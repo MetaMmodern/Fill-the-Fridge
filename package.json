@@ -1,0 +1,17 @@
+{
+  "name": "web-parser",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "MetaMmodern",
+  "license": "MIT",
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.3",
+    "iconv-lite": "^0.5.1",
+    "needle": "^2.3.3",
+    "request": "^2.88.2"
+  }
+}
