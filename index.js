@@ -37,9 +37,7 @@ function getIngredientsObject($) {
   });
   return ingredients;
 }
-function newFormat(someText) {
-  return someText.replace(/\s+/g, ' ').trim()
-}
+
 function getArticles(links) {
   let promises = [];
   links.forEach((link, index) => {
@@ -53,7 +51,8 @@ function getArticles(links) {
           name: articleBody(".item-about div h1").text(),
           link: link,
           image: articleBody(".item-about div .m-img img").attr("src"),
-          reciep: newFormat(articleBody(".cooking-bl").text()),
+          //нужно написать функцию удаления лишних символов из рецепта
+          //reciep: $(".cooking-bl").text(),
           ingredients: getIngredientsObject(articleBody)
         };
       })
