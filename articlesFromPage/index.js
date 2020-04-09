@@ -1,21 +1,15 @@
 const needle = require("needle");
-const fs = require("fs");
 const cheerio = require("cheerio");
-const creatorurl = require("./urlcreate");
-const URL = "https://www.povarenok.ru/recipes/search/";
-
-const ings = ["Мясо", "Сыр"];
-const readyURL = creatorurl(URL, ings, 0);
+const creatorurl = require("../urlcreate");
 
 function getIngredientsObject($) {
   let ingredients = [];
   $(".ingredients-bl ul li > span").each((index, value) => {
     let ingredientAndAmount = {};
-    //promises.push(new Promise(value));
     let inner = $(value)
       .first()
       .contents()
-      .filter(function() {
+      .filter(function () {
         return this.nodeType == 3;
       })
       .text()
@@ -26,9 +20,7 @@ function getIngredientsObject($) {
       inner = inner.join();
     }
     ingredientAndAmount.item =
-      $(value)
-        .find("span[itemprop='name']")
-        .text() + inner;
+      $(value).find("span[itemprop='name']").text() + inner;
     ingredientAndAmount.amount = $(value)
       .find("span[itemprop='amount']")
       .text();
@@ -37,23 +29,24 @@ function getIngredientsObject($) {
   });
   return ingredients;
 }
-
+function newFormat(someText) {
+  return someText.replace(/\s+/g, " ").trim();
+}
 function getArticles(links) {
   let promises = [];
   links.forEach((link, index) => {
     promises.push(
-      needle("get", link).then(function(response) {
+      needle("get", link).then(function (response) {
         const articleBody = cheerio.load(response.body, {
-          decodeEntities: false
+          decodeEntities: false,
         });
         return {
           id: index,
           name: articleBody(".item-about div h1").text(),
           link: link,
           image: articleBody(".item-about div .m-img img").attr("src"),
-          //нужно написать функцию удаления лишних символов из рецепта
-          //reciep: $(".cooking-bl").text(),
-          ingredients: getIngredientsObject(articleBody)
+          reciep: newFormat(articleBody(".cooking-bl").text()),
+          ingredients: getIngredientsObject(articleBody),
         };
       })
     );
@@ -61,8 +54,13 @@ function getArticles(links) {
   return Promise.all(promises);
 }
 
-async function articlesFromPage() {
+async function articlesFromPage(ings, page) {
   try {
+    if (ings.length == 0) {
+      throw new Error("Empty ingredients array!");
+    }
+    const URL = "https://www.povarenok.ru/recipes/search/";
+    const readyURL = creatorurl(URL, ings, page);
     const response = await needle("get", readyURL);
     if (response.statusCode != 200) {
       throw new Error(response.statusCode);
@@ -81,12 +79,11 @@ async function articlesFromPage() {
     $(".item-bl h2 a").each(async (index, value) => {
       await links.push($(value).attr("href"));
     });
-    console.log(links);
     const articles = await getArticles(links);
-    console.log(articles);
+    return articles;
   } catch (error) {
     console.log(error);
   }
 }
 
-articlesFromPage();
+module.exports = articlesFromPage;

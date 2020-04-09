@@ -10,8 +10,11 @@
   "license": "MIT",
   "dependencies": {
     "cheerio": "^1.0.0-rc.3",
+    "fetch": "^1.1.0",
     "iconv-lite": "^0.5.1",
     "needle": "^2.3.3",
-    "request": "^2.88.2"
+    "node-fetch": "^2.6.0",
+    "request": "^2.88.2",
+    "superagent": "^5.2.2"
   }
 }
