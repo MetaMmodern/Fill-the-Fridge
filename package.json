@@ -1,0 +1,49 @@
+{
+  "name": "Fill-the-Fridge",
+  "version": "1.0.0",
+  "description": "## What is Fill the Fridge?",
+  "main": "index.js",
+  "scripts": {
+    "debug": "DEBUG=index node index.js",
+    "test": "npm run lint",
+    "prettier": "prettier --config .prettierrc.json --write index.js",
+    "lint": "eslint index.js",
+    "lint:fix": "eslint --fix index.js",
+    "precommit": "npm run lint:fix",
+    "prepush": "npm run test",
+    "start": "node index.js "
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MetaMmodern/Fill-the-Fridge.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MetaMmodern/Fill-the-Fridge/issues"
+  },
+  "homepage": "https://github.com/MetaMmodern/Fill-the-Fridge#readme",
+  "devDependencies": {
+    "eslint": "^6.8.0",
+    "eslint-plugin-react": "^7.19.0"
+  },
+  "dependencies": {
+    "chalk": "^4.0.0",
+    "debug": "^4.1.1",
+    "eslint": "^6.7.1",
+    "eslint-config-standard": "^14.1.0",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-node": "^10.0.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.1",
+    "husky": "^3.1.0",
+    "koa": "^2.11.0",
+    "koa-morgan": "^1.0.1",
+    "morgan": "^1.10.0",
+    "path": "^0.12.7",
+    "pre-commit": "^1.2.2",
+    "prettier": "^1.19.1",
+    "rotating-file-stream": "^2.0.2"
+  }
+}
