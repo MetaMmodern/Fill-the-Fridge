@@ -10,7 +10,7 @@ const accessLogStream = rfs.createStream('access.log', {
   interval: '1d', // rotate daily
   path: path.join(__dirname, 'log')
 })
-app.use(morgan('combined', { stream: accessLogStream }))
+app.use(morgan('tiny', { stream: accessLogStream }))
 
 app.use(function * () {
   this.body = 'Hello world!'
