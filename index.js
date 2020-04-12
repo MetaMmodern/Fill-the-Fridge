@@ -16,7 +16,6 @@ app.use(morgan('tiny', { stream: accessLogStream }))
 app.use(function * () {
   this.body = 'Hello world!'
 })
-
 app.listen(port, function () {
   debug(`listening on port ${chalk.green('3000')}`)
 })
