@@ -1,6 +1,8 @@
 
 # **Fill the Fridge**
 
+[![Build Status](https://travis-ci.org/MetaMmodern/Fill-the-Fridge.svg?branch=feature_preparation)](https://travis-ci.org/MetaMmodern/Fill-the-Fridge)
+
 ## What is Fill the Fridge?
 
 A web service, which helps you to make a dish from ingredients, which you have in your fridge.
