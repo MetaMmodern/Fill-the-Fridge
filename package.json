@@ -1,13 +1,8 @@
 {
-  "name": "web-parser",
+  "name": "fill-the-fridge",
   "version": "1.0.0",
-  "description": "",
+  "description": "A web service, which helps you to make a dish from ingredients, which you have in your fridge.\r If you don't have neccesary inridients, this service will find several options for stores and show you the best price for the unit. You will be able to select the nearest store and the store with lowest price.",
   "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "MetaMmodern",
-  "license": "MIT",
   "dependencies": {
     "cheerio": "^1.0.0-rc.3",
     "fetch": "^1.1.0",
@@ -16,5 +11,19 @@
     "node-fetch": "^2.6.0",
     "request": "^2.88.2",
     "superagent": "^5.2.2"
-  }
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MetaMmodern/Fill-the-Fridge.git"
+  },
+  "author": "TsakeLove",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MetaMmodern/Fill-the-Fridge/issues"
+  },
+  "homepage": "https://github.com/MetaMmodern/Fill-the-Fridge#readme"
 }
