@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<h1>
+    Welcome to <%= title %>
+</h1>
+<% attributes.forEach( function(attribute) { %>
+<li class="list-group-item">
+    <%= attribute.text %>
+</li>
+<% }); %>
+</body>
+</html>
