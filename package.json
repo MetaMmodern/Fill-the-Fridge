@@ -1,7 +1,7 @@
 {
   "name": "Fill-the-Fridge",
   "version": "1.0.0",
-  "description": "## What is Fill the Fridge?",
+  "description": "A web service, which helps you to make a dish from ingredients, which you have in your fridge.\r If you don't have neccesary inridients, this service will find several options for stores and show you the best price for the unit. You will be able to select the nearest store and the store with lowest price.",
   "main": "index.js",
   "scripts": {
     "debug": "DEBUG=index node index.js",
@@ -18,17 +18,25 @@
     "url": "git+https://github.com/MetaMmodern/Fill-the-Fridge.git"
   },
   "keywords": [],
-  "author": "",
+  "author": "TsakeLove",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/MetaMmodern/Fill-the-Fridge/issues"
   },
+
   "homepage": "https://github.com/MetaMmodern/Fill-the-Fridge#readme",
   "devDependencies": {
     "eslint": "^6.8.0",
     "eslint-plugin-react": "^7.19.0"
   },
   "dependencies": {
+    "cheerio": "^1.0.0-rc.3",
+    "fetch": "^1.1.0",
+    "iconv-lite": "^0.5.1",
+    "needle": "^2.3.3",
+    "node-fetch": "^2.6.0",
+    "request": "^2.88.2",
+    "superagent": "^5.2.2",    
     "chalk": "^4.0.0",
     "debug": "^4.1.1",
     "eslint": "^6.7.1",
