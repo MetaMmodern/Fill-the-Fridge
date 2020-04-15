@@ -13,5 +13,26 @@
     <%= attribute.text %>
 </li>
 <% }); %>
+<button>Press</button>
+<div id="target">
+</div>
+<script src="https://code.jquery.com/jquery-3.1.1.js" integrity="sha256-16cdPddA6VdVInumRGo6IbivbERE8p7CQR3HzTBuELA=" crossorigin="anonymous"></script>
+<script type="text/javascript" >
+    $(function() {
+        $("button").on("click", function () {
+            $.ajax({
+                type: 'POST',
+                url: '/add',
+                success: function(arr) {
+                    let html = '';
+                    for (let i = 0; i< arr.length; i++) {
+                        html += '<h2>' + arr[i].first + ' ' + arr[i].second + '</h2>';
+                    }
+                    $('#target').html(html);
+                }
+            });
+        });
+    });
+</script>
 </body>
 </html>

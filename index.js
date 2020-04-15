@@ -33,6 +33,27 @@ router.get('/', (ctx) => {
     title: mainTitle
   })
 })
+//*
+const arr = [
+  {
+    id: 1,
+    first: 'First text one ',
+    second: 'Second text one'
+  },
+  {
+    id: 2,
+    first: 'First text two ',
+    second: 'Second text two'
+  }
+]
+router.post('/add',
+  (ctx) => {
+    // eslint-disable-next-line no-return-assign
+    return ctx.response.body = arr
+  }
+)
+//*
+
 app.use(router.routes())
 app.listen(port, function () {
   debug(`listening on port ${chalk.green('3000')}`)
