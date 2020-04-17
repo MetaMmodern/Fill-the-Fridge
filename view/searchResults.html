@@ -1,0 +1,15 @@
+<% for (const reciep of recipesArray) { %>
+<div class="col mb-4">
+    <div class="card">
+        <img src="<%=reciep.image %>" class="card-img-top" alt="..." />
+        <div class="card-body">
+            <h5 class="card-title">
+                <a target="_blank" href="<%=reciep.link %>"
+                    ><%=reciep.name %></a
+                >
+            </h5>
+            <p class="card-text"></p>
+        </div>
+    </div>
+</div>
+<% }%>

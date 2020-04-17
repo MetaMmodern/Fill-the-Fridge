@@ -31,10 +31,12 @@ router.get('/', (ctx) => {
 })
 
 router.post('/recipes/search', async (ctx) => {
-  console.log(ctx.request.body)
-  console.log('do you work?')
-  const articles = await getArticles(ctx.request.body.ings)
-  return ctx.render('h1', articles)
+  debug(`the request body is ${chalk.green(ctx.request.body)}`)
+  const whatToSearch = await getArticles(
+    ctx.request.body.ings,
+    ctx.request.body.page
+  )
+  return ctx.render('searchResults', { recipesArray: whatToSearch })
 })
 
 app.use(koaBody())

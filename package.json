@@ -1,14 +1,14 @@
 {
-    "name": "Fill-the-Fridge",
+    "name": "fill-the-fridge",
     "version": "1.0.0",
     "description": "A web service, which helps you to make a dish from ingredients, which you have in your fridge.\r If you don't have neccesary inridients, this service will find several options for stores and show you the best price for the unit. You will be able to select the nearest store and the store with lowest price.",
     "main": "index.js",
     "scripts": {
-        "debug": "DEBUG=index node index.js",
+        "debug": "SET DEBUG=index & nodemon index.js",
         "test": "npm run lint",
         "prettier": "prettier --config .prettierrc.json --write index.js",
-        "lint": "eslint index.js",
-        "lint:fix": "eslint --fix index.js",
+        "lint": "eslint index.js & eslint ./public /**/*.js",
+        "lint:fix": "eslint --fix index.js & eslint --fix ./public/**/*.js",
         "precommit": "npm run lint:fix",
         "prepush": "npm run test",
         "start": "nodemon index.js "
