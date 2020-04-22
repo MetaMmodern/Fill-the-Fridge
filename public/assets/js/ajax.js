@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const form = document.forms[0]
   const searchResult = document.getElementById('search-results-container')
   // Настройка AJAX запроса
-  let numberOfNextPage = 0
+  let numberOfNextPage = 1
   form.addEventListener('submit', function (event) {
     event.preventDefault()
     const ingsString = document.getElementById('inputIngredients').value
@@ -28,9 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       xhr.onload = function () {
         console.log(numberOfNextPage)
-        numberOfNextPage === 0
-          ? (numberOfNextPage += 2)
-          : numberOfNextPage++
+        numberOfNextPage++
         searchResult.insertAdjacentHTML('beforeend', xhr.responseText)
       }
     }

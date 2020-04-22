@@ -8,7 +8,11 @@
                     ><%=reciep.name %></a
                 >
             </h5>
-            <p class="card-text"></p>
+            <p class="card-text">
+                <% for (let i = 0; i < reciep['ingr-fast'].length; i++) {%>
+                <span><%=reciep['ingr-fast'][i]%></span><br />
+                <% } %>
+            </p>
         </div>
     </div>
 </div>

@@ -34,28 +34,19 @@ function getIngredientsObject($) {
 function newFormat(someText) {
     return someText.replace(/\s+/g, ' ').trim();
 }
-function getArticles(links) {
-    let promises = [];
-    links.forEach((link, index) => {
-        promises.push(
-            needle('get', link).then(function(response) {
-                const articleBody = cheerio.load(response.body, {
-                    decodeEntities: false,
-                });
-                return {
-                    id: index,
-                    name: articleBody('.item-about div h1').text(),
-                    link: link,
-                    image: articleBody('.item-about div .m-img img').attr(
-                        'src'
-                    ),
-                    reciep: newFormat(articleBody('.cooking-bl').text()),
-                    ingredients: getIngredientsObject(articleBody),
-                };
-            })
-        );
+async function getArticle(link) {
+    const response = await needle('get', link, { follow_max: 3 });
+    const articleBody = cheerio.load(response.body, {
+        decodeEntities: false,
     });
-    return Promise.all(promises);
+    return {
+        id: index,
+        name: articleBody('.item-about div h1').text(),
+        link: link,
+        image: articleBody('.item-about div .m-img img').attr('src'),
+        reciep: newFormat(articleBody('.cooking-bl').text()),
+        ingredients: getIngredientsObject(articleBody),
+    };
 }
 
 async function articlesFromPage(ings, page) {
@@ -63,9 +54,12 @@ async function articlesFromPage(ings, page) {
         if (ings.length == 0) {
             throw new Error('Empty ingredients array!');
         }
+        const options = {
+            follow_max: 3,
+        };
         const URL = 'https://www.povarenok.ru/recipes/search/';
         const readyURL = creatorurl(URL, ings, page);
-        const response = await needle('get', readyURL);
+        const response = await needle('get', readyURL, options);
         if (response.statusCode != 200) {
             throw new Error(response.statusCode);
         }
@@ -77,15 +71,25 @@ async function articlesFromPage(ings, page) {
             console.log('no results');
             throw new Error('NO other recieps');
         }
-        let links = [];
-        $('.item-bl h2 a').each(async (index, value) => {
-            await links.push($(value).attr('href'));
+        let articles = [];
+        $('.item-bl').each((index, item) => {
+            let article = {
+                name: $('h2 a', item).text(),
+                link: $('h2 a', item).attr('href'),
+                image: $('.desktop-img a img', item).attr('src'),
+            };
+            let ingr_fast = [];
+            $('.ingr_fast span', item).each((index, value) =>
+                ingr_fast.push(value.children[0].data)
+            );
+            article['ingr-fast'] = ingr_fast;
+            articles.push(article);
         });
-        const articles = await getArticles(links);
+
         return articles;
     } catch (error) {
         console.log(error);
     }
 }
 
-module.exports = articlesFromPage;
+module.exports = { articlesFromPage, getArticle };
