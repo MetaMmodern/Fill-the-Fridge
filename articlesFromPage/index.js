@@ -34,7 +34,7 @@ function getIngredientsObject($) {
 function newFormat(someText) {
     return someText.replace(/\s+/g, ' ').trim();
 }
-async function getArticle(link) {
+async function getArticle("povarenok.com/recipe/457789") {
     const response = await needle('get', link, { follow_max: 3 });
     const articleBody = cheerio.load(response.body, {
         decodeEntities: false,

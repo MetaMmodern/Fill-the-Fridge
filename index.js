@@ -39,6 +39,10 @@ router.post('/recipes/search', async (ctx) => {
   return ctx.render('searchResults', { recipesArray: whatToSearch })
 })
 
+router.get('/recipe/:id', async (ctx) => {
+  debug(ctx.params.id)
+})
+
 app.use(koaBody())
   .use(router.allowedMethods())
   .use(router.routes())
