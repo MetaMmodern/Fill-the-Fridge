@@ -9,7 +9,7 @@ const chalk = require('chalk')
 const debug = require('debug')('index')
 const path = require('path')
 const rfs = require('rotating-file-stream')
-const { articlesFromPage } = require('./articlesFromPage')
+const { articlesFromPage, getArticle } = require('./articlesFromPage')
 const app = new Koa()
 const port = process.env.PORT || 3000
 const accessLogStream = rfs.createStream('access.log', {
@@ -41,6 +41,10 @@ router.post('/recipes/search', async (ctx) => {
 
 router.get('/recipe/:id', async (ctx) => {
   debug(ctx.params.id)
+  const article = (await getArticle('https://www.povarenok.ru/recipes/show/' + ctx.params.id))
+  debug(article)
+  // TO DO
+  return (ctx.body = article)
 })
 
 app.use(koaBody())
