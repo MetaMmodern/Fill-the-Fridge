@@ -41,10 +41,12 @@ router.post('/recipes/search', async (ctx) => {
 
 router.get('/recipe/:id', async (ctx) => {
   debug(ctx.params.id)
-  const article = (await getArticle('https://www.povarenok.ru/recipes/show/' + ctx.params.id))
+  const article = await getArticle(
+    'https://www.povarenok.ru/recipes/show/' + ctx.params.id
+  )
   debug(article)
   // TO DO
-  return (ctx.body = article)
+  return ctx.render('reciepPage', article)
 })
 
 app.use(koaBody())

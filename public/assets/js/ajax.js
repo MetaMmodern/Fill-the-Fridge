@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const ingsArray = ingredientsTempParser(ingsString)
     if (ingsString.length !== 0) {
       const xhr = new XMLHttpRequest()
-      xhr.open('POST', '/recipes/search', true)
+      xhr.open('POST', '/recipes/search')
       xhr.setRequestHeader(
         'Content-Type',
         'application/json; charset=utf-8'
