@@ -32,7 +32,7 @@ async function getPrice(ings) {
       };
       $(value)
         .find('p')
-        .each(elem => {
+        .each((_index, elem) => {
           if (
             $(elem)
               .find('b')

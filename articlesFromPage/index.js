@@ -4,12 +4,12 @@ const creatorurl = require('../urlcreate');
 
 function getIngredientsObject($) {
   const ingredients = [];
-  $('.ingredients-bl ul li > span').each((index, value) => {
+  $('.ingredients-bl ul li > span').each((_index, value) => {
     const ingredientAndAmount = {};
     let inner = $(value)
       .first()
       .contents()
-      .filter(function() {
+      .filter(() => {
         return this.nodeType === 3;
       })
       .text()
@@ -63,11 +63,9 @@ async function articlesFromPage(ings, page) {
       throw new Error(response.statusCode);
     }
     const $ = cheerio.load(response.body);
-
     const resultsNumber = $('div.sort-res div.bl-right strong').text();
     const nothingFound = 'ничего не найдено';
     if (resultsNumber === nothingFound) {
-      console.log('no results');
       throw new Error('NO other recieps');
     }
     const articles = [];
@@ -82,7 +80,7 @@ async function articlesFromPage(ings, page) {
         image: $('.desktop-img a img', item).attr('src')
       };
       const ingrFast = [];
-      $('.ingr_fast span', item).each(value => ingrFast.push(value.children[0].data));
+      $('.ingr_fast span', item).each((_index, value) => ingrFast.push(value.children[0].data));
       article['ingr-fast'] = ingrFast;
       articles.push(article);
     });
