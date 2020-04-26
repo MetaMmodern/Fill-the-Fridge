@@ -32,9 +32,9 @@ router.get('/', ctx => {
   return ctx.render('../public/index');
 });
 
-router.post('/recipes/search', async ctx => {
+router.post('/recipes/search/:page', async ctx => {
   debug(`the request body is ${chalk.green(ctx.request.body)}`);
-  const whatToSearch = await articlesFromPage(ctx.request.body.ings, ctx.request.body.page);
+  const whatToSearch = await articlesFromPage(ctx.request.body.ings, ctx.request.page);
   return ctx.render('searchResults', { recipesArray: whatToSearch });
 });
 
