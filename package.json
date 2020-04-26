@@ -7,7 +7,7 @@
     "debug": "cross-env DEBUG=index nodemon index.js",
     "test": "npm run lint",
     "prettier": "prettier --config .prettierrc.json --write index.js",
-    "lint": "eslint index.js & eslint ./public /**/*.js",
+    "lint": "eslint index.js & eslint ./public/**/*.js",
     "lint:fix": "eslint --fix index.js & eslint --fix ./public/**/*.js",
     "precommit": "npm run lint:fix",
     "prepush": "npm run test",
