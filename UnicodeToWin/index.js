@@ -257,14 +257,13 @@ const DMap = {
 };
 
 function unicodeToWin1251(s) {
-  let output = [];
+  const output = [];
   for (let i = 0; i < s.length; i++) {
     const ord = s.charCodeAt(i);
-    if (!(ord in DMap))
-      throw "Character " + s.charAt(i) + " isn't supported by win1251!";
-    output.push("%" + DMap[ord].toString(16));
+    if (!(ord in DMap)) throw new Error(`Character ${s.charAt(i)} isn't supported by win1251!`);
+    output.push(`%${DMap[ord].toString(16)}`);
   }
-  return output.join("").toUpperCase();
+  return output.join('').toUpperCase();
 }
 
 module.exports = unicodeToWin1251;
