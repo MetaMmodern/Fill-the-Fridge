@@ -34,7 +34,8 @@ router.get('/', ctx => {
 
 router.post('/recipes/search/:page', async ctx => {
   debug(`the request body is ${chalk.green(ctx.request.body)}`);
-  const whatToSearch = await articlesFromPage(ctx.request.body.ings, ctx.request.page);
+  const whatToSearch = await articlesFromPage(ctx.request.body.ings, ctx.params.page);
+  debug(ctx.params.page);
   return ctx.render('searchResults', { recipesArray: whatToSearch });
 });
 
