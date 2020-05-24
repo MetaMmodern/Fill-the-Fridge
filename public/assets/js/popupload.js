@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', () => {
+function popup() {
   const popupContainer = document.getElementsByClassName('container-popup')[0];
   document.addEventListener('click', event => {
     if (!event.target.matches('a.recipe-link')) return;
@@ -11,4 +11,5 @@ document.addEventListener('DOMContentLoaded', () => {
       $('#myModal').modal('show');
     };
   });
-});
+}
+export default popup;
