@@ -5,12 +5,18 @@ import addTags from './tagsinput.js';
 
 import popup from './popupload.js';
 
+import localStorageSetter from './startup.js';
+
 document.addEventListener('DOMContentLoaded', () => {
   const form = document.forms[0];
-  let allTags = [];
   let loadPageNum = 2;
-  let olderInput;
+  let olderInput = [];
   const searchResult = document.getElementById('search-results-container');
+  const container = document.querySelector('.tag-container');
+  const input = document.querySelector('.tag-container input');
+
+  let allTags = localStorageSetter(container);
+
   //  preventing form sending by enter
   form.addEventListener('keypress', e => {
     if (e.key === 'Enter') e.preventDefault();
@@ -18,10 +24,13 @@ document.addEventListener('DOMContentLoaded', () => {
   //  very comlex and spagetti code below. it is for first ajax loading.
   form.addEventListener('submit', event => {
     event.preventDefault();
-    if (allTags.join('').length !== 0 && olderInput !== allTags) {
+    if (
+      allTags.join('').length !== 0 &&
+      [...new Set(olderInput.slice().sort())].join() !== [...new Set(allTags.slice().sort())].join()
+    ) {
       loadPageNum = 2;
       SubmitForm(form, allTags, searchResult);
-      olderInput = allTags;
+      olderInput = [...allTags];
     }
   });
   popup();
@@ -75,12 +84,11 @@ document.addEventListener('DOMContentLoaded', () => {
   window.addEventListener('scroll', infinity);
 
   //  tags adding below
-  const container = document.querySelector('.tag-container');
-  const input = document.querySelector('.tag-container input');
   input.addEventListener('keyup', e => {
     if (e.key === 'Enter' || e.keyCode === 13) {
       e.preventDefault();
       allTags.push(input.value);
+      localStorage.setItem('tags', JSON.stringify(allTags));
       addTags(allTags, container);
       input.value = '';
     }
@@ -91,6 +99,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const value = e.target.getAttribute('data-item');
       const index = allTags.indexOf(value);
       allTags = [...allTags.slice(0, index), ...allTags.slice(index + 1)];
+      localStorage.setItem('tags', JSON.stringify(allTags));
       addTags(allTags, container);
     }
   });
