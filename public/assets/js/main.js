@@ -95,7 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   document.addEventListener('click', e => {
-    if (e.target.tagName === 'SPAN') {
+    if (e.target.classList.contains('tagCloser')) {
       const value = e.target.getAttribute('data-item');
       const index = allTags.indexOf(value);
       allTags = [...allTags.slice(0, index), ...allTags.slice(index + 1)];

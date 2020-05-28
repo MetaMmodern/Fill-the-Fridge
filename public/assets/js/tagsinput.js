@@ -4,7 +4,7 @@ function createTag(label) {
   const labelDiv = document.createElement('div');
   labelDiv.innerHTML = label;
   const close = document.createElement('span');
-  close.setAttribute('class', 'material-icons');
+  close.setAttribute('class', 'material-icons tagCloser');
   close.setAttribute('data-item', label);
   close.innerHTML = 'close';
   div.appendChild(labelDiv);
