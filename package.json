@@ -11,7 +11,7 @@
     "lint:fix": "eslint --fix index.js & eslint --fix ./public/**/*.js",
     "precommit": "npm run lint:fix",
     "prepush": "npm run test",
-    "start": "nodemon index.js "
+    "start": "node index.js "
   },
   "repository": {
     "type": "git",
