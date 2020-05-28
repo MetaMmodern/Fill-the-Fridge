@@ -11,6 +11,7 @@ const debug = require('debug')('index');
 const path = require('path');
 const rfs = require('rotating-file-stream');
 const { articlesFromPage, getArticle } = require('./articlesFromPage');
+const getPrice = require('./getPrice');
 
 const app = new Koa();
 const port = process.env.PORT || 3000;
@@ -46,7 +47,50 @@ router.get('/recipe/:id', async ctx => {
   // TO DO
   return ctx.render('reciepPage', article);
 });
+router.post('/Cart', async ctx => {
+  let listOfProducts;
+  // eslint-disable-next-line no-restricted-syntax,guard-for-in
+  for (const product in ctx.request.body) {
+    listOfProducts = ctx.request.body[product];
+  }
+  // eslint-disable-next-line no-unused-vars
+  const arrayOfProducts = [];
+  let arrayPrice;
+  const arrayOfStore = [];
+  arrayOfStore[0] = {
+    name: 'Novus',
+    price: 0,
+    count: 0
+  };
+  arrayOfStore[1] = {
+    name: 'АТБ',
+    price: 0,
+    count: 0
+  };
 
+  for (let i = 0; i < listOfProducts.length; i++) {
+    // eslint-disable-next-line no-await-in-loop
+    arrayPrice = await getPrice([listOfProducts[i]]);
+    console.log(listOfProducts[i]);
+    let object;
+    // eslint-disable-next-line prefer-const
+    object = arrayPrice[0].pricesAndStores;
+
+    // eslint-disable-next-line guard-for-in,no-restricted-syntax
+    for (const key in object) {
+      for (let store = 0; store < arrayOfStore.length; store++)
+        // eslint-disable-next-line eqeqeq
+        if (arrayOfStore[store].name == object[key].store) {
+          arrayOfStore[store].price += object[key].price;
+          // eslint-disable-next-line no-plusplus
+          arrayOfStore[store].count++;
+          console.log(`${arrayOfStore[store].name} = ${object[key].price}`);
+        }
+    }
+  }
+
+  console.log(arrayOfStore);
+});
 app
   .use(koaBody())
   .use(router.allowedMethods())
