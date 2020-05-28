@@ -85,12 +85,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
   //  tags adding below
   input.addEventListener('keyup', e => {
-    if (e.key === 'Enter' || e.keyCode === 13) {
+    if ((e.key === 'Enter' || e.keyCode === 13) && input.value !== '') {
       e.preventDefault();
       allTags.push(input.value);
       localStorage.setItem('tags', JSON.stringify(allTags));
       addTags(allTags, container);
       input.value = '';
+    }
+    if (e.key === 'Backspace' && input.value === '' && allTags.length > 0) {
+      e.preventDefault();
+      input.value = allTags[allTags.length - 1];
+      allTags = [...allTags.slice(0, allTags.length - 1)];
+      localStorage.setItem('tags', JSON.stringify(allTags));
+      addTags(allTags, container);
     }
   });
 
@@ -101,6 +108,13 @@ document.addEventListener('DOMContentLoaded', () => {
       allTags = [...allTags.slice(0, index), ...allTags.slice(index + 1)];
       localStorage.setItem('tags', JSON.stringify(allTags));
       addTags(allTags, container);
+    }
+  });
+  document.addEventListener('click', e => {
+    if (e.target.classList.contains('cleaner')) {
+      allTags = [];
+      addTags([], container);
+      localStorage.setItem('tags', JSON.stringify([]));
     }
   });
 });
