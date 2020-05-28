@@ -61,26 +61,34 @@ router.post('/Cart', async ctx => {
   arrayOfStore[0] = {
     name: 'Novus',
     price: 0,
-    count: 0
+    count: 0,
+    products: ''
   };
   arrayOfStore[1] = {
     name: 'АТБ',
     price: 0,
-    count: 0
+    count: 0,
+    products: ''
   };
 
+  for (let i = 0; i < arrayOfStore.length; i++) arrayOfStore[i].products = listOfProducts;
+  // console.log(arrayOfStore[0].products);
   for (let i = 0; i < listOfProducts.length; i++) {
     // eslint-disable-next-line no-await-in-loop
     arrayPrice = await getPrice([listOfProducts[i]]);
-    console.log(listOfProducts[i]);
     const object = arrayPrice[0].pricesAndStores;
 
+    // eslint-disable-next-line guard-for-in
     for (const key in object) {
       for (let store = 0; store < arrayOfStore.length; store++)
         if (arrayOfStore[store].name === object[key].store) {
+
           arrayOfStore[store].price += object[key].price;
           arrayOfStore[store].count += 1;
-          console.log(`${arrayOfStore[store].name} = ${object[key].price}`);
+          for (let product = 0; product < arrayOfStore[store].products.length; product++) {
+            if (listOfProducts[i] === arrayOfStore[store].products[product])
+              arrayOfStore[store].products[product] = '-';
+          }
         }
     }
   }
