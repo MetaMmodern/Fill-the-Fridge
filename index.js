@@ -6,11 +6,10 @@ const morgan = require('koa-morgan');
 const render = require('koa-ejs');
 const KoaRouter = require('koa-router');
 const koaBody = require('koa-bodyparser');
-const chalk = require('chalk');
-const debug = require('debug')('index');
 const path = require('path');
 const rfs = require('rotating-file-stream');
 const { articlesFromPage, getArticle } = require('./articlesFromPage');
+const getCart = require('./getPrice');
 
 const app = new Koa();
 const port = process.env.PORT || 3000;
@@ -33,20 +32,20 @@ router.get('/', ctx => {
 });
 
 router.post('/recipes/search/:page', async ctx => {
-  debug(`the request body is ${chalk.green(ctx.request.body)}`);
   const whatToSearch = await articlesFromPage(ctx.request.body.ings, ctx.params.page);
-  debug(ctx.params.page);
   return ctx.render('searchResults', { recipesArray: whatToSearch });
 });
 
 router.get('/recipe/:id', async ctx => {
-  debug(ctx.params.id);
   const article = await getArticle(`https://www.povarenok.ru/recipes/show/${ctx.params.id}`);
-  debug(article);
   // TO DO
   return ctx.render('reciepPage', article);
 });
-
+router.post('/Cart', async ctx => {
+  const result = await getCart(ctx.request.body);
+  // eslint-disable-next-line no-return-assign
+  return (ctx.body = result);
+});
 app
   .use(koaBody())
   .use(router.allowedMethods())
@@ -57,6 +56,4 @@ app
     ctx.body = ctx.request.body;
   });
 
-app.listen(port, () => {
-  debug(`listening on port ${chalk.green('3000')}`);
-});
+app.listen(port);
