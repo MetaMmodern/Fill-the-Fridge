@@ -85,7 +85,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
   //  tags adding below
   input.addEventListener('keyup', e => {
-    if ((e.key === 'Enter' || e.keyCode === 13) && input.value !== '') {
+    if (
+      (e.key === 'Enter' || e.keyCode === 13) &&
+      input.value !== '' &&
+      input.value.split(' ').join('') !== ''
+    ) {
       e.preventDefault();
       allTags.push(input.value);
       localStorage.setItem('tags', JSON.stringify(allTags));
