@@ -9,6 +9,7 @@ const koaBody = require('koa-bodyparser');
 const path = require('path');
 const rfs = require('rotating-file-stream');
 const { articlesFromPage, getArticle } = require('./articlesFromPage');
+const getCart = require('./getPrice');
 
 const app = new Koa();
 const port = process.env.PORT || 3000;
@@ -40,7 +41,11 @@ router.get('/recipe/:id', async ctx => {
   // TO DO
   return ctx.render('reciepPage', article);
 });
-
+router.post('/Cart', async ctx => {
+  const result = await getCart(ctx.request.body);
+  // eslint-disable-next-line no-return-assign
+  return (ctx.body = result);
+});
 app
   .use(koaBody())
   .use(router.allowedMethods())
@@ -51,4 +56,5 @@ app
     ctx.body = ctx.request.body;
   });
 
-app.listen(port, () => {});
+app.listen(port);
+
