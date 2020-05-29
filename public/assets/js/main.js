@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const input = document.querySelector('.tag-container input');
 
   let allTags = localStorageSetter(container);
-
+  if (allTags.length === 0) input.setAttribute('placeholder', 'Ingredients');
   //  preventing form sending by enter
   form.addEventListener('keypress', e => {
     if (e.key === 'Enter') e.preventDefault();
@@ -91,6 +91,7 @@ document.addEventListener('DOMContentLoaded', () => {
       localStorage.setItem('tags', JSON.stringify(allTags));
       addTags(allTags, container);
       input.value = '';
+      input.removeAttribute('placeholder');
     }
     if (e.key === 'Backspace' && input.value === '' && allTags.length > 0) {
       e.preventDefault();
@@ -108,6 +109,9 @@ document.addEventListener('DOMContentLoaded', () => {
       allTags = [...allTags.slice(0, index), ...allTags.slice(index + 1)];
       localStorage.setItem('tags', JSON.stringify(allTags));
       addTags(allTags, container);
+      if (allTags.length === 0) {
+        input.setAttribute('placeholder', 'Ingredients');
+      }
     }
   });
   document.addEventListener('click', e => {
