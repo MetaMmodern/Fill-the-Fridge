@@ -62,26 +62,30 @@ router.post('/Cart', async ctx => {
     name: 'Novus',
     price: 0,
     count: 0,
-    products: [...listOfProducts]
+    products: [...listOfProducts],
+    MinimalCost: false
   };
   arrayOfStore[1] = {
     name: 'АТБ',
     price: 0,
     count: 0,
-    products: [...listOfProducts]
+    products: [...listOfProducts],
+    MinimalCost: false
   };
   arrayOfStore[2] = {
     name: 'Велика Кишеня',
     price: 0,
     count: 0,
-    products: [...listOfProducts]
+    products: [...listOfProducts],
+    MinimalCost: false
   };
   arrayOfStore[3] = {
     name: 'Сільпо',
     price: 0,
     count: 0,
-    products: [...listOfProducts]
-  }
+    products: [...listOfProducts],
+    MinimalCost: false
+  };
   for (let i = 0; i < listOfProducts.length; i++) {
     // eslint-disable-next-line no-await-in-loop
     arrayPrice = await getPrice([listOfProducts[i]]);
@@ -97,67 +101,28 @@ router.post('/Cart', async ctx => {
 
           for (let product = 0; product < arrayOfStore[store].products.length; product++) {
             if (listOfProducts[i] === arrayOfStore[store].products[product]) {
-              arrayOfStore[store].products.splice(product,1);
+              arrayOfStore[store].products.splice(product, 1);
             }
           }
         }
       }
     }
   }
-   let minStore = arrayOfStore[0];
-   let countFirst = arrayOfStore[0].count;
- for (let i = 1; i <arrayOfStore.length; i++)
- {
-
-     if (countFirst === arrayOfStore[i].count)
-     {
-       console.log(countFirst + ' - ' + arrayOfStore[i].count);
-       console.log('I want to compare ' + minStore.name + ' and ' + arrayOfStore[i].name);
-       console.log(minStore.price +' - ' + arrayOfStore[i].price);
-        if (minStore.price > arrayOfStore[i].price) {
-          console.log(minStore.price + ' > ' + arrayOfStore[i].price);
-          minStore = arrayOfStore[i];
-        }
-     }
-     else {
-       console.log(countFirst + ' - ' + arrayOfStore[i].count);
-       console.log('I want to compare ' + minStore.name + ' and ' + arrayOfStore[i].name);
-       if (countFirst < arrayOfStore[i].count)
-       {
-         console.log(minStore.price +' > ' + arrayOfStore[i].price);
-         minStore = arrayOfStore[i];
-       }
-     }
- }
- console.log('Final min: ');
- console.log(minStore);
-  // for (let i = 0; i < arrayOfStore.length - 1; i++) {
-  //   if (arrayOfStore[i].count === arrayOfStore[i + 1].count) {
-  //     console.log('Count ' + arrayOfStore[i].name + ' = ' + arrayOfStore[i].count + ' in ' + arrayOfStore[i+1].name + ' = ' +  arrayOfStore[i+1].count);
-  //     if (arrayOfStore[i].price > arrayOfStore[i + 1].price){
-  //       console.log('Price in ' + arrayOfStore[i].name + ' is ' + arrayOfStore[i].price);
-  //       console.log('Price in ' + arrayOfStore[i+1].name + ' is ' + arrayOfStore[i+1].price);
-  //       console.log(arrayOfStore[i + 1]);
-  //     }
-  //     else {
-  //       console.log('Price in ' + arrayOfStore[i].name + ' is ' + arrayOfStore[i].price);
-  //       console.log('Price in ' + arrayOfStore[i+1].name + ' is ' + arrayOfStore[i+1].price);
-  //       console.log(arrayOfStore[i]);
-  //     }
-  //   } else if (arrayOfStore[i].count > arrayOfStore[i + 1].count) {
-  //     console.log('Count ' + arrayOfStore[i].name + ' = ' + arrayOfStore[i].count + ' in ' + arrayOfStore[i+1].name + ' = ' +  arrayOfStore[i+1].count);
-  //     console.log('Price in ' + arrayOfStore[i].name + ' is ' + arrayOfStore[i].price);
-  //     console.log('Price in ' + arrayOfStore[i+1].name + ' is ' + arrayOfStore[i+1].price);
-  //     console.log(arrayOfStore[i]);
-  //   }
-  //   else {
-  //     console.log('Count ' + arrayOfStore[i].name + ' = ' + arrayOfStore[i].count + ' in ' + arrayOfStore[i+1].name + ' = ' +  arrayOfStore[i+1].count);
-  //     console.log('Price in ' + arrayOfStore[i].name + ' is ' + arrayOfStore[i].price);
-  //     console.log('Price in ' + arrayOfStore[i+1].name + ' is ' + arrayOfStore[i+1].price);
-  //     console.log(arrayOfStore[i + 1]);
-  //   }
-  //   }
-
+  let minStore = arrayOfStore[0];
+  const countFirst = arrayOfStore[0].count;
+  for (let i = 1; i < arrayOfStore.length; i++) {
+    if (countFirst === arrayOfStore[i].count) {
+      if (minStore.price > arrayOfStore[i].price) {
+        minStore = arrayOfStore[i];
+      }
+    } else if (countFirst < arrayOfStore[i].count) {
+      minStore = arrayOfStore[i];
+    }
+  }
+  for (let i = 0; i < arrayOfStore.length; i++)
+    if (arrayOfStore[i].name === minStore.name) arrayOfStore[i].MinimalCost = true;
+    console.log(arrayOfStore);
+  return ctx.body = arrayOfStore;
 });
 app
   .use(koaBody())
