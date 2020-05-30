@@ -66,8 +66,8 @@ function initMap() {
       // ------//
       const MyStore1 = {
         name: 'Сільпо',
-        name2: 'Siplo',
-        name3: 'Сільпо',
+        name2: 'Silpo',
+        name3: 'Сильпо',
         price: '333,33'
       };
       const MyStore2 = {
