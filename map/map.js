@@ -15,20 +15,30 @@ function error(err) {
 }
 
 // создание маркера
-function createMarker(map, place, arrayMyStore, infowindow) {
+function createMarker(map, place, myposition, arrayMyStore, infowindow) {
   const marker = new google.maps.Marker({
     map,
     position: place.geometry.location
   });
+  const cpos = google.maps.geometry.spherical.computeDistanceBetween(
+    new google.maps.LatLng(JSON.parse(JSON.stringify(marker.position))),
+    new google.maps.LatLng(myposition)
+  );
+  if (cpos > 56000) {
+    marker.setMap(null);
+    return null;
+  }
   // по клику появляется инфополе
-  google.maps.event.addListener(marker, 'click', function() {
+  google.maps.event.addListener(marker, 'click', () => {
     for (let i = 0; i < arrayMyStore.length; i++) {
-      if (place.name == arrayMyStore[i].name || place.name == arrayMyStore[i].name2) {
-        console.log(`${place.name} = ${arrayMyStore[i].name}`);
-
+      if (
+        place.name.toLowerCase().includes(arrayMyStore[i].name.toLowerCase()) ||
+        place.name.toLowerCase().includes(arrayMyStore[i].name2.toLowerCase()) ||
+        place.name.toLowerCase().includes(arrayMyStore[i].name3.toLowerCase())
+      ) {
         // если название места совпадает с местом в массиве
         infowindow.setContent(`${place.name} with price ${arrayMyStore[i].price}`); // выводим название места и цену
-        infowindow.open(map, this);
+        infowindow.open(map, marker);
       }
     }
   });
@@ -36,7 +46,7 @@ function createMarker(map, place, arrayMyStore, infowindow) {
 function initMap() {
   const map = new google.maps.Map(document.getElementById('map'), {
     center: { lat: -20, lng: 150.644 },
-    zoom: 10
+    zoom: 15
   });
   const infoWindow = new google.maps.InfoWindow();
   const service = new google.maps.places.PlacesService(map);
@@ -55,24 +65,31 @@ function initMap() {
       // поля хардкода
       // ------//
       const MyStore1 = {
-        name: 'Сильпо',
-        name2: 'Silpo',
+        name: 'Сільпо',
+        name2: 'Siplo',
+        name3: 'Сільпо',
         price: '333,33'
       };
       const MyStore2 = {
-        name: 'Atb',
-        name2: 'Aтб',
+        name: 'АТБ',
+        name2: 'Atb',
+        name3: 'АТБ',
+
         price: '222,22'
       };
       const MyStore3 = {
-        name: 'Velyka Kyshenya',
-        name2: 'Велика Кишеня',
-        price: '0'
+        name: 'Велика Кишеня',
+        name2: 'Velyka Kyshenya',
+        name3: 'Велика Кишеня',
+
+        price: '9874'
       };
       const MyStore4 = {
-        name: 'Novus',
-        name2: 'Новус',
-        price: '0'
+        name: 'Новус',
+        name2: 'Novus',
+        name3: 'Novus',
+
+        price: '2345'
       };
       const arrayMyStore = [];
       const arrayOfRequest = [];
@@ -87,7 +104,7 @@ function initMap() {
           query: arrayMyStore[i].name,
           fields: ['name', 'geometry'],
           locationBias: {
-            radius: 5,
+            radius: 1000,
             center: { lat: pos.lat, lng: pos.lng }
           }
         });
@@ -96,8 +113,9 @@ function initMap() {
         const element = arrayOfRequest[index];
         service.findPlaceFromQuery(element, (results, status) => {
           if (status === google.maps.places.PlacesServiceStatus.OK) {
+            console.log(JSON.stringify(results));
             results.forEach(res => {
-              createMarker(map, res, arrayMyStore, infoWindow);
+              createMarker(map, res, pos, arrayMyStore, infoWindow);
             });
           }
         });
