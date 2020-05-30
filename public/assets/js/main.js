@@ -75,8 +75,10 @@ document.addEventListener('DOMContentLoaded', () => {
       allTags.join('').length !== 0 &&
       [...new Set(olderInput.slice().sort())].join() !== [...new Set(allTags.slice().sort())].join()
     ) {
-      document.getElementsByClassName('fullreciep')[0].innerHTML = '';
-      document.getElementsByClassName('fullreciep')[0].style.border = 'none';
+      if (document.getElementsByClassName('fullreciep')[0] !== undefined) {
+        document.getElementsByClassName('fullreciep')[0].innerHTML = '';
+        document.getElementsByClassName('fullreciep')[0].style.border = 'none';
+      }
       loadPageNum = 2;
       SubmitForm(form, allTags, searchResult);
       olderInput = [...allTags];
@@ -85,9 +87,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
   popup();
-
-  if (document.getElementsByClassName('fullreciep')[0].innerHTML !== '') {
-    window.removeEventListener('scroll', infinity);
+  if (document.getElementsByClassName('fullreciep')[0] !== undefined) {
+    if (document.getElementsByClassName('fullreciep')[0].innerHTML !== '') {
+      window.removeEventListener('scroll', infinity);
+    }
   }
 
   //  tags adding below
