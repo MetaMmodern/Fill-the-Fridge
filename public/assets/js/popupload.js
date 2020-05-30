@@ -4,11 +4,25 @@ function popup() {
     if (!event.target.matches('a.recipe-link')) return;
     event.preventDefault();
     const popupRequest = new XMLHttpRequest();
-    popupRequest.open('GET', event.target.getAttribute('href'));
-    popupRequest.send();
+    popupRequest.open('POST', event.target.getAttribute('href'));
+    popupRequest.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
+
+    popupRequest.send(
+      JSON.stringify({
+        href: event.target.getAttribute('href')
+      })
+    );
     popupRequest.onload = () => {
       popupContainer.innerHTML = popupRequest.responseText;
+      window.history.pushState(
+        event.target.getAttribute('href'),
+        'page 2',
+        event.target.getAttribute('href')
+      );
       $('#myModal').modal('show');
+      $('#myModal').on('hidden.bs.modal', () => {
+        window.history.back();
+      });
       const currentLocalStorage = JSON.parse(localStorage.getItem('tags')).map(el =>
         el.toLowerCase()
       );

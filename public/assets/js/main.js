@@ -21,19 +21,6 @@ document.addEventListener('DOMContentLoaded', () => {
   form.addEventListener('keypress', e => {
     if (e.key === 'Enter') e.preventDefault();
   });
-  //  very comlex and spagetti code below. it is for first ajax loading.
-  form.addEventListener('submit', event => {
-    event.preventDefault();
-    if (
-      allTags.join('').length !== 0 &&
-      [...new Set(olderInput.slice().sort())].join() !== [...new Set(allTags.slice().sort())].join()
-    ) {
-      loadPageNum = 2;
-      SubmitForm(form, allTags, searchResult);
-      olderInput = [...allTags];
-    }
-  });
-  popup();
   //  infinity scroll loading below
   let scrollPos = 0;
   function infinity() {
@@ -81,7 +68,27 @@ document.addEventListener('DOMContentLoaded', () => {
     // saves the new position for iteration.
     scrollPos = document.body.getBoundingClientRect().top;
   }
-  window.addEventListener('scroll', infinity);
+  //  very comlex and spagetti code below. it is for first ajax loading.
+  form.addEventListener('submit', event => {
+    event.preventDefault();
+    if (
+      allTags.join('').length !== 0 &&
+      [...new Set(olderInput.slice().sort())].join() !== [...new Set(allTags.slice().sort())].join()
+    ) {
+      document.getElementsByClassName('fullreciep')[0].innerHTML = '';
+      document.getElementsByClassName('fullreciep')[0].style.border = 'none';
+      loadPageNum = 2;
+      SubmitForm(form, allTags, searchResult);
+      olderInput = [...allTags];
+      window.history.pushState('search', 'page 1', '/');
+      window.addEventListener('scroll', infinity);
+    }
+  });
+  popup();
+
+  if (document.getElementsByClassName('fullreciep')[0].innerHTML !== '') {
+    window.removeEventListener('scroll', infinity);
+  }
 
   //  tags adding below
   input.addEventListener('keyup', e => {
