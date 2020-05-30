@@ -32,7 +32,6 @@ router.get('/', ctx => {
 });
 router.get('/recipe/:id', async ctx => {
   const article = await getArticle(`https://www.povarenok.ru/recipes/show/${ctx.params.id}`);
-  console.log('requested recip');
   return ctx.render('../public/reciepFull', article);
 });
 
