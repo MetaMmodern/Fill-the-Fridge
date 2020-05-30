@@ -22,6 +22,7 @@ function createMarker(map, place, arrayMyStore, infowindow) {
   });
   // по клику появляется инфополе
   google.maps.event.addListener(marker, 'click', () => {
+    console.log(`clicked ${marker.position}`);
     for (let i = 0; i < arrayMyStore.length; i++) {
       if (place.name === arrayMyStore[i].name || place.name === arrayMyStore[i].name2) {
         console.log(`${place.name} = ${arrayMyStore[i].name}`);
@@ -48,9 +49,9 @@ function initMap() {
         lng: position.coords.longitude
       };
 
-      infoWindow.setPosition(pos);
-      infoWindow.setContent('Location found. ');
-      infoWindow.open(map);
+      // infoWindow.setPosition(pos);
+      // infoWindow.setContent('Location found. ');
+      // infoWindow.open(map);
       map.setCenter(pos);
       // поля хардкода
       // ------//
@@ -87,7 +88,7 @@ function initMap() {
           query: arrayMyStore[i].name,
           fields: ['name', 'geometry'],
           locationBias: {
-            radius: 50,
+            radius: 5,
             center: { lat: pos.lat, lng: pos.lng }
           }
         });
@@ -99,7 +100,6 @@ function initMap() {
             results.forEach(res => {
               createMarker(map, res, arrayMyStore, infoWindow);
             });
-            map.setCenter(results[0].geometry.location);
           }
         });
       }
