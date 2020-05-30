@@ -21,10 +21,9 @@ function createMarker(map, place, arrayMyStore, infowindow) {
     position: place.geometry.location
   });
   // по клику появляется инфополе
-  google.maps.event.addListener(marker, 'click', () => {
-    console.log(`clicked ${marker.position}`);
+  google.maps.event.addListener(marker, 'click', function() {
     for (let i = 0; i < arrayMyStore.length; i++) {
-      if (place.name === arrayMyStore[i].name || place.name === arrayMyStore[i].name2) {
+      if (place.name == arrayMyStore[i].name || place.name == arrayMyStore[i].name2) {
         console.log(`${place.name} = ${arrayMyStore[i].name}`);
 
         // если название места совпадает с местом в массиве
