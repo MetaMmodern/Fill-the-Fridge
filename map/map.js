@@ -20,9 +20,9 @@ const MyStore1 = {
   name2: 'Silpo',
   price: '333,33'
 };
-const MyStore4 = {
+const MyStore2 = {
   name: 'Atb',
-  name2: 'Atb',
+  name2: 'Aтб',
   price: '222,22'
 };
 const MyStore3 = {
@@ -30,7 +30,7 @@ const MyStore3 = {
   name2: 'Велика Кишеня',
   price: '0'
 };
-const MyStore2 = {
+const MyStore4 = {
   name: 'Novus',
   name2: 'Новус',
   price: '0'
@@ -48,7 +48,7 @@ for (let i = 0; i < arrayMyStore.length; i++) {
   const request = {
     query: arrayMyStore[i].name,
     fields: ['name', 'geometry'],
-    locationBias: { radius: 10, center: { lat: 120, lng: 38 } }
+    locationBias: { radius: 50, center: { lat: myGeoPos.lat, lng:myGeoPos.long } }
   };
   arrayOfRequest.push(request);
 }
