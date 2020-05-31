@@ -27,6 +27,11 @@
   cursor: pointer;
   padding-left: 0.3125rem;
 }
+.store .material-icons {
+  font-size: 1rem;
+  cursor: default;
+  padding-left: 0.3125rem;
+}
 .tag-container input,
 input:focus {
   flex: 1;

@@ -3,11 +3,11 @@ import SubmitForm from './ajax.js';
 
 import addTags from './tagsinput.js';
 
-import popup from './popupload.js';
-
 import localStorageSetter from './startup.js';
 
-document.addEventListener('DOMContentLoaded', () => {
+import { popup, loadStoresAndPries, setupStores, setupIngredients } from './popupload.js';
+
+document.addEventListener('DOMContentLoaded', async () => {
   const form = document.forms[0];
   let loadPageNum = 2;
   let olderInput = [];
@@ -90,6 +90,14 @@ document.addEventListener('DOMContentLoaded', () => {
   if (document.getElementsByClassName('fullreciep')[0] !== undefined) {
     if (document.getElementsByClassName('fullreciep')[0].innerHTML !== '') {
       window.removeEventListener('scroll', infinity);
+      const currentLocalStorage = JSON.parse(localStorage.getItem('tags')).map(el =>
+        el.toLowerCase()
+      );
+      const whatToBuy = [...document.querySelectorAll('.ingredientsSingle span')]
+        .map(e => e.innerHTML.toLowerCase())
+        .filter(el => !currentLocalStorage.includes(el));
+      setupStores(await loadStoresAndPries(whatToBuy));
+      setupIngredients(whatToBuy);
     }
   }
 

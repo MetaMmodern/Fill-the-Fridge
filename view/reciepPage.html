@@ -21,16 +21,19 @@
               <img src="<%= image %>" alt="" class="img-fluid rounded" style="height: auto;" />
             </div>
             <div class="col-6 h-100 overflow-auto">
-              <p>
-                Market's where to buy other ings
-              </p>
+              <div id="allStores"></div>
+              <button type="button" class="btn btn-primary">
+                See on Map
+              </button>
             </div>
           </div>
-          <div class="row ingredientsSingle">
-            <div class="col-12">
-              <ul class="pl-3">
+          <div class="row ingredientsSingle mt-3 mb-3">
+            <div class="col-6">
+              <ul class="list-group" id="allIngs">
                 <%for (const element of ingredients) {%>
-                <li><span><%= element.item %></span>--<%= element.amount %></li>
+                <li class="list-group-item">
+                  <span><%= element.item %></span>&mdash;<%= element.amount %>
+                </li>
                 <% }%>
               </ul>
             </div>
@@ -41,11 +44,6 @@
             </div>
           </div>
         </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary">
-          Open Map
-        </button>
       </div>
     </div>
   </div>
