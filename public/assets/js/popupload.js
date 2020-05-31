@@ -1,3 +1,13 @@
+function setupIngredients(whatToBuy) {
+  const allIngs = document.getElementById('allIngs');
+  allIngs.querySelectorAll('span').forEach(ing => {
+    console.log(whatToBuy);
+    console.log(ing.innerHTML);
+    if (whatToBuy.includes(ing.innerHTML.toLowerCase())) {
+      ing.parentElement.classList.add('list-group-item-danger');
+    }
+  });
+}
 function setupStores(stores) {
   const storesInHTML = document.getElementById('allStores');
   stores.forEach(store => {
@@ -69,13 +79,13 @@ function popup() {
       const currentLocalStorage = JSON.parse(localStorage.getItem('tags')).map(el =>
         el.toLowerCase()
       );
-      // make this parser work normally!
       const whatToBuy = [...document.querySelectorAll('.ingredientsSingle span')]
         .map(e => e.innerHTML.toLowerCase())
         .filter(el => !currentLocalStorage.includes(el));
 
       setupStores(await loadStoresAndPries(whatToBuy));
+      setupIngredients(whatToBuy);
     };
   });
 }
-export { popup, loadStoresAndPries, setupStores };
+export { popup, loadStoresAndPries, setupStores, setupIngredients };

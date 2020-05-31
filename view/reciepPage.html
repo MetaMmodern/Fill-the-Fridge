@@ -27,11 +27,13 @@
               </button>
             </div>
           </div>
-          <div class="row ingredientsSingle">
-            <div class="col-12">
-              <ul class="pl-3">
+          <div class="row ingredientsSingle mt-3 mb-3">
+            <div class="col-6">
+              <ul class="list-group" id="allIngs">
                 <%for (const element of ingredients) {%>
-                <li><span><%= element.item %></span>--<%= element.amount %></li>
+                <li class="list-group-item">
+                  <span><%= element.item %></span>&mdash;<%= element.amount %>
+                </li>
                 <% }%>
               </ul>
             </div>

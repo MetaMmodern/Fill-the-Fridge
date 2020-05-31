@@ -5,7 +5,7 @@ import addTags from './tagsinput.js';
 
 import localStorageSetter from './startup.js';
 
-import { popup, loadStoresAndPries, setupStores } from './popupload.js';
+import { popup, loadStoresAndPries, setupStores, setupIngredients } from './popupload.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
   const form = document.forms[0];
@@ -97,6 +97,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         .map(e => e.innerHTML.toLowerCase())
         .filter(el => !currentLocalStorage.includes(el));
       setupStores(await loadStoresAndPries(whatToBuy));
+      setupIngredients(whatToBuy);
     }
   }
 
