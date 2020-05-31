@@ -40,11 +40,13 @@
     "eslint-plugin-react": "^7.20.0",
     "eslint-plugin-standard": "^4.0.1",
     "husky": "^3.1.0",
-    "nodemon": "^2.0.4",
+    "mocha": "^7.2.0",
+    "nodemon": "^2.0.3",
     "pre-commit": "^1.2.2",
     "prettier": "^1.19.1"
   },
   "dependencies": {
+    "assert": "^2.0.0",
     "cheerio": "^1.0.0-rc.3",
     "fetch": "^1.1.0",
     "iconv-lite": "^0.5.1",
@@ -61,6 +63,8 @@
     "path": "^0.12.7",
     "request": "^2.88.2",
     "rotating-file-stream": "^2.0.2",
-    "superagent": "^5.2.2"
+    "sinon": "^9.0.2",
+    "superagent": "^5.2.2",
+    "supertest": "^4.0.2"
   }
 }

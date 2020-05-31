@@ -59,5 +59,6 @@ app
     // if nothing was parsed, body will be an empty object {}
     ctx.body = ctx.request.body;
   });
-
+// if you want to test index.js, you need to comment line #59!
 app.listen(port);
+module.exports.app = app.listen(5001);
