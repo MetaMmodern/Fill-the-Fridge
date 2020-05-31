@@ -46,7 +46,7 @@ function createMarker(map, place, myposition, arrayMyStore, infowindow) {
 function initMap() {
   const map = new google.maps.Map(document.getElementById('map'), {
     center: { lat: -20, lng: 150.644 },
-    zoom: 15
+    zoom: 8
   });
   const infoWindow = new google.maps.InfoWindow();
   const service = new google.maps.places.PlacesService(map);
@@ -109,18 +109,18 @@ function initMap() {
           }
         });
       }
-      for (let index = 0; index < arrayOfRequest.length; index++) {
-        const element = arrayOfRequest[index];
-        service.findPlaceFromQuery(element, (results, status) => {
-          if (status === google.maps.places.PlacesServiceStatus.OK) {
-            console.log(JSON.stringify(results));
-            results.forEach(res => {
-              createMarker(map, res, pos, arrayMyStore, infoWindow);
-            });
-          }
-        });
-      }
-      console.log(arrayOfRequest);
+      google.maps.event.addDomListener(document.getElementById('putmarkers'), 'click', () => {
+        for (let index = 0; index < arrayOfRequest.length; index++) {
+          const element = arrayOfRequest[index];
+          service.findPlaceFromQuery(element, (results, status) => {
+            if (status === google.maps.places.PlacesServiceStatus.OK) {
+              results.forEach(res => {
+                createMarker(map, res, pos, arrayMyStore, infoWindow);
+              });
+            }
+          });
+        }
+      });
     },
     error,
     options
