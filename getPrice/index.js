@@ -2,10 +2,26 @@ const needle = require('needle');
 const cheerio = require('cheerio');
 const creatorurl = require('../urlcreate');
 
+async function wait(ms) {
+  return new Promise(resolve => {
+    setTimeout(resolve, ms);
+  });
+}
+
 function getNumber(str) {
   return parseFloat(str);
 }
+function sortByPrice(arrayOfStore) {
+  arrayOfStore.sort((store, anotherStore) => {
+    if (store.count === anotherStore.count) {
+      if (store.price > anotherStore.price) return 1;
+      return -1;
+    }
 
+    if (store.count < anotherStore.count) return 1;
+    return -1;
+  });
+}
 async function getPrice(ings) {
   try {
     if (ings === undefined) {
@@ -20,6 +36,7 @@ async function getPrice(ings) {
       headers: { Referer: 'http://mysupermarket.org.ua/' }
     };
     const items = [];
+    await wait(100);
     const response = await needle('get', readyURL, options);
     if (response.statusCode !== 200) {
       throw new Error('Error, not 200');
@@ -88,69 +105,53 @@ async function getCart(responseProds) {
     name: 'Novus',
     price: 0,
     count: 0,
-    products: [...listOfProducts],
-    MinimalCost: false
+    products: [...listOfProducts]
   };
   arrayOfStore[1] = {
     name: 'АТБ',
     price: 0,
     count: 0,
-    products: [...listOfProducts],
-    MinimalCost: false
+    products: [...listOfProducts]
   };
   arrayOfStore[2] = {
     name: 'Велика Кишеня',
     price: 0,
     count: 0,
-    products: [...listOfProducts],
-    MinimalCost: false
+    products: [...listOfProducts]
   };
   arrayOfStore[3] = {
     name: 'Сільпо',
     price: 0,
     count: 0,
-    products: [...listOfProducts],
-    MinimalCost: false
+    products: [...listOfProducts]
   };
   for (let i = 0; i < listOfProducts.length; i++) {
     // идём по продуктам
-    arrayPrice = await getPrice([listOfProducts[i]]); //получаем цены в магазинах на продукт
-    const firstItem = arrayPrice[0].pricesAndStores; //на первый в списке
-    firstItem.forEach(key => {
-      //  на каждый магаз/цену
-      for (let store = 0; store < arrayOfStore.length; store++) {
-        //пробегаем по хард магазинам
+    arrayPrice = await getPrice([listOfProducts[i]]); // получаем цены в магазинах на продукт
+    if (arrayPrice[0] !== undefined) {
+      const firstItem = arrayPrice[0].pricesAndStores; // на первый в списке
+      firstItem.forEach(key => {
+        // на каждый магаз/цену
+        for (let store = 0; store < arrayOfStore.length; store++) {
+          // пробегаем по хард магазинам
 
-        if (arrayOfStore[store].name === key.store) {
-          //если названия совпали
-          arrayOfStore[store].price += key.price; //суммируем цену
-          arrayOfStore[store].count += 1;
-          for (let product = 0; product < arrayOfStore[store].products.length; product++) {
-            if (listOfProducts[i] === arrayOfStore[store].products[product]) {
-              arrayOfStore[store].products.splice(product, 1);
+
+          if (arrayOfStore[store].name === key.store) {
+            // если названия совпали
+            arrayOfStore[store].price = Number(arrayOfStore[store].price.toFixed(2));
+            arrayOfStore[store].price += key.price; // суммируем цену
+            arrayOfStore[store].count += 1;
+            for (let product = 0; product < arrayOfStore[store].products.length; product++) {
+              if (listOfProducts[i] === arrayOfStore[store].products[product]) {
+                arrayOfStore[store].products.splice(product, 1);
+              }
             }
           }
         }
-      }
-    });
-  }
-
-  let minStore = arrayOfStore[0];
-  const countFirst = arrayOfStore[0].count;
-  for (let i = 1; i < arrayOfStore.length; i++) {
-    if (countFirst === arrayOfStore[i].count) {
-      if (minStore.price > arrayOfStore[i].price) {
-        minStore = arrayOfStore[i];
-      }
-    } else if (countFirst < arrayOfStore[i].count) {
-      minStore = arrayOfStore[i];
+      });
     }
   }
-  for (let i = 0; i < arrayOfStore.length; i++)
-    if (arrayOfStore[i].name === minStore.name) {
-      arrayOfStore[i].MinimalCost = true;
-      arrayOfStore[i].price = Number(arrayOfStore[i].price.toFixed(2));
-    }
+  sortByPrice(arrayOfStore);
   return arrayOfStore;
 }
 module.exports = getCart;
