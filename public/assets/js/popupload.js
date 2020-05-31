@@ -1,3 +1,42 @@
+function setupStores(stores) {
+  const storesInHTML = document.getElementById('allStores');
+  stores.forEach(store => {
+    const outterStoreContainer = document.createElement('div');
+    const cartLogo = document.createElement('span');
+    const storeName = document.createElement('div');
+    const dash = document.createElement('span');
+    const storeCartPrice = document.createElement('div');
+    const uah = document.createElement('span');
+    outterStoreContainer.setAttribute('class', 'store d-flex align-items-center mb-2');
+    cartLogo.setAttribute('class', 'material-icons mr-1');
+    cartLogo.innerHTML = 'shopping_cart';
+    storeName.setAttribute('class', 'storeName');
+    storeCartPrice.setAttribute('class', 'Price');
+    uah.innerHTML = ' grn.';
+    dash.innerHTML = '&mdash;';
+    storeName.innerHTML = store.name;
+    storeCartPrice.innerHTML = store.price;
+    outterStoreContainer.appendChild(cartLogo);
+    outterStoreContainer.appendChild(storeName);
+    outterStoreContainer.appendChild(dash);
+    outterStoreContainer.appendChild(storeCartPrice);
+    outterStoreContainer.appendChild(uah);
+    storesInHTML.appendChild(outterStoreContainer);
+  });
+}
+async function loadStoresAndPries(whatToBuy) {
+  const response = await fetch('/Cart', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json; charset=utf-8' },
+    body: JSON.stringify({
+      whatToBuy
+    })
+  });
+  // Отправляем данные
+  const stores = await response.json();
+
+  return stores;
+}
 function popup() {
   const popupContainer = document.getElementsByClassName('container-popup')[0];
   document.addEventListener('click', event => {
@@ -12,13 +51,17 @@ function popup() {
         href: event.target.getAttribute('href')
       })
     );
-    popupRequest.onload = () => {
+    popupRequest.onload = async () => {
       popupContainer.innerHTML = popupRequest.responseText;
       window.history.pushState(
         event.target.getAttribute('href'),
         'page 2',
         event.target.getAttribute('href')
       );
+      $(() => {
+        $('[data-toggle="tooltip"]').tooltip();
+      });
+
       $('#myModal').modal('show');
       $('#myModal').on('hidden.bs.modal', () => {
         window.history.back();
@@ -30,30 +73,9 @@ function popup() {
       const whatToBuy = [...document.querySelectorAll('.ingredientsSingle span')]
         .map(e => e.innerHTML.toLowerCase())
         .filter(el => !currentLocalStorage.includes(el));
-      const buyRequest = new XMLHttpRequest(); // открытие запроса
-      buyRequest.open('POST', '/Cart');
-      buyRequest.setRequestHeader('Content-Type', 'application/json; charset=utf-8'); //  пишем что это json
-      // Отправляем данные
-      buyRequest.send(
-        JSON.stringify({
-          whatToBuy
-        })
-      );
-      buyRequest.onreadystatechange = () => {
-        // 4 = Ответ от сервера полностью загружен
-        if (buyRequest.readyState === 4) {
-          // 200 - 299 = успешная отправка данных!
-          if (buyRequest.status === 200 && buyRequest.status < 300) {
-            // eslint-disable-next-line no-console
-            console.log(buyRequest.responseText);
-          } else {
-            //  не успешное получение данных
-            // eslint-disable-next-line no-console
-            console.log('ну напиши ты миддлвар нормально');
-          }
-        }
-      };
+
+      setupStores(await loadStoresAndPries(whatToBuy));
     };
   });
 }
-export default popup;
+export { popup, loadStoresAndPries, setupStores };
