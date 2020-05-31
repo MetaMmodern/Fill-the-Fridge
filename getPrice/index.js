@@ -117,7 +117,7 @@ async function getCart(responseProds) {
     arrayPrice = await getPrice([listOfProducts[i]]); //получаем цены в магазинах на продукт
     const firstItem = arrayPrice[0].pricesAndStores; //на первый в списке
     firstItem.forEach(key => {
-      //на каждый магаз/цену
+      //  на каждый магаз/цену
       for (let store = 0; store < arrayOfStore.length; store++) {
         //пробегаем по хард магазинам
 
