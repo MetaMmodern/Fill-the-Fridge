@@ -2,6 +2,12 @@ const needle = require('needle');
 const cheerio = require('cheerio');
 const creatorurl = require('../urlcreate');
 
+async function wait(ms) {
+  return new Promise(resolve => {
+    setTimeout(resolve, ms);
+  });
+}
+
 function getNumber(str) {
   return parseFloat(str);
 }
@@ -30,6 +36,7 @@ async function getPrice(ings) {
       headers: { Referer: 'http://mysupermarket.org.ua/' }
     };
     const items = [];
+    await wait(100);
     const response = await needle('get', readyURL, options);
     if (response.statusCode !== 200) {
       throw new Error('Error, not 200');
@@ -120,26 +127,29 @@ async function getCart(responseProds) {
   };
   for (let i = 0; i < listOfProducts.length; i++) {
     // идём по продуктам
+    console.log(listOfProducts[i]);
     arrayPrice = await getPrice([listOfProducts[i]]); // получаем цены в магазинах на продукт
-    const firstItem = arrayPrice[0].pricesAndStores; // на первый в списке
-    firstItem.forEach(key => {
-      // на каждый магаз/цену
-      for (let store = 0; store < arrayOfStore.length; store++) {
-        // пробегаем по хард магазинам
+    if (arrayPrice[0] !== undefined) {
+      const firstItem = arrayPrice[0].pricesAndStores; // на первый в списке
+      firstItem.forEach(key => {
+        // на каждый магаз/цену
+        for (let store = 0; store < arrayOfStore.length; store++) {
+          // пробегаем по хард магазинам
 
-        if (arrayOfStore[store].name === key.store) {
-          // если названия совпали
-          arrayOfStore[store].price = Number(arrayOfStore[store].price.toFixed(2));
-          arrayOfStore[store].price += key.price; // суммируем цену
-          arrayOfStore[store].count += 1;
-          for (let product = 0; product < arrayOfStore[store].products.length; product++) {
-            if (listOfProducts[i] === arrayOfStore[store].products[product]) {
-              arrayOfStore[store].products.splice(product, 1);
+          if (arrayOfStore[store].name === key.store) {
+            // если названия совпали
+            arrayOfStore[store].price = Number(arrayOfStore[store].price.toFixed(2));
+            arrayOfStore[store].price += key.price; // суммируем цену
+            arrayOfStore[store].count += 1;
+            for (let product = 0; product < arrayOfStore[store].products.length; product++) {
+              if (listOfProducts[i] === arrayOfStore[store].products[product]) {
+                arrayOfStore[store].products.splice(product, 1);
+              }
             }
           }
         }
-      }
-    });
+      });
+    }
   }
   sortByPrice(arrayOfStore);
   console.log(arrayOfStore);
