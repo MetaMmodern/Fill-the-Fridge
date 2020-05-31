@@ -35,6 +35,11 @@ function setupStores(stores) {
   });
 }
 async function loadStoresAndPries(whatToBuy) {
+  document
+    .getElementById('allStores')
+    .setAttribute('class', 'd-flex justify-content-center align-items-center mt-1 mb-3');
+  document.getElementById('allStores').innerHTML =
+    "<div class='spinner-border' role='status'><span class='sr-only'>Loading...</span></div>";
   const response = await fetch('/Cart', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json; charset=utf-8' },
@@ -44,7 +49,8 @@ async function loadStoresAndPries(whatToBuy) {
   });
   // Отправляем данные
   const stores = await response.json();
-
+  document.getElementById('allStores').innerHTML = '';
+  document.getElementById('allStores').setAttribute('class', '');
   return stores;
 }
 function popup() {
