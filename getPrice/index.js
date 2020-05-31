@@ -129,6 +129,7 @@ async function getCart(responseProds) {
 
         if (arrayOfStore[store].name === key.store) {
           // если названия совпали
+          arrayOfStore[store].price = Number(arrayOfStore[store].price.toFixed(2));
           arrayOfStore[store].price += key.price; // суммируем цену
           arrayOfStore[store].count += 1;
           for (let product = 0; product < arrayOfStore[store].products.length; product++) {
@@ -141,6 +142,7 @@ async function getCart(responseProds) {
     });
   }
   sortByPrice(arrayOfStore);
+  console.log(arrayOfStore);
   return arrayOfStore;
 }
 module.exports = getCart;
