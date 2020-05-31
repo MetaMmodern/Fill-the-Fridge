@@ -17,18 +17,18 @@
       <div class="modal-body">
         <div class="container-fluid">
           <div class="row">
-            <div class="col-5">
-              <img src="<%= image %>" alt="" class="img-fluid" style="height: auto;" />
+            <div class="col-6">
+              <img src="<%= image %>" alt="" class="img-fluid rounded" style="height: auto;" />
             </div>
-            <div class="col-7 h-100 overflow-auto">
+            <div class="col-6 h-100 overflow-auto">
               <p>
-                Ingredients, you need to buy additionally
+                Market's where to buy other ings
               </p>
             </div>
           </div>
           <div class="row ingredientsSingle">
             <div class="col-12">
-              <ul>
+              <ul class="pl-3">
                 <%for (const element of ingredients) {%>
                 <li><span><%= element.item %></span>--<%= element.amount %></li>
                 <% }%>

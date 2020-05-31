@@ -127,7 +127,6 @@ async function getCart(responseProds) {
   };
   for (let i = 0; i < listOfProducts.length; i++) {
     // идём по продуктам
-    console.log(listOfProducts[i]);
     arrayPrice = await getPrice([listOfProducts[i]]); // получаем цены в магазинах на продукт
     if (arrayPrice[0] !== undefined) {
       const firstItem = arrayPrice[0].pricesAndStores; // на первый в списке
@@ -135,6 +134,7 @@ async function getCart(responseProds) {
         // на каждый магаз/цену
         for (let store = 0; store < arrayOfStore.length; store++) {
           // пробегаем по хард магазинам
+
 
           if (arrayOfStore[store].name === key.store) {
             // если названия совпали
@@ -152,7 +152,6 @@ async function getCart(responseProds) {
     }
   }
   sortByPrice(arrayOfStore);
-  console.log(arrayOfStore);
   return arrayOfStore;
 }
 module.exports = getCart;

@@ -30,13 +30,17 @@ render(app, {
 router.get('/', ctx => {
   return ctx.render('../public/index');
 });
+router.get('/recipe/:id', async ctx => {
+  const article = await getArticle(`https://www.povarenok.ru/recipes/show/${ctx.params.id}`);
+  return ctx.render('../public/reciepFull', article);
+});
 
 router.post('/recipes/search/:page', async ctx => {
   const whatToSearch = await articlesFromPage(ctx.request.body.ings, ctx.params.page);
   return ctx.render('searchResults', { recipesArray: whatToSearch });
 });
 
-router.get('/recipe/:id', async ctx => {
+router.post('/recipe/:id', async ctx => {
   const article = await getArticle(`https://www.povarenok.ru/recipes/show/${ctx.params.id}`);
   // TO DO
   return ctx.render('reciepPage', article);

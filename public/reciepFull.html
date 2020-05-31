@@ -10,7 +10,8 @@
       integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
       crossorigin="anonymous"
     />
-    <link rel="stylesheet" href="./assets/css/input.css" />
+    <link rel="stylesheet" href="/assets/css/input.css" />
+    <link rel="stylesheet" href="/assets/css/fullreciep.css" />
     <!-- Bootstrap JavaScript and JQuery-->
     <script
       src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
@@ -28,8 +29,8 @@
       crossorigin="anonymous"
     ></script>
 
-    <script src="./assets/js/main.js" type="module"></script>
-    <title>Fill the Fridge</title>
+    <script src="/assets/js/main.js" type="module"></script>
+    <title><%= name %></title>
   </head>
   <body>
     <div class="container mt-4">
@@ -49,7 +50,39 @@
       </form>
     </div>
     <div class="d-flex justify-content-center mt-4" id="reloading"></div>
-    <div class="container mt-4 container-infinite">
+    <div class="container mt-4 container-infinite mb-4">
+      <div class="fullreciep container">
+        <div class="row articleName mt-2 mb-2 border-bottom">
+          <div class="col-12">
+            <h1><%= name %></h1>
+          </div>
+        </div>
+        <div class="row mt-2 mb-4">
+          <div class="col-5 imageandIngs">
+            <img src="<%= image %>" alt="" class="img-fluid rounded" style="height: auto;" />
+          </div>
+          <div class="col-7 h-100 overflow-auto">
+            <p>
+              Market's where to buy other ings
+            </p>
+            <button class="btn btn-success">See on Map</button>
+          </div>
+        </div>
+        <div class="row ingredientsSingle">
+          <div class="col-12">
+            <ul style="padding-left: 1rem;">
+              <%for (const element of ingredients) {%>
+              <li><span><%= element.item %></span>--<%= element.amount %></li>
+              <% }%>
+            </ul>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <p><%= reciep %></p>
+          </div>
+        </div>
+      </div>
       <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3" id="search-results-container"></div>
       <div class="d-flex justify-content-center" id="loading"></div>
     </div>
