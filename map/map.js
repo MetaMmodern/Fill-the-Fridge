@@ -43,7 +43,8 @@ function createMarker(map, place, myposition, arrayMyStore, infowindow) {
     }
   });
 }
-function initMap() {
+function initMap(array) {
+  console.log(array);
   const map = new google.maps.Map(document.getElementById('map'), {
     center: { lat: -20, lng: 150.644 },
     zoom: 8
@@ -109,18 +110,16 @@ function initMap() {
           }
         });
       }
-      google.maps.event.addDomListener(document.getElementById('putmarkers'), 'click', () => {
-        for (let index = 0; index < arrayOfRequest.length; index++) {
-          const element = arrayOfRequest[index];
-          service.findPlaceFromQuery(element, (results, status) => {
-            if (status === google.maps.places.PlacesServiceStatus.OK) {
-              results.forEach(res => {
-                createMarker(map, res, pos, arrayMyStore, infoWindow);
-              });
-            }
-          });
-        }
-      });
+      for (let index = 0; index < arrayOfRequest.length; index++) {
+        const element = arrayOfRequest[index];
+        service.findPlaceFromQuery(element, (results, status) => {
+          if (status === google.maps.places.PlacesServiceStatus.OK) {
+            results.forEach(res => {
+              createMarker(map, res, pos, arrayMyStore, infoWindow);
+            });
+          }
+        });
+      }
     },
     error,
     options
