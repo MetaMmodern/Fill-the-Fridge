@@ -68,3 +68,25 @@ input:focus {
 .cleaner {
   border-radius: 1.28125rem;
 }
+
+#mapPopup {
+  height: 0px;
+  border-radius: 1.5rem;
+  width: 0%;
+  transition: width 0.2s ease-in, height 0.2s ease-in;
+}
+#map {
+  height: 100%;
+  border-radius: 1rem;
+}
+#dropmarkers {
+  display: flex;
+  justify-content: center;
+  margin-top: 0.5rem;
+}
+#dropmarkers button {
+  height: 2rem;
+  width: 2rem;
+  border: none;
+  padding: 0px;
+}
