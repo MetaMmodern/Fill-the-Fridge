@@ -1,3 +1,4 @@
+// originally got from https://stackoverflow.com/a/2711936
 const DMap = {
   0: 0,
   1: 1,

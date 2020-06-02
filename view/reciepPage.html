@@ -6,44 +6,56 @@
   aria-hidden="true"
   id="myModal"
 >
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title"><%= name %></h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
+  <div class="modal-dialog modal-lg d-flex">
+    <div class="modal-content" id="reciepContent" style="border-radius: 1.5rem;">
+      <div class="backbutton d-none" id="dropmarkers">
+        <button type="button" class="rounded-circle material-icons btn btn-light">
+          navigate_before
         </button>
       </div>
-      <div class="modal-body">
-        <div class="container-fluid">
-          <div class="row">
-            <div class="col-6">
-              <img src="<%= image %>" alt="" class="img-fluid rounded" style="height: auto;" />
+      <div id="wholemodalReciep">
+        <div class="modal-header">
+          <h5 class="modal-title"><%= name %></h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-6">
+                <img src="<%= image %>" alt="" class="img-fluid rounded" style="height: auto;" />
+              </div>
+              <div class="col-6 h-100">
+                <div id="allStores"></div>
+                <button type="button" class="btn btn-primary btn-block" id="openMap">
+                  See on Map
+                </button>
+              </div>
             </div>
-            <div class="col-6 h-100 overflow-auto">
-              <div id="allStores"></div>
-              <button type="button" class="btn btn-primary">
-                See on Map
-              </button>
+            <div class="row ingredientsSingle mt-3 mb-3">
+              <div class="col-6">
+                <ul class="list-group" id="allIngs">
+                  <%for (const element of ingredients) {%>
+                  <li class="list-group-item">
+                    <span><%= element.item %></span>&mdash;<%= element.amount %>
+                  </li>
+                  <% }%>
+                </ul>
+              </div>
             </div>
-          </div>
-          <div class="row ingredientsSingle mt-3 mb-3">
-            <div class="col-6">
-              <ul class="list-group" id="allIngs">
-                <%for (const element of ingredients) {%>
-                <li class="list-group-item">
-                  <span><%= element.item %></span>&mdash;<%= element.amount %>
-                </li>
-                <% }%>
-              </ul>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-12">
-              <p><%= reciep %></p>
+            <div class="row">
+              <div class="col-12">
+                <p><%= reciep %></p>
+              </div>
             </div>
           </div>
         </div>
+      </div>
+    </div>
+    <div class="modal-content d-none" id="mapPopup">
+      <div class="modal-body" style="padding: 0.5rem;">
+        <div id="map"></div>
       </div>
     </div>
   </div>

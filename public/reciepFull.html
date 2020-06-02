@@ -3,6 +3,11 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- og tags -->
+    <meta property="og:title" content=<%= `Fill the Fridge: ${name}` %> /> <meta property="og:url"
+    content=<%= link %> /> <meta property="og:image" content=<%= image %> />
+    <meta property="og:type" content="article" />
+    <meta property="og:description" content=<%= `${reciep.substring(0, 20)}...` %> />
     <!-- Bootstrap CSS -->
     <link
       rel="stylesheet"
@@ -28,6 +33,7 @@
       integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
       crossorigin="anonymous"
     ></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCYsL3NtRxHucdRBUKgnmP5m0QQcTnjM3s&libraries=places"></script>
 
     <script src="/assets/js/main.js" type="module"></script>
     <title><%= name %></title>
@@ -51,38 +57,55 @@
     </div>
     <div class="d-flex justify-content-center mt-4" id="reloading"></div>
     <div class="container mt-4 container-infinite mb-4">
-      <div class="fullreciep container">
-        <div class="row articleName mt-2 mb-2 border-bottom">
-          <div class="col-12">
-            <h1><%= name %></h1>
+      <div class="toDelete d-flex">
+        <div class="fullreciep" id="reciepContent">
+          <div class="backbutton d-none" id="dropmarkers">
+            <button type="button" class="rounded-circle material-icons btn btn-light">
+              navigate_before
+            </button>
+          </div>
+          <div class="container">
+            <div id="wholemodalReciep">
+              <div class="row articleName mt-2 mb-2 border-bottom">
+                <div class="col-12">
+                  <h1><%= name %></h1>
+                </div>
+              </div>
+              <div class="row mt-2 mb-4">
+                <div class="col-5 imageandIngs">
+                  <img src="<%= image %>" alt="" class="img-fluid rounded" style="height: auto;" />
+                </div>
+                <div class="col-7 h-100">
+                  <div id="allStores"></div>
+                  <button class="btn btn-primary btn-block" id="openMap">See on Map</button>
+                </div>
+              </div>
+              <div class="row ingredientsSingle">
+                <div class="col-6">
+                  <ul class="list-group" id="allIngs">
+                    <%for (const element of ingredients) {%>
+                    <li class="list-group-item">
+                      <span><%= element.item %></span>&mdash;<%= element.amount %>
+                    </li>
+                    <% }%>
+                  </ul>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-12">
+                  <p><%= reciep %></p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-        <div class="row mt-2 mb-4">
-          <div class="col-5 imageandIngs">
-            <img src="<%= image %>" alt="" class="img-fluid rounded" style="height: auto;" />
-          </div>
-          <div class="col-7 h-100 overflow-auto">
-            <div id="allStores"></div>
-            <button class="btn btn-primary">See on Map</button>
-          </div>
-        </div>
-        <div class="row ingredientsSingle">
-          <div class="col-6">
-            <ul class="list-group" id="allIngs">
-              <%for (const element of ingredients) {%>
-              <li class="list-group-item">
-                <span><%= element.item %></span>&mdash;<%= element.amount %>
-              </li>
-              <% }%>
-            </ul>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-12">
-            <p><%= reciep %></p>
+        <div class="modal-content d-none" id="mapPopup">
+          <div class="modal-body" style="padding: 0.5rem;">
+            <div id="map"></div>
           </div>
         </div>
       </div>
+
       <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3" id="search-results-container"></div>
       <div class="d-flex justify-content-center" id="loading"></div>
     </div>

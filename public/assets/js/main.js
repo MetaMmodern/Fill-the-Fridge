@@ -5,7 +5,13 @@ import addTags from './tagsinput.js';
 
 import localStorageSetter from './startup.js';
 
-import { popup, loadStoresAndPries, setupStores, setupIngredients } from './popupload.js';
+import {
+  popup,
+  loadStoresAndPries,
+  setupStores,
+  setupIngredients,
+  initializeMap
+} from './popupload.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
   const form = document.forms[0];
@@ -75,9 +81,9 @@ document.addEventListener('DOMContentLoaded', async () => {
       allTags.join('').length !== 0 &&
       [...new Set(olderInput.slice().sort())].join() !== [...new Set(allTags.slice().sort())].join()
     ) {
-      if (document.getElementsByClassName('fullreciep')[0] !== undefined) {
-        document.getElementsByClassName('fullreciep')[0].innerHTML = '';
-        document.getElementsByClassName('fullreciep')[0].style.border = 'none';
+      if (document.getElementsByClassName('toDelete')[0] !== undefined) {
+        document.getElementsByClassName('toDelete')[0].innerHTML = '';
+        document.getElementsByClassName('toDelete')[0].style.border = 'none';
       }
       loadPageNum = 2;
       SubmitForm(form, allTags, searchResult);
@@ -96,11 +102,54 @@ document.addEventListener('DOMContentLoaded', async () => {
       const whatToBuy = [...document.querySelectorAll('.ingredientsSingle span')]
         .map(e => e.innerHTML.toLowerCase())
         .filter(el => !currentLocalStorage.includes(el));
-      setupStores(await loadStoresAndPries(whatToBuy));
+      const mapButton = document.getElementById('openMap');
+      mapButton.setAttribute('disabled', 'true');
+      const storesAndPrices = await loadStoresAndPries(whatToBuy);
+      setupStores(storesAndPrices);
       $(function() {
         $('[data-toggle="tooltip"]').tooltip();
       });
       setupIngredients(whatToBuy);
+      const storesForMap = storesAndPrices.map(el => {
+        switch (el.name) {
+          case 'Сільпо':
+            return {
+              name: el.name,
+              name2: 'Silpo',
+              name3: 'Сильпо',
+              price: el.price
+            };
+          case 'АТБ':
+            return {
+              name: el.name,
+              name2: 'Atb',
+              name3: 'АТБ',
+              price: el.price
+            };
+
+          case 'Novus':
+            return {
+              name: 'Новус',
+              name2: el.name,
+              name3: 'Новус',
+              price: el.price
+            };
+
+          case 'Велика Кишеня':
+            return {
+              name: el.name,
+              name2: 'Velyka Kyshenya',
+              name3: el.name,
+              price: el.price
+            };
+
+          default:
+            return {};
+        }
+      });
+
+      mapButton.removeAttribute('disabled');
+      initializeMap(mapButton, storesForMap);
     }
   }
 
