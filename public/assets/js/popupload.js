@@ -56,6 +56,16 @@ function setupIngredients(whatToBuy) {
     }
   });
 }
+function splitOn(products) {
+  const string = products.map(el => {
+    return `<li> ${el}</li>`;
+  });
+  const clearList = string.reduce((result, item) => {
+    return result + item;
+  });
+  return clearList;
+}
+
 function setupStores(stores) {
   const storesInHTML = document.getElementById('allStores');
   stores.forEach(store => {
@@ -65,6 +75,15 @@ function setupStores(stores) {
     const dash = document.createElement('span');
     const storeCartPrice = document.createElement('div');
     const uah = document.createElement('span');
+    cartLogo.setAttribute('data-toggle', 'tooltip');
+    cartLogo.setAttribute('data-placement', 'right');
+    cartLogo.setAttribute('data-html', true);
+    // cartLogo.setAttribute('title', console.log(store.products)
+
+    cartLogo.setAttribute(
+      'title',
+      `<div>Не удалось купить:</div><ul> ${splitOn(store.products)}</ul>`
+    );
     outterStoreContainer.setAttribute('class', 'store d-flex align-items-center mb-2');
     cartLogo.setAttribute('class', 'material-icons mr-1');
     cartLogo.innerHTML = 'shopping_cart';
@@ -122,9 +141,6 @@ function popup() {
         'page 2',
         event.target.getAttribute('href')
       );
-      $(() => {
-        $('[data-toggle="tooltip"]').tooltip();
-      });
       const mapButton = document.getElementById('openMap');
       mapButton.setAttribute('disabled', 'true');
       mapButton.innerHTML = 'Searching for prices...';
@@ -138,8 +154,13 @@ function popup() {
       const whatToBuy = [...document.querySelectorAll('.ingredientsSingle span')]
         .map(e => e.innerHTML.toLowerCase())
         .filter(el => !currentLocalStorage.includes(el));
+
       const storesAndPrices = await loadStoresAndPries(whatToBuy);
       setupStores(storesAndPrices);
+
+      $(() => {
+        $('[data-toggle="tooltip"]').tooltip();
+      });
       setupIngredients(whatToBuy);
       const storesForMap = storesAndPrices.map(el => {
         switch (el.name) {

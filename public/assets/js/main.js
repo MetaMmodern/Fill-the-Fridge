@@ -102,11 +102,13 @@ document.addEventListener('DOMContentLoaded', async () => {
       const whatToBuy = [...document.querySelectorAll('.ingredientsSingle span')]
         .map(e => e.innerHTML.toLowerCase())
         .filter(el => !currentLocalStorage.includes(el));
-
       const mapButton = document.getElementById('openMap');
       mapButton.setAttribute('disabled', 'true');
       const storesAndPrices = await loadStoresAndPries(whatToBuy);
       setupStores(storesAndPrices);
+      $(function() {
+        $('[data-toggle="tooltip"]').tooltip();
+      });
       setupIngredients(whatToBuy);
       const storesForMap = storesAndPrices.map(el => {
         switch (el.name) {
