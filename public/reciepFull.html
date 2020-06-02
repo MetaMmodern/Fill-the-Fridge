@@ -3,6 +3,11 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- og tags -->
+    <meta property="og:title" content=<%= `Fill the Fridge: ${name}` %> /> <meta property="og:url"
+    content=<%= link %> /> <meta property="og:image" content=<%= image %> />
+    <meta property="og:type" content="article" />
+    <meta property="og:description" content=<%= `${reciep.substring(0, 20)}...` %> />
     <!-- Bootstrap CSS -->
     <link
       rel="stylesheet"
@@ -70,7 +75,7 @@
                 <div class="col-5 imageandIngs">
                   <img src="<%= image %>" alt="" class="img-fluid rounded" style="height: auto;" />
                 </div>
-                <div class="col-7 h-100 overflow-auto">
+                <div class="col-7 h-100">
                   <div id="allStores"></div>
                   <button class="btn btn-primary btn-block" id="openMap">See on Map</button>
                 </div>

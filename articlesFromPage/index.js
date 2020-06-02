@@ -41,7 +41,7 @@ async function getArticle(link) {
   });
   return {
     name: articleBody('.item-about div h1').text(),
-    link,
+    link: `http://fillthefridge.me/recipe/${link.split('/').pop()}`,
     image: articleBody('.item-about div .m-img img').attr('src'),
     reciep: newFormat(articleBody('.cooking-bl').text()),
     ingredients: getIngredientsObject(articleBody)
