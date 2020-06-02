@@ -11,6 +11,7 @@ describe ('Testing rout ', function () {
       .set('Accept-Encoding', 'gzip')
       .end(done);
   });
+
   it("Test '/recipes/search/'", function(done){
 
     request(app)
@@ -27,4 +28,15 @@ describe ('Testing rout ', function () {
     .set('Accept-Encoding', 'gzip')
     .end(done);
 });
-})
+});
+describe ('Testing post ', function () {
+  it("Test get atr", function(done){
+
+    request(app)
+      .post("/Cart")
+      .send('вода')
+      .expect(200)
+      .set('Accept-Encoding', 'gzip')
+      .end(done);
+  });
+});
