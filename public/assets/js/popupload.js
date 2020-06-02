@@ -9,12 +9,12 @@ function setupIngredients(whatToBuy) {
   });
 }
 function splitOn(products) {
- let string = products.map(function(el) {
-   return `<li> ${el}</li>`
- });
- let clearList = string.reduce(function(result, item) {
-   return result + item;
- })
+  const string = products.map(el => {
+    return `<li> ${el}</li>`;
+  });
+  const clearList = string.reduce((result, item) => {
+    return result + item;
+  });
   return clearList;
 }
 
@@ -32,7 +32,10 @@ function setupStores(stores) {
     cartLogo.setAttribute('data-html', true);
     // cartLogo.setAttribute('title', console.log(store.products)
 
-    cartLogo.setAttribute('title', `<ul> ${splitOn(store.products)}</ul>`);
+    cartLogo.setAttribute(
+      'title',
+      `<div>Не удалось купить:</div><ul> ${splitOn(store.products)}</ul>`
+    );
     outterStoreContainer.setAttribute('class', 'store d-flex align-items-center mb-2');
     cartLogo.setAttribute('class', 'material-icons mr-1');
     cartLogo.innerHTML = 'shopping_cart';
@@ -103,9 +106,9 @@ function popup() {
         .filter(el => !currentLocalStorage.includes(el));
 
       setupStores(await loadStoresAndPries(whatToBuy));
-      $(function () {
-        $('[data-toggle="tooltip"]').tooltip()
-      })
+      $(function() {
+        $('[data-toggle="tooltip"]').tooltip();
+      });
       setupIngredients(whatToBuy);
     };
   });

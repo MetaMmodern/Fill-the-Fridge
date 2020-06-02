@@ -97,9 +97,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         .map(e => e.innerHTML.toLowerCase())
         .filter(el => !currentLocalStorage.includes(el));
       setupStores(await loadStoresAndPries(whatToBuy));
-      $(function () {
-        $('[data-toggle="tooltip"]').tooltip()
-      })
+      $(function() {
+        $('[data-toggle="tooltip"]').tooltip();
+      });
       setupIngredients(whatToBuy);
     }
   }
