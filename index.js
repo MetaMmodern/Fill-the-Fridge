@@ -1,5 +1,10 @@
 'use strict';
 
+const {
+  default: sslify, // middleware factory со стандартными опциями
+  xForwardedProtoResolver: resolver // resolver, который устанавливает x-forwarded-proto хэдер, требуемый для редиректа на Heroku
+} = require('koa-sslify');
+
 const Koa = require('koa');
 const serve = require('koa-static');
 const morgan = require('koa-morgan');
@@ -29,6 +34,7 @@ render(app, {
 });
 
 app
+  .use(sslify({ resolver, hostname: 'fillthefridge.me' }))
   .use(koaBody())
   .use(middleware)
   .use(router.allowedMethods())

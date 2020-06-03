@@ -54,6 +54,7 @@
     "koa-ejs": "^4.3.0",
     "koa-morgan": "^1.0.1",
     "koa-router": "^8.0.8",
+    "koa-sslify": "^4.0.3",
     "koa-static": "^5.0.0",
     "morgan": "^1.10.0",
     "needle": "^2.5.0",
