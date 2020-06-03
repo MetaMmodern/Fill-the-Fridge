@@ -1,6 +1,6 @@
 const KoaRouter = require('koa-router');
-const { articlesFromPage, getArticle } = require('./articlesFromPage');
-const getCart = require('./getPrice');
+const { articlesFromPage, getArticle } = require('../articlesFromPage');
+const getCart = require('../getPrice');
 
 const router = new KoaRouter();
 router.get('/', ctx => {
@@ -18,7 +18,6 @@ router.post('/recipes/search/:page', async ctx => {
 
 router.post('/recipe/:id', async ctx => {
   const article = await getArticle(`https://www.povarenok.ru/recipes/show/${ctx.params.id}`);
-  // TO DO
   return ctx.render('reciepPage', article);
 });
 router.post('/Cart', async ctx => {

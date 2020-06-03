@@ -16,7 +16,7 @@ const accessLogStream = rfs.createStream('access.log', {
   path: path.join(__dirname, 'log')
 });
 const router = new KoaRouter();
-const routers = require('./rout');
+const middleware = require('./routes/index');
 
 app.use(serve('./public'));
 app.use(morgan('tiny', { stream: accessLogStream }));
@@ -30,7 +30,7 @@ render(app, {
 
 app
   .use(koaBody())
-  .use(routers)
+  .use(middleware)
   .use(router.allowedMethods())
   .use(router.routes())
   .use(async ctx => {
