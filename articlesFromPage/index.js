@@ -2,11 +2,11 @@ const needle = require('needle');
 const cheerio = require('cheerio');
 const creatorurl = require('../urlcreate');
 
-function getIngredientsObject($) {
+function getIngredientsObject(currentHTML) {
   const ingredients = [];
-  $('.ingredients-bl ul li > span').each((_index, value) => {
+  currentHTML('.ingredients-bl ul li > span').each((_index, value) => {
     const ingredientAndAmount = {};
-    let inner = $(value)
+    let inner = currentHTML(value)
       .first()
       .contents()
       .filter(() => {
@@ -20,10 +20,10 @@ function getIngredientsObject($) {
       inner = inner.join();
     }
     ingredientAndAmount.item =
-      $(value)
+      currentHTML(value)
         .find("span[itemprop='name']")
         .text() + inner;
-    ingredientAndAmount.amount = $(value)
+    ingredientAndAmount.amount = currentHTML(value)
       .find("span[itemprop='amount']")
       .text();
 

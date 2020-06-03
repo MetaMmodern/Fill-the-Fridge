@@ -86,7 +86,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.getElementsByClassName('toDelete')[0].style.border = 'none';
       }
       loadPageNum = 2;
-      SubmitForm(form, allTags, searchResult);
+      SubmitForm(allTags, searchResult);
       olderInput = [...allTags];
       window.history.pushState('search', 'page 1', '/');
       window.addEventListener('scroll', infinity);

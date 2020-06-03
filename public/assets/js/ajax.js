@@ -1,6 +1,6 @@
 /* eslint-disable no-param-reassign */
 // Настройка AJAX запроса
-function SubmitForm(form, allTags, searchResult) {
+function SubmitForm(allTags, searchResult) {
   const xhr = new XMLHttpRequest();
   xhr.open('POST', `/recipes/search/1`);
   xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
