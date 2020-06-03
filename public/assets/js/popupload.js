@@ -48,12 +48,19 @@ function initializeMap(mapButton, storesForMap) {
     });
   });
 }
-function setupIngredients(whatToBuy) {
+function setupIngredients(whatNotToBuy) {
   const allIngs = document.getElementById('allIngs');
-  allIngs.querySelectorAll('span').forEach(ing => {
-    if (whatToBuy.includes(ing.innerHTML.toLowerCase())) {
-      ing.parentElement.classList.add('list-group-item-danger');
+  const whatToBuy = [...allIngs.querySelectorAll('span')].filter(elToSearch => {
+    const temp = whatNotToBuy.filter(el =>
+      elToSearch.innerHTML.toLowerCase().includes(el.toLowerCase())
+    );
+    if (temp.length > 0) {
+      return false;
     }
+    return true;
+  });
+  whatToBuy.forEach(ing => {
+    ing.parentElement.classList.add('list-group-item-danger');
   });
 }
 function splitOn(products) {
@@ -161,7 +168,7 @@ function popup() {
       $(() => {
         $('[data-toggle="tooltip"]').tooltip();
       });
-      setupIngredients(whatToBuy);
+      setupIngredients(currentLocalStorage);
       const storesForMap = storesAndPrices.map(el => {
         switch (el.name) {
           case 'Сільпо':
