@@ -13,6 +13,10 @@ function getNumber(str) {
 }
 function sortByPrice(arrayOfStore) {
   arrayOfStore.sort((store, anotherStore) => {
+    // eslint-disable-next-line no-param-reassign
+    store.price = Number(store.price.toFixed(2));
+    // eslint-disable-next-line no-param-reassign
+    anotherStore.price = Number(anotherStore.price.toFixed(2));
     if (store.count === anotherStore.count) {
       if (store.price > anotherStore.price) return 1;
       return -1;
@@ -135,10 +139,8 @@ async function getCart(responseProds) {
         for (let store = 0; store < arrayOfStore.length; store++) {
           // пробегаем по хард магазинам
 
-
           if (arrayOfStore[store].name === key.store) {
             // если названия совпали
-            arrayOfStore[store].price = Number(arrayOfStore[store].price.toFixed(2));
             arrayOfStore[store].price += key.price; // суммируем цену
             arrayOfStore[store].count += 1;
             for (let product = 0; product < arrayOfStore[store].products.length; product++) {
