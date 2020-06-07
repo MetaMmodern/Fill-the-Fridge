@@ -4,10 +4,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <!-- og tags -->
-    <meta property="og:title" content=<%= `Fill the Fridge: ${name}` %> /> <meta property="og:url"
-    content=<%= link %> /> <meta property="og:image" content=<%= image %> />
+    <meta property="og:title" content="<%= `Fill the Fridge: ${name}` %>" />
+    <meta property="og:url" content=<%= link %> /> <meta property="og:image" content=<%= image %> />
     <meta property="og:type" content="article" />
-    <meta property="og:description" content=<%= `${reciep.substring(0, 20)}...` %> />
+    <meta property="og:description" content="<%= `${reciep.substr(0, 127)}...` %>" />
     <!-- Bootstrap CSS -->
     <link
       rel="stylesheet"
@@ -72,16 +72,16 @@
                 </div>
               </div>
               <div class="row mt-2 mb-4">
-                <div class="col-5 imageandIngs">
+                <div class="col-12 col-md-5 col-lg-6 image">
                   <img src="<%= image %>" alt="" class="img-fluid rounded" style="height: auto;" />
                 </div>
-                <div class="col-7 h-100">
+                <div class="col-12 col-md-7 col-lg-6 mt-2 mt-md-0  h-100">
                   <div id="allStores"></div>
                   <button class="btn btn-primary btn-block" id="openMap">See on Map</button>
                 </div>
               </div>
               <div class="row ingredientsSingle">
-                <div class="col-6">
+                <div class="col-12 col-md-9 col-lg-6">
                   <ul class="list-group" id="allIngs">
                     <%for (const element of ingredients) {%>
                     <li class="list-group-item">

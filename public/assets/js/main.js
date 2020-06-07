@@ -109,7 +109,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       $(function() {
         $('[data-toggle="tooltip"]').tooltip();
       });
-      setupIngredients(whatToBuy);
+      setupIngredients(currentLocalStorage);
       const storesForMap = storesAndPrices.map(el => {
         switch (el.name) {
           case 'Сільпо':
