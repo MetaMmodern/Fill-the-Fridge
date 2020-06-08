@@ -127,90 +127,86 @@ async function loadStoresAndPries(whatToBuy) {
   document.getElementById('allStores').setAttribute('class', '');
   return stores;
 }
-function popup() {
-  const popupContainer = document.getElementsByClassName('container-popup')[0];
-  document.addEventListener('click', event => {
-    if (!event.target.matches('a.recipe-link')) return;
-    event.preventDefault();
-    const popupRequest = new XMLHttpRequest();
-    popupRequest.open('POST', event.target.getAttribute('href'));
-    popupRequest.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
 
-    popupRequest.send(
-      JSON.stringify({
-        href: event.target.getAttribute('href')
-      })
-    );
-    popupRequest.onload = async () => {
-      popupContainer.innerHTML = popupRequest.responseText;
-      window.history.pushState(
-        event.target.getAttribute('href'),
-        'page 2',
-        event.target.getAttribute('href')
-      );
-      const mapButton = document.getElementById('openMap');
-      mapButton.setAttribute('disabled', 'true');
-      mapButton.innerHTML = 'Searching for prices...';
-      $('#myModal').modal('show');
-      $('#myModal').on('hidden.bs.modal', () => {
-        window.history.back();
-      });
-      const currentLocalStorage = JSON.parse(localStorage.getItem('tags')).map(el =>
-        el.toLowerCase()
-      );
-      const whatToBuy = [...document.querySelectorAll('.ingredientsSingle span')]
-        .map(e => e.innerHTML.toLowerCase())
-        .filter(el => !currentLocalStorage.includes(el));
-
-      const storesAndPrices = await loadStoresAndPries(whatToBuy);
-      setupStores(storesAndPrices);
-
-      $(() => {
-        $('[data-toggle="tooltip"]').tooltip();
-      });
-      setupIngredients(currentLocalStorage);
-      const storesForMap = storesAndPrices.map(el => {
-        switch (el.name) {
-          case 'Сільпо':
-            return {
-              name: el.name,
-              name2: 'Silpo',
-              name3: 'Сильпо',
-              price: el.price
-            };
-          case 'АТБ':
-            return {
-              name: el.name,
-              name2: 'Atb',
-              name3: 'АТБ',
-              price: el.price
-            };
-
-          case 'Novus':
-            return {
-              name: 'Новус',
-              name2: el.name,
-              name3: 'Новус',
-              price: el.price
-            };
-
-          case 'Велика Кишеня':
-            return {
-              name: el.name,
-              name2: 'Velyka Kyshenya',
-              name3: el.name,
-              price: el.price
-            };
-
-          default:
-            return {};
-        }
-      });
-      mapButton.removeAttribute('disabled');
-      mapButton.innerHTML = 'See on Map';
-
-      initializeMap(mapButton, storesForMap);
-    };
+async function loadCartsAndMap() {
+  const currentLocalStorage = JSON.parse(localStorage.getItem('tags')).map(el => el.toLowerCase());
+  const whatToBuy = [...document.querySelectorAll('.ingredientsSingle span')]
+    .map(e => e.innerHTML.toLowerCase())
+    .filter(el => !currentLocalStorage.includes(el));
+  const mapButton = document.getElementById('openMap');
+  mapButton.setAttribute('disabled', 'true');
+  mapButton.innerHTML = 'Searching for prices...';
+  const storesAndPrices = await loadStoresAndPries(whatToBuy);
+  setupStores(storesAndPrices);
+  $(() => {
+    $('[data-toggle="tooltip"]').tooltip();
   });
+  setupIngredients(currentLocalStorage);
+  const storesForMap = storesAndPrices.map(el => {
+    switch (el.name) {
+      case 'Сільпо':
+        return {
+          name: el.name,
+          name2: 'Silpo',
+          name3: 'Сильпо',
+          price: el.price
+        };
+      case 'АТБ':
+        return {
+          name: el.name,
+          name2: 'Atb',
+          name3: 'АТБ',
+          price: el.price
+        };
+
+      case 'Novus':
+        return {
+          name: 'Новус',
+          name2: el.name,
+          name3: 'Новус',
+          price: el.price
+        };
+
+      case 'Велика Кишеня':
+        return {
+          name: el.name,
+          name2: 'Velyka Kyshenya',
+          name3: el.name,
+          price: el.price
+        };
+
+      default:
+        return {};
+    }
+  });
+  mapButton.removeAttribute('disabled');
+  mapButton.innerHTML = 'See on Map';
+
+  initializeMap(mapButton, storesForMap);
 }
-export { popup, loadStoresAndPries, setupStores, setupIngredients, initializeMap };
+function popup(event) {
+  event.preventDefault();
+  const popupRequest = new XMLHttpRequest();
+  popupRequest.open('POST', event.target.getAttribute('href'));
+  popupRequest.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
+  popupRequest.send(
+    JSON.stringify({
+      href: event.target.getAttribute('href')
+    })
+  );
+  popupRequest.onload = async () => {
+    document.getElementsByClassName('container-popup')[0].innerHTML = popupRequest.responseText;
+    window.history.pushState(
+      event.target.getAttribute('href'),
+      'page 2',
+      event.target.getAttribute('href')
+    );
+    $('#myModal').modal('show');
+    $('#myModal').on('hidden.bs.modal', () => {
+      window.history.back();
+    });
+
+    loadCartsAndMap();
+  };
+}
+export { popup, loadCartsAndMap };
