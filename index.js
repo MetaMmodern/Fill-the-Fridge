@@ -1,10 +1,5 @@
 'use strict';
 
-const {
-  default: sslify, // middleware factory со стандартными опциями
-  xForwardedProtoResolver: resolver // resolver, который устанавливает x-forwarded-proto хэдер, требуемый для редиректа на Heroku
-} = require('koa-sslify');
-
 const Koa = require('koa');
 const serve = require('koa-static');
 const morgan = require('koa-morgan');
@@ -23,7 +18,6 @@ const accessLogStream = rfs.createStream('access.log', {
 const router = new KoaRouter();
 const middleware = require('./routes/index');
 
-app.use(serve('./public'));
 app.use(morgan('tiny', { stream: accessLogStream }));
 render(app, {
   root: path.join(__dirname, 'view'),
@@ -34,7 +28,14 @@ render(app, {
 });
 
 app
-  .use(sslify({ resolver, hostname: 'fillthefridge.me' }))
+  .use(async (ctx, next) => {
+    if (ctx.get('X-Forwarded-Proto') !== 'https' && ctx.get('X-Forwarded-Port') !== '443') {
+      ctx.redirect(`https://${ctx.request.header.host}${ctx.url}`);
+    } else {
+      await next();
+    }
+  })
+  .use(serve('public'))
   .use(koaBody())
   .use(middleware)
   .use(router.allowedMethods())
