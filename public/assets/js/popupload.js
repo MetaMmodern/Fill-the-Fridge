@@ -16,6 +16,7 @@ function initializeMap(mapButton, storesForMap) {
     // } else {
 
     // }
+    const vh = window.innerHeight;
     const wholemodalReciep = document.getElementById('wholemodalReciep');
     const reciepContent = document.getElementById('reciepContent');
     const mapPopup = document.getElementById('mapPopup');
@@ -23,11 +24,11 @@ function initializeMap(mapButton, storesForMap) {
     reciepContent.style.transition =
       'width 0.3s ease-in, height 0.3s ease-in, margin-right 0.3s ease-in';
     reciepContent.style.width = '3.5rem';
-    reciepContent.style.height = 'calc(100vh - 3.5rem)';
+    reciepContent.style.height = `calc(${vh}px - 3.5rem)`;
     reciepContent.style.marginRight = '0.5rem';
     wholemodalReciep.classList.add('d-none');
     mapPopup.classList.remove('d-none');
-    mapPopup.style.height = 'calc(100vh - 3.5rem)';
+    mapPopup.style.height = `calc(${vh}px - 3.5rem)`;
     mapPopup.classList.add('w-100');
     setTimeout(() => {
       initMap(storesForMap);
