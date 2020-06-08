@@ -58,7 +58,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         addTags(this.allTags, this.container);
         if (this.allTags.length === 0) {
           this.input.setAttribute('placeholder', 'Ingredients');
-
         }
       } else if (e.target.classList.contains('cleaner')) {
         this.allTags = [];
