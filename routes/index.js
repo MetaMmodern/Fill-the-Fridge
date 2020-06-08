@@ -12,6 +12,7 @@ router.get('/recipe/:id', async ctx => {
 });
 
 router.post('/recipes/search/:page', async ctx => {
+  console.log(ctx.request.body.ings);
   const whatToSearch = await articlesFromPage(ctx.request.body.ings, ctx.params.page);
   return ctx.render('searchResults', { recipesArray: whatToSearch });
 });

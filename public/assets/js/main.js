@@ -5,194 +5,160 @@ import addTags from './tagsinput.js';
 
 import localStorageSetter from './startup.js';
 
-import {
-  popup,
-  loadStoresAndPries,
-  setupStores,
-  setupIngredients,
-  initializeMap
-} from './popupload.js';
+import { popup, loadCartsAndMap } from './popupload.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
-  const form = document.forms[0];
-  let loadPageNum = 2;
-  let olderInput = [];
-  const searchResult = document.getElementById('search-results-container');
-  const container = document.querySelector('.tag-container');
-  const input = document.querySelector('.tag-container input');
-
-  let allTags = localStorageSetter(container);
-  if (allTags.length === 0) input.setAttribute('placeholder', 'Ingredients');
-  //  preventing form sending by enter
-  form.addEventListener('keypress', e => {
-    if (e.key === 'Enter') e.preventDefault();
-  });
-  //  infinity scroll loading below
-  let scrollPos = 0;
-  function infinity() {
-    if (
-      //  ref https://codepen.io/lehollandaisvolant/pen/ryrrGx?editors=0010
-      //  ref http://jsfiddle.net/8PkQN/1/
-      document.body.getBoundingClientRect().top <= scrollPos &&
-      window.innerHeight + window.scrollY >= document.body.offsetHeight - 300
-    ) {
-      window.removeEventListener('scroll', infinity);
-      if (allTags.join('').length !== 0) {
-        const infinityXhr = new XMLHttpRequest();
-        infinityXhr.open('POST', `/recipes/search/${loadPageNum}`);
-        infinityXhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
-        const json = JSON.stringify({
-          ings: allTags
-        });
-
-        // Отправляем данные
-        infinityXhr.send(json);
-
-        document.getElementById('loading').innerHTML =
-          "<div class='spinner-border' role='status'><span class='sr-only'>Loading...</span></div>";
-
-        // Функция для наблюдения изменения состояния xhr.readyState обновления statusMessage соответственно
-        infinityXhr.onreadystatechange = () => {
-          // 4 = Ответ от сервера полностью загружен
-          if (infinityXhr.readyState === 4) {
-            // 200 - 299 = успешная отправка данных!
-            if (infinityXhr.status === 200 && infinityXhr.status < 300) {
-              loadPageNum += 1;
-              searchResult.insertAdjacentHTML('beforeend', infinityXhr.responseText);
-
-              document.getElementById('loading').innerHTML = '';
-              window.addEventListener('scroll', infinity);
-            } else {
-              searchResult.insertAdjacentHTML('beforeend', 'nothing found, try again, please');
-              document.getElementById('loading').innerHTML = '';
-              window.addEventListener('scroll', infinity);
-            }
-          }
-        };
+  const Main = {
+    form: document.forms[0],
+    container: document.querySelector('.tag-container'),
+    loadPageNum: 2,
+    olderInput: [],
+    allTags: localStorageSetter(document.querySelector('.tag-container')),
+    scrollPos: 0,
+    input: document.querySelector('.tag-container input'),
+    searchResultContainer: document.getElementById('search-results-container'),
+    // main point of entrance
+    starter() {
+      this.inputWorker();
+      // below is check for fullrecipePage
+      if (this.isFullPage()) {
+        window.removeEventListener('scroll', this);
+        loadCartsAndMap();
       }
-    }
-    // saves the new position for iteration.
-    scrollPos = document.body.getBoundingClientRect().top;
-  }
-  //  very comlex and spagetti code below. it is for first ajax loading.
-  form.addEventListener('submit', event => {
-    event.preventDefault();
-    if (
-      allTags.join('').length !== 0 &&
-      [...new Set(olderInput.slice().sort())].join() !== [...new Set(allTags.slice().sort())].join()
-    ) {
-      if (document.getElementsByClassName('toDelete')[0] !== undefined) {
-        document.getElementsByClassName('toDelete')[0].innerHTML = '';
-        document.getElementsByClassName('toDelete')[0].style.border = 'none';
+    },
+    // hadler for keyup event
+    keyup(e) {
+      if (
+        (e.key === 'Enter' || e.keyCode === 13) &&
+        this.input.value !== '' &&
+        this.input.value.split(' ').join('') !== ''
+      ) {
+        this.allTags.push(this.input.value);
+        localStorage.setItem('tags', JSON.stringify(this.allTags));
+        addTags(this.allTags, this.container);
+        this.input.value = '';
+        this.input.removeAttribute('placeholder');
       }
-      loadPageNum = 2;
-      SubmitForm(allTags, searchResult);
-      olderInput = [...allTags];
-      window.history.pushState('search', 'page 1', '/');
-      window.addEventListener('scroll', infinity);
-    }
-  });
-  popup();
-  if (document.getElementsByClassName('fullreciep')[0] !== undefined) {
-    if (document.getElementsByClassName('fullreciep')[0].innerHTML !== '') {
-      window.removeEventListener('scroll', infinity);
-      const currentLocalStorage = JSON.parse(localStorage.getItem('tags')).map(el =>
-        el.toLowerCase()
-      );
-      const whatToBuy = [...document.querySelectorAll('.ingredientsSingle span')]
-        .map(e => e.innerHTML.toLowerCase())
-        .filter(el => !currentLocalStorage.includes(el));
-      const mapButton = document.getElementById('openMap');
-      mapButton.setAttribute('disabled', 'true');
-      const storesAndPrices = await loadStoresAndPries(whatToBuy);
-      setupStores(storesAndPrices);
-      $(function() {
-        $('[data-toggle="tooltip"]').tooltip();
-      });
-      setupIngredients(currentLocalStorage);
-      const storesForMap = storesAndPrices.map(el => {
-        switch (el.name) {
-          case 'Сільпо':
-            return {
-              name: el.name,
-              name2: 'Silpo',
-              name3: 'Сильпо',
-              price: el.price
-            };
-          case 'АТБ':
-            return {
-              name: el.name,
-              name2: 'Atb',
-              name3: 'АТБ',
-              price: el.price
-            };
+      if (e.key === 'Backspace' && this.input.value === '' && this.allTags.length > 0) {
+        e.preventDefault();
+        this.input.setAttribute('placeholder', 'Ingredients');
+        this.input.value = this.allTags[this.allTags.length - 1];
+        this.allTags = [...this.allTags.slice(0, this.allTags.length - 1)];
+        localStorage.setItem('tags', JSON.stringify(this.allTags));
+        addTags(this.allTags, this.container);
+      }
+    },
+    // handler for all click events
+    click(e) {
+      if (e.target.classList.contains('tagCloser')) {
+        const value = e.target.getAttribute('data-item');
+        const index = this.allTags.indexOf(value);
+        this.allTags = [...this.allTags.slice(0, index), ...this.allTags.slice(index + 1)];
+        localStorage.setItem('tags', JSON.stringify(this.allTags));
+        addTags(this.allTags, this.container);
+        if (this.allTags.length === 0) {
+          this.input.setAttribute('placeholder', 'Ingredients');
 
-          case 'Novus':
-            return {
-              name: 'Новус',
-              name2: el.name,
-              name3: 'Новус',
-              price: el.price
-            };
-
-          case 'Велика Кишеня':
-            return {
-              name: el.name,
-              name2: 'Velyka Kyshenya',
-              name3: el.name,
-              price: el.price
-            };
-
-          default:
-            return {};
         }
-      });
+      } else if (e.target.classList.contains('cleaner')) {
+        this.allTags = [];
+        addTags([], this.container);
+        localStorage.setItem('tags', JSON.stringify([]));
+      } else if (e.target.matches('a.recipe-link')) {
+        popup(e);
+      }
+    },
+    // attaches listeners on input field
+    inputWorker() {
+      if (this.allTags.length === 0) this.input.setAttribute('placeholder', 'Ingredients');
+      this.input.addEventListener('keyup', this);
+      document.addEventListener('click', this);
+      this.form.addEventListener('keypress', this);
+      this.form.addEventListener('submit', this);
+    },
+    //  handles all events added by addEventListener
+    handleEvent(e) {
+      switch (e.type) {
+        case 'scroll':
+          this.infinity(e);
+          break;
+        case 'keyup':
+          this.keyup(e);
+          break;
+        case 'click':
+          this.click(e);
+          break;
+        case 'submit':
+          this.firstAjax(e);
+          break;
+        case 'keypress':
+          if (e.key === 'Enter') e.preventDefault();
+          break;
+        default:
+          break;
+      }
+    },
+    // checker for full reciep page
+    isFullPage() {
+      if (
+        document.getElementsByClassName('toDelete')[0] !== undefined &&
+        document.getElementsByClassName('toDelete')[0].innerHTML !== ''
+      ) {
+        return true;
+      }
+      return false;
+    },
+    // used for ajax load by fetch
+    anyAJAXLoad: SubmitForm,
+    // infinity content loader
+    async infinity() {
+      if (
+        //  ref https://codepen.io/lehollandaisvolant/pen/ryrrGx?editors=0010
+        //  ref http://jsfiddle.net/8PkQN/1/
+        document.body.getBoundingClientRect().top <= this.scrollPos &&
+        window.innerHeight + window.scrollY >= document.body.offsetHeight - 300
+      ) {
+        window.removeEventListener('scroll', this);
 
-      mapButton.removeAttribute('disabled');
-      initializeMap(mapButton, storesForMap);
-    }
-  }
-
-  //  tags adding below
-  input.addEventListener('keyup', e => {
-    if (
-      (e.key === 'Enter' || e.keyCode === 13) &&
-      input.value !== '' &&
-      input.value.split(' ').join('') !== ''
-    ) {
-      e.preventDefault();
-      allTags.push(input.value);
-      localStorage.setItem('tags', JSON.stringify(allTags));
-      addTags(allTags, container);
-      input.value = '';
-      input.removeAttribute('placeholder');
-    }
-    if (e.key === 'Backspace' && input.value === '' && allTags.length > 0) {
-      e.preventDefault();
-      input.value = allTags[allTags.length - 1];
-      allTags = [...allTags.slice(0, allTags.length - 1)];
-      localStorage.setItem('tags', JSON.stringify(allTags));
-      addTags(allTags, container);
-    }
-  });
-
-  document.addEventListener('click', e => {
-    if (e.target.classList.contains('tagCloser')) {
-      const value = e.target.getAttribute('data-item');
-      const index = allTags.indexOf(value);
-      allTags = [...allTags.slice(0, index), ...allTags.slice(index + 1)];
-      localStorage.setItem('tags', JSON.stringify(allTags));
-      addTags(allTags, container);
-      if (allTags.length === 0) {
-        input.setAttribute('placeholder', 'Ingredients');
+        if (this.allTags.join('').length !== 0) {
+          document.getElementById('loading').innerHTML =
+            "<div class='spinner-border' role='status'><span class='sr-only'>Loading...</span></div>";
+          const response = await this.anyAJAXLoad(this.allTags, this.loadPageNum);
+          this.loadPageNum += 1;
+          this.searchResultContainer.insertAdjacentHTML('beforeend', response);
+          document.getElementById('loading').innerHTML = '';
+          if (response !== 'nothing found, try changing your request') {
+            window.addEventListener('scroll', this);
+          }
+        }
+      }
+      // saves the new position for iteration.
+      this.scrollPos = document.body.getBoundingClientRect().top;
+    },
+    // first request loader
+    async firstAjax(event) {
+      event.preventDefault();
+      if (
+        this.allTags.join('').length !== 0 &&
+        [...new Set(this.olderInput.slice().sort())].join() !==
+          [...new Set(this.allTags.slice().sort())].join()
+      ) {
+        if (document.getElementsByClassName('toDelete')[0] !== undefined) {
+          document.getElementsByClassName('toDelete')[0].innerHTML = '';
+          document.getElementsByClassName('toDelete')[0].style.border = 'none';
+        }
+        this.loadPageNum = 2;
+        document.getElementById('reloading').innerHTML =
+          "<div class='spinner-border' role='status'><span class='sr-only'>Loading...</span></div>";
+        this.searchResultContainer.style.filter = 'blur(5px) opacity(50%)';
+        this.searchResultContainer.innerHTML = await this.anyAJAXLoad(this.allTags, 1);
+        this.searchResultContainer.style.filter = 'none';
+        document.getElementById('reloading').innerHTML = '';
+        this.olderInput = [...this.allTags];
+        window.history.pushState('search', 'page 1', '/');
+        window.addEventListener('scroll', this);
       }
     }
-  });
-  document.addEventListener('click', e => {
-    if (e.target.classList.contains('cleaner')) {
-      allTags = [];
-      addTags([], container);
-      localStorage.setItem('tags', JSON.stringify([]));
-    }
-  });
+  };
+  Main.starter();
 });
