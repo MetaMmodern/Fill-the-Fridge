@@ -66,8 +66,11 @@ function setupIngredients(whatNotToBuy) {
 }
 function splitOn(products) {
   const string = products.map(el => {
-    return `<li> ${el}</li>`;
+    return `<li>${el}</li>`;
   });
+  if (string.length === 0) {
+    return ['<li>Всё купили!</li>'];
+  }
   const clearList = string.reduce((result, item) => {
     return result + item;
   });
@@ -90,7 +93,9 @@ function setupStores(stores) {
 
     cartLogo.setAttribute(
       'title',
-      `<div>Не удалось купить:</div><ul> ${splitOn(store.products)}</ul>`
+      `<div class="text-left"><div>Не удалось купить:</div><ul style="padding-left: 1.2em;"> ${splitOn(
+        store.products
+      )}</ul></div>`
     );
     outterStoreContainer.setAttribute('class', 'store d-flex align-items-center mb-2');
     cartLogo.setAttribute('class', 'material-icons mr-1');
