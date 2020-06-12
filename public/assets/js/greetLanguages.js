@@ -2,27 +2,26 @@ const English = {
   title: 'Welcome to Fill the Fridge!',
   modalBody: {
     aboutWebsite: {
-      header: '',
+      header: 'What is Fill The Fridge?',
       content: ''
     },
     aboutSearch: {
-      header: '',
+      header: 'About search bar',
       content: ''
     },
     aboutRecipes: {
-      header: '',
+      header: 'About recipes',
       content: ''
     },
     aboutMap: {
-      header: '',
-      content: ''
-    },
-    Goodbye: {
-      header: '',
+      header: 'Aboup Map',
       content: ''
     }
   },
-
+  Goodbye: {
+    header: '',
+    content: ''
+  },
   closeFooter: 'Close'
 };
 const Russian = {
