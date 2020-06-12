@@ -1,62 +1,53 @@
-const English = {
-  title: 'Welcome to Fill the Fridge!',
-  modalBody: {
-    aboutWebsite: {
-      header: '',
-      content: ''
-    },
-    aboutSearch: {
-      header: '',
-      content: ''
-    },
-    aboutRecipes: {
-      header: '',
-      content: ''
-    },
-    aboutMap: {
-      header: '',
-      content: ''
-    },
-    Goodbye: {
-      header: '',
-      content: ''
-    }
-  },
+// eslint-disable-next-line import/extensions
+import languages from './greetLanguages.js';
 
-  closeFooter: 'Close'
-};
-const Russian = {
-  title: 'Добро пожаловать на Fill the Fridge!',
-  modalBody: {
-    aboutWebsite: {
-      header: '',
-      content: ''
-    },
-    aboutSearch: {
-      header: '',
-      content: ''
-    },
-    aboutRecipes: {
-      header: '',
-      content: ''
-    },
-    aboutMap: {
-      header: '',
-      content: ''
-    },
-    Goodbye: {
-      header: '',
-      content: ''
-    }
-  },
-
-  closeFooter: 'Закрыть'
-};
 const Greeting = {
-  getModalBody() {
+  createCardBody(cardContents) {
+    console.log(JSON.stringify(cardContents, null, 2));
+    return Object.entries(cardContents)
+      .map(([key, value]) => {
+        let val = '';
+        if (key.includes('content')) {
+          val = `<p>${value}</p>`;
+        } else if (key.includes('image')) {
+          val = `<p><img class='introGif mx-auto d-block' src='${value}'></img></p>`;
+        } else if (key.includes('annotaion')) {
+          val = `<i><p class='text-success'>${cardContents?.annotation ?? ''}</p></i>`;
+        }
+        return val;
+      })
+      .join('');
+  },
+  createCard(card) {
+    const cardReady = document.createElement('div');
+    cardReady.classList.add('card');
+    const headingId = `heading${card[0]}`;
+    const collapseId = `collapse${card[0]}`;
+    cardReady.innerHTML = `<div class="card-header" id="${headingId}">
+                            <h2 class="mb-0">
+                              <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#${collapseId}" aria-expanded="true" aria-controls="${collapseId}">
+                                ${card[1].header}
+                                </button>
+                            </h2>
+                          </div>
+
+                          <div id="${collapseId}" class="collapse" aria-labelledby="${headingId}" data-parent="#accordion">
+                            <div class="card-body">
+                              ${this.createCardBody(card[1])}
+                              </div>
+                          </div>`;
+    return cardReady;
+  },
+  getModalBody(LanguageObj) {
     const accordion = document.createElement('div');
     accordion.setAttribute('id', 'accordion');
-
+    const keyValArray = Object.entries(LanguageObj.modalBody);
+    const allCard = keyValArray.map(card => {
+      return this.createCard(card);
+    });
+    allCard.forEach(card => {
+      accordion.appendChild(card);
+    });
     return accordion;
   },
   initializeModal(langObject) {
@@ -94,7 +85,7 @@ const Greeting = {
     closeButton.setAttribute('aria-label', 'Close');
     closeButton.innerHTML = '<span aria-hidden="true">&times;</span>';
     modalBody.classList.add('modal-body'); //  whole text
-    modalBody.innerHTML = langObject.modalBody;
+    modalBody.appendChild(this.getModalBody(langObject));
     modalFooter.classList.add('modal-footer');
     closeFooter.className = 'btn btn-primary';
     closeFooter.setAttribute('data-dismiss', 'modal');
@@ -109,13 +100,13 @@ const Greeting = {
     let modal = '';
     switch (lang) {
       case 'ru-RU':
-        modal = this.initializeModal(Russian);
+        modal = this.initializeModal(languages.Russian);
         break;
       case 'en':
-        modal = this.initializeModal(English);
+        modal = this.initializeModal(languages.English);
         break;
       default:
-        modal = this.initializeModal(English);
+        modal = this.initializeModal(languages.English);
         break;
     }
     document.querySelector('body').prepend(modal);

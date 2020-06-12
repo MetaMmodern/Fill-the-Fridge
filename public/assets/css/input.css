@@ -90,3 +90,7 @@ input:focus {
   border: none;
   padding: 0px;
 }
+
+.introGif[src=''] {
+  display: none;
+}
