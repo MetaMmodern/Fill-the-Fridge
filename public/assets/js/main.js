@@ -7,6 +7,8 @@ import localStorageSetter from './startup.js';
 
 import { popup, loadCartsAndMap } from './popupload.js';
 
+import Greeting from './greeting.js';
+
 document.addEventListener('DOMContentLoaded', async () => {
   const Main = {
     form: document.forms[0],
@@ -159,5 +161,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
     }
   };
+
   Main.starter();
+  Greeting.checkIfNeeded();
 });
