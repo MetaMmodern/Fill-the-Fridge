@@ -95,7 +95,34 @@ async function getPrice(ings) {
     return new Error(error);
   }
 }
+function getMinPrice(arrayOfStore) {
+  for (let store = 0; store < arrayOfStore.length; store++) {
+    const listOfAllGoods = arrayOfStore[store].listOfAllGoods;
+    const shoppingList = arrayOfStore[store].shoppingList;
+    shoppingList.forEach(product => {
+      let minPrice = 0;
+      for (let goods = 0; goods < listOfAllGoods.length; goods++) {
+        if (listOfAllGoods[goods].name === product) {
+          if (minPrice === 0 || minPrice > listOfAllGoods[goods].price) minPrice = listOfAllGoods[goods].price;
 
+        }
+      }
+      arrayOfStore[store].price+=minPrice;
+     // console.log(`${arrayOfStore[store].name} ${product} ${minPrice}`);
+    });
+  }
+}
+function getCount (arrayOfStore)
+{
+  for (let store = 0; store < arrayOfStore.length;store++)
+  {
+     const products = arrayOfStore[store].products;
+     const shoppingList = arrayOfStore[store].shoppingList;
+     const newShoppingList = shoppingList.filter(n => products.indexOf(n) === -1);
+     arrayOfStore[store].shoppingList = newShoppingList;
+     arrayOfStore[store].count = newShoppingList.length;
+  }
+}
 async function getCart(responseProds) {
   let listOfProducts;
   for (const product in responseProds) {
@@ -109,51 +136,75 @@ async function getCart(responseProds) {
     name: 'Novus',
     price: 0,
     count: 0,
-    products: [...listOfProducts]
+    products: [...listOfProducts],
+    listOfAllGoods: [],
+    shoppingList: [...listOfProducts]
   };
   arrayOfStore[1] = {
     name: 'АТБ',
     price: 0,
     count: 0,
-    products: [...listOfProducts]
+    products: [...listOfProducts],
+    listOfAllGoods: [],
+    shoppingList: [...listOfProducts]
   };
   arrayOfStore[2] = {
     name: 'Велика Кишеня',
     price: 0,
     count: 0,
-    products: [...listOfProducts]
+    products: [...listOfProducts],
+    listOfAllGoods: [],
+    shoppingList: [...listOfProducts]
   };
   arrayOfStore[3] = {
     name: 'Сільпо',
     price: 0,
     count: 0,
-    products: [...listOfProducts]
+    products: [...listOfProducts],
+    listOfAllGoods: [],
+    shoppingList: [...listOfProducts]
   };
+
   for (let i = 0; i < listOfProducts.length; i++) {
     // идём по продуктам
     arrayPrice = await getPrice([listOfProducts[i]]); // получаем цены в магазинах на продукт
-    if (arrayPrice[0] !== undefined) {
-      const firstItem = arrayPrice[0].pricesAndStores; // на первый в списке
-      firstItem.forEach(key => {
-        // на каждый магаз/цену
-        for (let store = 0; store < arrayOfStore.length; store++) {
-          // пробегаем по хард магазинам
+    for (let newStore = 0; newStore <= arrayPrice.length; newStore++)
+      if (arrayPrice[newStore] !== undefined) {
+        const firstItem = arrayPrice[newStore].pricesAndStores; // на первый в списке
+        // console.log(firstItem);
+        const minPrice = 0;
+        firstItem.forEach(key => {
+          // на каждый магаз/цену
+          for (let store = 0; store < arrayOfStore.length; store++) {
+            // пробегаем по хард магазинам
 
-          if (arrayOfStore[store].name === key.store) {
-            // если названия совпали
-            arrayOfStore[store].price += key.price; // суммируем цену
-            arrayOfStore[store].count += 1;
-            for (let product = 0; product < arrayOfStore[store].products.length; product++) {
-              if (listOfProducts[i] === arrayOfStore[store].products[product]) {
-                arrayOfStore[store].products.splice(product, 1);
+            if (arrayOfStore[store].name === key.store) {
+              // если названия совпали
+              const temp = {
+                store: '',
+                price: '',
+                name: ''
+              };
+              temp.store = key.store;
+              temp.price = key.price;
+              temp.name = listOfProducts[i];
+              arrayOfStore[store].listOfAllGoods.push(temp);
+             // arrayOfStore[store].price += key.price; // суммируем цену
+             // arrayOfStore[store].count += 1;
+              for (let product = 0; product < arrayOfStore[store].products.length; product++) {
+                if (listOfProducts[i] === arrayOfStore[store].products[product]) {
+                  arrayOfStore[store].products.splice(product, 1);
+                }
               }
             }
           }
-        }
-      });
-    }
+        });
+      }
   }
+  getMinPrice(arrayOfStore);
+  getCount(arrayOfStore);
   sortByPrice(arrayOfStore);
+  console.log(arrayOfStore);
   return arrayOfStore;
 }
 module.exports = getCart;
