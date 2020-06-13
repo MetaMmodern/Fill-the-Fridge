@@ -14,13 +14,14 @@ const Greeting = {
           body.innerHTML = '';
           body.appendChild(this.getModalBody(languages.English));
           btn.innerHTML = event.target.id;
+          document.querySelector('.modal-footer button').innerHTML = languages.English.closeFooter;
           break;
         case 'Russian':
           title.innerHTML = languages.Russian.title;
           body.innerHTML = '';
           body.appendChild(this.getModalBody(languages.Russian));
           btn.innerHTML = event.target.id;
-
+          document.querySelector('.modal-footer button').innerHTML = languages.Russian.closeFooter;
           break;
         default:
           break;
@@ -36,7 +37,6 @@ const Greeting = {
       btn.innerHTML = lang;
       return btn;
     });
-    console.log(buttons);
     return `<button type="button" class="btn btn-primary dropdown-toggle" id="currentLanguage" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                   Russian
                                 </button>
@@ -51,7 +51,7 @@ const Greeting = {
         if (key.includes('content')) {
           val = `<p>${value}</p>`;
         } else if (key.includes('image')) {
-          val = `<p><img class='introGif mx-auto d-block' src='${value}'></img></p>`;
+          val = `<p><img class='introGif mx-auto d-block img-fluid' src='${value}'></img></p>`;
         } else if (key.includes('annotation')) {
           val = `<i><p class='text-success'>${cardContents?.annotation ?? ''}</p></i>`;
         }
@@ -80,6 +80,7 @@ const Greeting = {
     return cardReady;
   },
   getModalBody(LanguageObj) {
+    const modalBody = document.createElement('div');
     const accordion = document.createElement('div');
     accordion.setAttribute('id', 'accordion');
     const keyValArray = Object.entries(LanguageObj.modalBody);
@@ -89,7 +90,12 @@ const Greeting = {
     allCard.forEach(card => {
       accordion.appendChild(card);
     });
-    return accordion;
+    const Goodbye = document.createElement('div');
+    Goodbye.className = 'mt-3 mr-3 text-right';
+    Goodbye.innerHTML = LanguageObj.Goodbye.content;
+    modalBody.appendChild(accordion);
+    modalBody.appendChild(Goodbye);
+    return modalBody;
   },
   initializeModal(langObject) {
     const outterModal = document.createElement('div');
@@ -99,7 +105,7 @@ const Greeting = {
     const title = document.createElement('h5');
     const languageSelector = document.createElement('div');
     const closeButton = document.createElement('button');
-    const modalBody = document.createElement('div');
+    const modalBody = this.getModalBody(langObject);
     const modalFooter = document.createElement('div');
     const closeFooter = document.createElement('button');
     outterModal.appendChild(modalDialog);
@@ -132,7 +138,6 @@ const Greeting = {
     closeButton.setAttribute('aria-label', 'Close');
     closeButton.innerHTML = '<span class="material-icons" aria-hidden="true">close</span>';
     modalBody.classList.add('modal-body'); //  whole text
-    modalBody.appendChild(this.getModalBody(langObject));
     modalFooter.classList.add('modal-footer');
     closeFooter.className = 'btn btn-primary';
     closeFooter.setAttribute('data-dismiss', 'modal');
@@ -140,28 +145,37 @@ const Greeting = {
     return outterModal;
   },
   checkIfNeeded() {
-    if (localStorage.getItem('greeting') === null) this.sendGreeting();
+    if (localStorage.getItem('greeting') === null) {
+      this.sendGreeting();
+      localStorage.setItem('greeting', true);
+    }
     document.querySelector('.help').addEventListener('click', this.sendGreeting.bind(this));
+  },
+  modalCreator() {
+    const lang = navigator.language || navigator.userLanguage;
+    let modal = '';
+    switch (lang) {
+      case 'ru-RU':
+        modal = this.initializeModal(languages.Russian);
+        break;
+      case 'en':
+        modal = this.initializeModal(languages.English);
+        break;
+      default:
+        modal = this.initializeModal(languages.English);
+        break;
+    }
+    document.querySelector('body').prepend(modal);
   },
   sendGreeting(e) {
     if (e?.target.classList.contains('help')) {
+      if (document.getElementById('greetingModal') === null) {
+        this.modalCreator();
+      }
       $('#greetingModal').modal('toggle');
       this.startScanning();
     } else {
-      const lang = navigator.language || navigator.userLanguage;
-      let modal = '';
-      switch (lang) {
-        case 'ru-RU':
-          modal = this.initializeModal(languages.Russian);
-          break;
-        case 'en':
-          modal = this.initializeModal(languages.English);
-          break;
-        default:
-          modal = this.initializeModal(languages.English);
-          break;
-      }
-      document.querySelector('body').prepend(modal);
+      this.modalCreator();
       $('#greetingModal').modal('toggle');
       this.startScanning();
     }
