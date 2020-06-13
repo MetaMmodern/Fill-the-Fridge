@@ -90,3 +90,14 @@ input:focus {
   border: none;
   padding: 0px;
 }
+
+.introGif[src=''] {
+  display: none;
+}
+
+.help:hover {
+  text-decoration: underline;
+}
+.help:focus {
+  outline: none;
+}
