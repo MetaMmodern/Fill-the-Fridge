@@ -4,15 +4,14 @@ const getCart = require('../getPrice');
 
 const router = new KoaRouter();
 router.get('/', ctx => {
-  return ctx.render('../public/index');
+  return ctx.render('../dist/index');
 });
 router.get('/recipe/:id', async ctx => {
   const article = await getArticle(`https://www.povarenok.ru/recipes/show/${ctx.params.id}`);
-  return ctx.render('../public/reciepFull', article);
+  return ctx.render('../dist/reciepFull', article);
 });
 
 router.post('/recipes/search/:page', async ctx => {
-  console.log(ctx.request.body.ings);
   const whatToSearch = await articlesFromPage(ctx.request.body.ings, ctx.params.page);
   return ctx.render('searchResults', { recipesArray: whatToSearch });
 });
