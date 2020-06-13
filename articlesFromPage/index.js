@@ -4,7 +4,7 @@ const creatorurl = require('../urlcreate');
 
 function getIngredientsObject(currentHTML) {
   const ingredients = [];
-  currentHTML('.ingredients-bl ul li > span').each((_index, value) => {
+  currentHTML(".ingredients-bl ul li > span[itemprop='ingredient']").each((_index, value) => {
     const ingredientAndAmount = {};
     let inner = currentHTML(value)
       .first()
@@ -14,6 +14,7 @@ function getIngredientsObject(currentHTML) {
       })
       .text()
       .match(/\([^)]*\)/);
+
     if (inner === null) {
       inner = '';
     } else {
@@ -22,6 +23,7 @@ function getIngredientsObject(currentHTML) {
     ingredientAndAmount.item =
       currentHTML(value)
         .find("span[itemprop='name']")
+        .first()
         .text() + inner;
     ingredientAndAmount.amount = currentHTML(value)
       .find("span[itemprop='amount']")
