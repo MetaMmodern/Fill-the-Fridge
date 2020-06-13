@@ -25,7 +25,7 @@ const English = {
       header: 'About search bar',
       content1:
         'To enter the ingredients, press the Enter key after each ingredient entered as in the image below. This will allow you to enter ingredients with spaces, such as wheat flour or butter.',
-      image1: images[0].default,
+      image1: images[0],
       content2:
         'To remove an ingredient from the search bar, just click on the cross next to the desired tag as in the image below.',
       image2: images[1],
