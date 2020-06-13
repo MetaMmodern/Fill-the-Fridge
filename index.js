@@ -29,10 +29,8 @@ render(app, {
 
 app
   .use(async (ctx, next) => {
-    if (ctx.hostname !== 'localhost') {
-      if (ctx.get('X-Forwarded-Proto') !== 'https' && ctx.get('X-Forwarded-Port') !== '443') {
-        ctx.redirect(`https://${ctx.request.header.host}${ctx.url}`);
-      }
+    if (ctx.get('X-Forwarded-Proto') !== 'https' && ctx.get('X-Forwarded-Port') !== '443') {
+      ctx.redirect(`https://${ctx.request.header.host}${ctx.url}`);
     } else {
       await next();
     }
