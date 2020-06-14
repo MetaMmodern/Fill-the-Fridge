@@ -155,14 +155,16 @@ async function loadCartsAndMap() {
           name: el.name,
           name2: 'Silpo',
           name3: 'Сильпо',
-          price: el.price
+          price: el.price,
+          listOfAllGoods: el.listOfAllGoods
         };
       case 'АТБ':
         return {
           name: el.name,
           name2: 'Atb',
           name3: 'АТБ',
-          price: el.price
+          price: el.price,
+          listOfAllGoods: el.listOfAllGoods
         };
 
       case 'Novus':
@@ -170,7 +172,8 @@ async function loadCartsAndMap() {
           name: 'Новус',
           name2: el.name,
           name3: 'Новус',
-          price: el.price
+          price: el.price,
+          listOfAllGoods: el.listOfAllGoods
         };
 
       case 'Велика Кишеня':
@@ -178,7 +181,8 @@ async function loadCartsAndMap() {
           name: el.name,
           name2: 'Velyka Kyshenya',
           name3: el.name,
-          price: el.price
+          price: el.price,
+          listOfAllGoods: el.listOfAllGoods
         };
 
       default:

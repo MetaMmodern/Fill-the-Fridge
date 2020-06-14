@@ -16,7 +16,14 @@ const options = {
 function error(err) {
   console.warn(`ERROR(${err.code}): ${err.message}`);
 }
-
+function createList(listOfAllGoods) {
+  let list = '<ul>';
+  listOfAllGoods.forEach(goods => {
+    list += `<li>${goods.name} - ${goods.price}</li>`;
+  });
+  list += '</ul>';
+  return list;
+}
 // создание маркера
 function createMarker(map, place, myposition, arrayMyStore, infowindow) {
   const marker = new google.maps.Marker({
@@ -39,8 +46,10 @@ function createMarker(map, place, myposition, arrayMyStore, infowindow) {
         place.name.toLowerCase().includes(arrayMyStore[i].name2.toLowerCase()) ||
         place.name.toLowerCase().includes(arrayMyStore[i].name3.toLowerCase())
       ) {
+        const list = createList(arrayMyStore[i].listOfAllGoods);
+
         // если название места совпадает с местом в массиве
-        infowindow.setContent(`${place.name}: ${arrayMyStore[i].price} grn.`); // выводим название места и цену
+        infowindow.setContent(`${place.name}: ${arrayMyStore[i].price} grn. ${list}`); // выводим название места и цену
         infowindow.open(map, marker);
       }
     }
