@@ -109,28 +109,46 @@ function getShoppingList(shoppingList, products) {
 function getCount(shoppingList) {
   return shoppingList.length;
 }
+function getListOfGoods(arrayOfName, listOfGoods) {
+  // eslint-disable-next-line no-param-reassign
+   listOfGoods = arrayOfName;
+   return listOfGoods;
+}
 function getMinPrice(arrayOfStore) {
+
+
   for (let store = 0; store < arrayOfStore.length; store++) {
     const { listOfAllGoods } = arrayOfStore[store];
     let { shoppingList } = arrayOfStore[store];
     const { products } = arrayOfStore[store];
+    let arrayOfName = [];
     shoppingList.forEach(product => {
       let minPrice = 0;
+
+      let nameOfMinProduct = {
+        name: '',
+        price: 0
+      };
       for (let goods = 0; goods < listOfAllGoods.length; goods++) {
-        if (listOfAllGoods[goods].name === product) {
-          if (minPrice === 0 || minPrice > listOfAllGoods[goods].price)
+        if (listOfAllGoods[goods].name === product)
+          if (minPrice === 0 || minPrice > listOfAllGoods[goods].price) {
             minPrice = listOfAllGoods[goods].price;
-        }
+            nameOfMinProduct.name = listOfAllGoods[goods].name;
+            nameOfMinProduct.price = listOfAllGoods[goods].price;
+          }
       }
+      if (nameOfMinProduct.name)
+      arrayOfName.push(nameOfMinProduct);
       // eslint-disable-next-line no-param-reassign
       arrayOfStore[store].price += minPrice;
-      // console.log(`${arrayOfStore[store].name} ${product} ${minPrice}`);
     });
     shoppingList = getShoppingList(shoppingList, products);
     // eslint-disable-next-line no-param-reassign
     arrayOfStore[store].shoppingList = shoppingList;
     // eslint-disable-next-line no-param-reassign
     arrayOfStore[store].count = getCount(arrayOfStore[store].shoppingList);
+
+    arrayOfStore[store].listOfAllGoods = arrayOfName;
   }
 }
 
