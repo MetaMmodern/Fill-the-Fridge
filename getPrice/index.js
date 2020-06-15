@@ -95,9 +95,66 @@ async function getPrice(ings) {
     return new Error(error);
   }
 }
+function crossItOut(products, nameOfProduct) {
+  for (let product = 0; product < products.length; product++) {
+    if (nameOfProduct === products[product]) {
+      products.splice(product, 1);
+    }
+  }
+  return products;
+}
+function getShoppingList(shoppingList, products) {
+  return shoppingList.filter(n => products.indexOf(n) === -1);
+}
+function getCount(shoppingList) {
+  return shoppingList.length;
+}
+function getListOfGoods(arrayOfName, listOfGoods) {
+  // eslint-disable-next-line no-param-reassign
+   listOfGoods = arrayOfName;
+   return listOfGoods;
+}
+function getMinPrice(arrayOfStore) {
+
+
+  for (let store = 0; store < arrayOfStore.length; store++) {
+    const { listOfAllGoods } = arrayOfStore[store];
+    let { shoppingList } = arrayOfStore[store];
+    const { products } = arrayOfStore[store];
+    let arrayOfName = [];
+    shoppingList.forEach(product => {
+      let minPrice = 0;
+
+      let nameOfMinProduct = {
+        name: '',
+        price: 0
+      };
+      for (let goods = 0; goods < listOfAllGoods.length; goods++) {
+        if (listOfAllGoods[goods].name === product)
+          if (minPrice === 0 || minPrice > listOfAllGoods[goods].price) {
+            minPrice = listOfAllGoods[goods].price;
+            nameOfMinProduct.name = listOfAllGoods[goods].name;
+            nameOfMinProduct.price = listOfAllGoods[goods].price;
+          }
+      }
+      if (nameOfMinProduct.name)
+      arrayOfName.push(nameOfMinProduct);
+      // eslint-disable-next-line no-param-reassign
+      arrayOfStore[store].price += minPrice;
+    });
+    shoppingList = getShoppingList(shoppingList, products);
+    // eslint-disable-next-line no-param-reassign
+    arrayOfStore[store].shoppingList = shoppingList;
+    // eslint-disable-next-line no-param-reassign
+    arrayOfStore[store].count = getCount(arrayOfStore[store].shoppingList);
+
+    arrayOfStore[store].listOfAllGoods = arrayOfName;
+  }
+}
 
 async function getCart(responseProds) {
   let listOfProducts;
+  // eslint-disable-next-line no-restricted-syntax
   for (const product in responseProds) {
     if (Object.prototype.hasOwnProperty.call(responseProds, product)) {
       listOfProducts = responseProds[product];
@@ -109,50 +166,63 @@ async function getCart(responseProds) {
     name: 'Novus',
     price: 0,
     count: 0,
-    products: [...listOfProducts]
+    products: [...listOfProducts],
+    listOfAllGoods: [],
+    shoppingList: [...listOfProducts]
   };
   arrayOfStore[1] = {
     name: 'АТБ',
     price: 0,
     count: 0,
-    products: [...listOfProducts]
+    products: [...listOfProducts],
+    listOfAllGoods: [],
+    shoppingList: [...listOfProducts]
   };
   arrayOfStore[2] = {
     name: 'Велика Кишеня',
     price: 0,
     count: 0,
-    products: [...listOfProducts]
+    products: [...listOfProducts],
+    listOfAllGoods: [],
+    shoppingList: [...listOfProducts]
   };
   arrayOfStore[3] = {
     name: 'Сільпо',
     price: 0,
     count: 0,
-    products: [...listOfProducts]
+    products: [...listOfProducts],
+    listOfAllGoods: [],
+    shoppingList: [...listOfProducts]
   };
+
   for (let i = 0; i < listOfProducts.length; i++) {
     // идём по продуктам
+    // eslint-disable-next-line no-await-in-loop
     arrayPrice = await getPrice([listOfProducts[i]]); // получаем цены в магазинах на продукт
-    if (arrayPrice[0] !== undefined) {
-      const firstItem = arrayPrice[0].pricesAndStores; // на первый в списке
-      firstItem.forEach(key => {
-        // на каждый магаз/цену
-        for (let store = 0; store < arrayOfStore.length; store++) {
-          // пробегаем по хард магазинам
+    for (let newStore = 0; newStore <= arrayPrice.length; newStore++)
+      if (arrayPrice[newStore] !== undefined) {
+        const firstItem = arrayPrice[newStore].pricesAndStores; // на первый в списке
+        firstItem.forEach(key => {
+          // на каждый магаз/цену
+          for (let store = 0; store < arrayOfStore.length; store++) {
+            // пробегаем по хард магазинам
 
-          if (arrayOfStore[store].name === key.store) {
-            // если названия совпали
-            arrayOfStore[store].price += key.price; // суммируем цену
-            arrayOfStore[store].count += 1;
-            for (let product = 0; product < arrayOfStore[store].products.length; product++) {
-              if (listOfProducts[i] === arrayOfStore[store].products[product]) {
-                arrayOfStore[store].products.splice(product, 1);
-              }
+            if (arrayOfStore[store].name === key.store) {
+              // если названия совпали
+              const goods = {
+                price: '',
+                name: ''
+              };
+              goods.price = key.price;
+              goods.name = listOfProducts[i];
+              arrayOfStore[store].listOfAllGoods.push(goods);
+              crossItOut(arrayOfStore[store].products, listOfProducts[i]);
             }
           }
-        }
-      });
-    }
+        });
+      }
   }
+  getMinPrice(arrayOfStore);
   sortByPrice(arrayOfStore);
   return arrayOfStore;
 }
