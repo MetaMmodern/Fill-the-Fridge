@@ -109,23 +109,16 @@ function getShoppingList(shoppingList, products) {
 function getCount(shoppingList) {
   return shoppingList.length;
 }
-function getListOfGoods(arrayOfName, listOfGoods) {
-  // eslint-disable-next-line no-param-reassign
-   listOfGoods = arrayOfName;
-   return listOfGoods;
-}
 function getMinPrice(arrayOfStore) {
-
-
   for (let store = 0; store < arrayOfStore.length; store++) {
     const { listOfAllGoods } = arrayOfStore[store];
     let { shoppingList } = arrayOfStore[store];
     const { products } = arrayOfStore[store];
-    let arrayOfName = [];
+    const arrayOfName = [];
     shoppingList.forEach(product => {
       let minPrice = 0;
 
-      let nameOfMinProduct = {
+      const nameOfMinProduct = {
         name: '',
         price: 0
       };
@@ -137,8 +130,7 @@ function getMinPrice(arrayOfStore) {
             nameOfMinProduct.price = listOfAllGoods[goods].price;
           }
       }
-      if (nameOfMinProduct.name)
-      arrayOfName.push(nameOfMinProduct);
+      if (nameOfMinProduct.name) arrayOfName.push(nameOfMinProduct);
       // eslint-disable-next-line no-param-reassign
       arrayOfStore[store].price += minPrice;
     });
@@ -147,19 +139,22 @@ function getMinPrice(arrayOfStore) {
     arrayOfStore[store].shoppingList = shoppingList;
     // eslint-disable-next-line no-param-reassign
     arrayOfStore[store].count = getCount(arrayOfStore[store].shoppingList);
-
+    // eslint-disable-next-line no-param-reassign
     arrayOfStore[store].listOfAllGoods = arrayOfName;
   }
 }
 
 async function getCart(responseProds) {
-  let listOfProducts;
-  // eslint-disable-next-line no-restricted-syntax
-  for (const product in responseProds) {
-    if (Object.prototype.hasOwnProperty.call(responseProds, product)) {
-      listOfProducts = responseProds[product];
-    }
-  }
+  let listOfProducts = [];
+  Object.values(responseProds).forEach(val => {
+    listOfProducts = val;
+  });
+
+  // for (const product in responseProds) {
+  //   if (Object.prototype.hasOwnProperty.call(responseProds, product)) {
+  //     listOfProducts = responseProds[product];
+  //   }
+  // }
   let arrayPrice = 0;
   const arrayOfStore = [];
   arrayOfStore[0] = {
@@ -202,24 +197,26 @@ async function getCart(responseProds) {
     for (let newStore = 0; newStore <= arrayPrice.length; newStore++)
       if (arrayPrice[newStore] !== undefined) {
         const firstItem = arrayPrice[newStore].pricesAndStores; // на первый в списке
-        firstItem.forEach(key => {
+
+        for (let index = 0; index < firstItem.length; index++) {
+          const element = firstItem[index];
           // на каждый магаз/цену
           for (let store = 0; store < arrayOfStore.length; store++) {
             // пробегаем по хард магазинам
 
-            if (arrayOfStore[store].name === key.store) {
+            if (arrayOfStore[store].name === element.store) {
               // если названия совпали
               const goods = {
                 price: '',
                 name: ''
               };
-              goods.price = key.price;
+              goods.price = element.price;
               goods.name = listOfProducts[i];
               arrayOfStore[store].listOfAllGoods.push(goods);
               crossItOut(arrayOfStore[store].products, listOfProducts[i]);
             }
           }
-        });
+        }
       }
   }
   getMinPrice(arrayOfStore);

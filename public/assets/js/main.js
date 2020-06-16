@@ -16,8 +16,8 @@ import Greeting from './greeting.js';
 const Main = {
   form: document.forms[0],
   container: document.querySelector('.tag-container'),
-  loadPageNum: 2,
   olderInput: [],
+  loadPageNum: 2,
   allTags: localStorageSetter(document.querySelector('.tag-container')),
   scrollPos: 0,
   input: document.querySelector('.tag-container input'),
@@ -147,7 +147,7 @@ const Main = {
       [...new Set(this.olderInput.slice().sort())].join() !==
         [...new Set(this.allTags.slice().sort())].join()
     ) {
-      if (document.getElementsByClassName('toDelete')[0] !== undefined) {
+      if (document.getElementsByClassName('toDelete')[0]) {
         document.getElementsByClassName('toDelete')[0].innerHTML = '';
         document.getElementsByClassName('toDelete')[0].style.border = 'none';
       }
