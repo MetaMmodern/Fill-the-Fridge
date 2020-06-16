@@ -91,8 +91,9 @@ const Greeting = {
       accordion.appendChild(card);
     });
     const Goodbye = document.createElement('div');
+
     Goodbye.className = 'mt-3 mr-3 text-right';
-    Goodbye.innerHTML = LanguageObj.Goodbye.content;
+    Goodbye.innerHTML = `<p>${LanguageObj.Goodbye.creators}</p><p><i>${LanguageObj.Goodbye.annotation}</i></p>`;
     modalBody.appendChild(accordion);
     modalBody.appendChild(Goodbye);
     return modalBody;

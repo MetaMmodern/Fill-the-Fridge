@@ -76,7 +76,9 @@ const English = {
     }
   },
   Goodbye: {
-    content: 'Enjoy our Website!'
+    creators:
+      'Created by KPI students: <a target="_blank" href="https://t.me/tsake_love">@tsake_love</a> and <a target="_blank" href="https://t.me/metamodern">@metamodern</a>',
+    annotation: 'Enjoy our Website!'
   },
   closeFooter: 'Close'
 };
@@ -145,7 +147,9 @@ const Russian = {
     }
   },
   Goodbye: {
-    content: 'Наслаждайтесь использованием нашего сайта!'
+    creators:
+      'Создано студентами КПИ: <a target="_blank" href="https://t.me/tsake_love">@tsake_love</a> и <a target="_blank" href="https://t.me/metamodern">@metamodern</a>',
+    annotation: 'Наслаждайтесь использованием нашего сайта!'
   },
   closeFooter: 'Закрыть'
 };
