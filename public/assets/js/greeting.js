@@ -28,7 +28,7 @@ const Greeting = {
       }
     }
   },
-  createLanguageSelector() {
+  createLanguageSelector(langName) {
     const buttons = Object.keys(languages).map(lang => {
       const btn = document.createElement('button');
       btn.setAttribute('id', lang);
@@ -38,7 +38,7 @@ const Greeting = {
       return btn;
     });
     return `<button type="button" class="btn btn-primary dropdown-toggle" id="currentLanguage" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                  Russian
+                                  ${langName}
                                 </button>
                                 <div class="dropdown-menu">
                                   ${buttons.map(b => b.outerHTML).join('')}
@@ -117,7 +117,7 @@ const Greeting = {
     modalHeader.appendChild(title);
     modalHeader.appendChild(languageSelector);
     modalHeader.appendChild(closeButton);
-    languageSelector.innerHTML = this.createLanguageSelector();
+    languageSelector.innerHTML = this.createLanguageSelector(langObject.langName);
     languageSelector.classList.add('btn-group');
     languageSelector.classList.add('ml-auto');
     modalFooter.appendChild(closeFooter);
