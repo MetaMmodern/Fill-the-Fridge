@@ -12,6 +12,7 @@ function importAll(r) {
 const images = importAll(require.context('../images/introPics', false, /\.(png)$/));
 
 const English = {
+  langName: 'English',
   title: 'Welcome to Fill the Fridge!',
   modalBody: {
     aboutWebsite: {
@@ -24,7 +25,7 @@ const English = {
     aboutSearch: {
       header: 'About search bar',
       content1:
-        'To enter the ingredients, press the Enter key after each ingredient entered as in the image below. This will allow you to enter ingredients with spaces, such as wheat flour or butter.',
+        'You need to type ingredients in Russian language. To enter the ingredients, press the Enter key after each ingredient entered as in the image below. This will allow you to enter ingredients with spaces, such as wheat flour or butter.',
       image1: images[0],
       content2:
         'To remove an ingredient from the search bar, just click on the cross next to the desired tag as in the image below.',
@@ -83,6 +84,7 @@ const English = {
   closeFooter: 'Close'
 };
 const Russian = {
+  langName: 'Russian',
   title: 'Добро пожаловать на Fill the Fridge!',
   modalBody: {
     aboutWebsite: {
@@ -95,7 +97,7 @@ const Russian = {
     aboutSearch: {
       header: 'Про строку поиска',
       content1:
-        'Для ввода ингредиентов нажимайте клавишу Enter после каждого введённого ингредиента как на изображении ниже. Это позволит вам вводить ингредиенты с пробелами, например "мука пшеничная" или "масло сливочное".',
+        'Ингредиенты нужно вводить на русском языке. Для ввода ингредиентов нажимайте клавишу Enter после каждого введённого ингредиента как на изображении ниже. Это позволит вам вводить ингредиенты с пробелами, например "мука пшеничная" или "масло сливочное".',
       image1: images[0],
       content2:
         'Для удаления ингредиента из строки поиска достаточно нажать на крестик рядом с нужным тегом как на изображении ниже.',
