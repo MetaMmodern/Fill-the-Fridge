@@ -1,0 +1,7 @@
+@import '~normalize.css';
+
+.fullreciep {
+  border-radius: 1.5rem;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  transition: width 0.3s ease-in, height 0.3s ease-in, margin-right 0.3s ease-in;
+}

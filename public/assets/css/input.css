@@ -1,0 +1,104 @@
+@import '~normalize.css';
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+
+.tag-container {
+  border: 2px solid #ccc;
+  padding: 0.2rem;
+  border-radius: 1.8125rem;
+  display: flex;
+  transition: height 0.2s ease-out;
+  align-items: center;
+}
+
+.tag-container .tag {
+  transition: height 0.2s ease-out;
+  padding: 0.3125rem 0.625rem;
+
+  border: 1px solid #ccc;
+  display: flex;
+  align-items: center;
+  border-radius: 1.125rem;
+  background: #f2f2f2;
+  cursor: default;
+  margin: 0.3125rem;
+}
+
+.tag .material-icons {
+  font-size: 1rem;
+  cursor: pointer;
+  padding-left: 0.3125rem;
+}
+.store .material-icons {
+  font-size: 1rem;
+  cursor: default;
+  padding-left: 0.3125rem;
+}
+.tag-container input,
+input:focus {
+  flex: 1;
+  font-size: 1rem;
+  padding: 0.3125rem;
+  outline: none;
+  border: 0;
+  box-shadow: none;
+  outline: 0px !important;
+  -webkit-appearance: none;
+  box-shadow: none !important;
+  border-radius: 1.1875rem;
+  margin: 5px;
+}
+
+.submit {
+  color: white;
+  outline: none;
+  border-radius: 1.1875rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  cursor: pointer;
+  transition: height 1s ease-out;
+  margin: 0.3125rem;
+  align-self: flex-end;
+}
+
+.submit:focus {
+  outline: 0px !important;
+  -webkit-appearance: none;
+  box-shadow: none !important;
+}
+
+.cleaner {
+  border-radius: 1.28125rem;
+}
+
+#mapPopup {
+  height: 0px;
+  border-radius: 1.5rem;
+  width: 0%;
+  transition: width 0.2s ease-in, height 0.2s ease-in;
+}
+#map {
+  height: 100%;
+  border-radius: 1rem;
+}
+#dropmarkers {
+  display: flex;
+  justify-content: center;
+  margin-top: 0.5rem;
+}
+#dropmarkers button {
+  height: 2rem;
+  width: 2rem;
+  border: none;
+  padding: 0px;
+}
+
+.introGif[src=''] {
+  display: none;
+}
+
+.help:hover {
+  text-decoration: underline;
+}
+.help:focus {
+  outline: none;
+}

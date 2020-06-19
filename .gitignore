@@ -1,0 +1,15 @@
+build
+npm-debug.log
+.env
+.DS_Store
+dist/
+node_modules/
+log/
+.idea/
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+package-lock.json
