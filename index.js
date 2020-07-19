@@ -22,7 +22,7 @@ app.use(morgan('tiny', { stream: accessLogStream }));
 render(app, {
   root: path.join(__dirname, 'view'),
   layout: false,
-  viewExt: 'html',
+  viewExt: 'ejs',
   cache: false,
   debug: false
 });

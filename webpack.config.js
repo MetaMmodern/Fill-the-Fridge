@@ -32,7 +32,7 @@ module.exports = {
       minify: { collapseWhitespace: isProd }
     }),
     new HTMLWebpackPlugin({
-      filename: 'reciepFull.html',
+      filename: 'reciepFull.ejs',
       template: './reciepFull.html',
       inject: true,
       // eslint-disable-next-line no-template-curly-in-string
@@ -91,14 +91,6 @@ module.exports = {
           'image-webpack-loader'
         ]
       }
-      // {
-      //   test: /\.html$/,
-      //   loader: 'ejs-loader',
-      //   query: {
-      //     interpolate: /<\$=([\s\S]+?)\$>/g,
-      //     evaluate: /<\$([\s\S]+?)\$>/g
-      //   }
-      // }
     ]
   }
 };
