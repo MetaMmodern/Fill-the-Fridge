@@ -1,15 +1,4 @@
-function importAll(r) {
-  return r
-    .keys()
-    .sort((f, s) => {
-      const fNum = parseInt(f.match(/\d+/g).join(''), 10);
-      const sNum = parseInt(s.match(/\d+/g).join(''), 10);
-      return fNum - sNum;
-    })
-    .map(r)
-    .map(el => el.default);
-}
-const images = importAll(require.context('../images/introPics', false, /\.(png)$/));
+const images = new Array(11).fill(0).map((e, i) => `../assets/images/introPics/${i + 1}.png`);
 
 const English = {
   langName: 'English',
