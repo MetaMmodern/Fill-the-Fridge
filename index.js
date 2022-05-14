@@ -22,20 +22,20 @@ app.use(morgan('tiny', { stream: accessLogStream }));
 render(app, {
   root: path.join(__dirname, 'view'),
   layout: false,
-  viewExt: 'ejs',
+  viewExt: 'html',
   cache: false,
   debug: false
 });
 
 app
   .use(async (ctx, next) => {
-    if (ctx.get('X-Forwarded-Proto') !== 'https' && ctx.get('X-Forwarded-Port') !== '443') {
-      ctx.redirect(`https://${ctx.request.header.host}${ctx.url}`);
-    } else {
-      await next();
-    }
+    // if (ctx.get('X-Forwarded-Proto') !== 'https' && ctx.get('X-Forwarded-Port') !== '443') {
+    // ctx.redirect(`https://${ctx.request.header.host}${ctx.url}`);
+    // } else {
+    await next();
+    // }
   })
-  .use(serve('dist'))
+  .use(serve('public'))
   .use(koaBody())
   .use(middleware)
   .use(router.allowedMethods())

@@ -1,8 +1,6 @@
 /* eslint-disable import/extensions */
-import '../css/input.css';
-import '../css/fullreciep.css';
-import 'core-js/stable';
-import 'regenerator-runtime/runtime';
+// import 'core-js/stable';
+// import 'regenerator-runtime/runtime';
 import SubmitForm from './ajax.js';
 
 import addTags from './tagsinput.js';
