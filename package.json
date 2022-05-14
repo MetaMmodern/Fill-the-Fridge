@@ -11,7 +11,8 @@
     "lint:fix": "eslint --fix ./server/index.js & eslint --fix ./client/**/*.js",
     "precommit": "npm run lint:fix",
     "prepush": "npm run test",
-    "start": "node ./server/index.js"
+    "start": "node ./server/index.js",
+    "dev": "nodemon ./server/index.js"
   },
   "repository": {
     "type": "git",
@@ -42,7 +43,7 @@
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.1",
     "husky": "^3.1.0",
-    "nodemon": "^2.0.4",
+    "nodemon": "^2.0.16",
     "open-cli": "^6.0.1",
     "pre-commit": "^1.2.2",
     "prettier": "^1.19.1"
