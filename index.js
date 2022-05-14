@@ -20,7 +20,7 @@ const middleware = require('./routes/index');
 
 app.use(morgan('tiny', { stream: accessLogStream }));
 render(app, {
-  root: path.join(__dirname, 'view'),
+  root: path.join(__dirname, 'views'),
   layout: false,
   viewExt: 'html',
   cache: false,
