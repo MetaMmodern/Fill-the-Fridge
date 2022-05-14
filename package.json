@@ -7,11 +7,11 @@
     "debug": "cross-env DEBUG=index open-cli http://localhost:3000 & nodemon index.js",
     "test": "npm run lint",
     "prettier": "prettier --config .prettierrc.json --write index.js",
-    "lint": "eslint index.js & eslint ./public/**/*.js",
-    "lint:fix": "eslint --fix index.js & eslint --fix ./public/**/*.js",
+    "lint": "eslint ./server/index.js & eslint ./client/**/*.js",
+    "lint:fix": "eslint --fix ./server/index.js & eslint --fix ./client/**/*.js",
     "precommit": "npm run lint:fix",
     "prepush": "npm run test",
-    "start": "node index.js"
+    "start": "node ./server/index.js"
   },
   "repository": {
     "type": "git",

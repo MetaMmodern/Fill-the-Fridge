@@ -35,7 +35,7 @@ app
     await next();
     // }
   })
-  .use(serve('public'))
+  .use(serve('client'))
   .use(koaBody())
   .use(middleware)
   .use(router.allowedMethods())
