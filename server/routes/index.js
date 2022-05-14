@@ -11,6 +11,10 @@ router.get('/login', ctx => {
   return ctx.render('../../client/login');
 });
 
+router.get('/register', ctx => {
+  return ctx.render('../../client/register');
+});
+
 router.get('/recipe/:id', async ctx => {
   const article = await getArticle(`https://www.povarenok.ru/recipes/show/${ctx.params.id}`);
   return ctx.render('../../client/reciepFull', article);
