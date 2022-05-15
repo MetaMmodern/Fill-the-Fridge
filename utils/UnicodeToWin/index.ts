@@ -257,14 +257,14 @@ const DMap = {
   1109: 190
 };
 
-function unicodeToWin1251(s) {
+function unicodeToWin1251(s: string) {
   const output = [];
   for (let i = 0; i < s.length; i++) {
     const ord = s.charCodeAt(i);
     if (!(ord in DMap)) throw new Error(`Character ${s.charAt(i)} isn't supported by win1251!`);
-    output.push(`%${DMap[ord].toString(16)}`);
+    output.push(`%${DMap[ord as keyof typeof DMap].toString(16)}`);
   }
   return output.join('').toUpperCase();
 }
 
-module.exports = unicodeToWin1251;
+export default unicodeToWin1251;

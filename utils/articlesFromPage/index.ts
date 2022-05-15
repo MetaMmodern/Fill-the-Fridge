@@ -1,12 +1,12 @@
-const needle = require('needle');
-const cheerio = require('cheerio');
-const creatorurl = require('../urlcreate');
+import needle from 'needle';
+import cheerio, { CheerioAPI } from 'cheerio';
+import creatorurl from '../urlcreate';
 
-function getIngredientsObject(currentHTML) {
-  const ingredients = [];
+function getIngredientsObject(currentHTML: CheerioAPI) {
+  const ingredients: {}[] = [];
   currentHTML(".ingredients-bl ul li > span[itemprop='ingredient']").each((_index, value) => {
-    const ingredientAndAmount = {};
-    let inner = currentHTML(value)
+    const ingredientAndAmount: any = {};
+    let inner: any = currentHTML(value)
       .first()
       .contents()
       .filter(() => {
@@ -33,10 +33,10 @@ function getIngredientsObject(currentHTML) {
   });
   return ingredients;
 }
-function newFormat(someText) {
+function newFormat(someText: string) {
   return someText.replace(/\s+/g, ' ').trim();
 }
-async function getArticle(link) {
+export async function getArticle(link: string) {
   const response = await needle('get', link, { follow_max: 3 });
   const articleBody = cheerio.load(response.body, {
     decodeEntities: false
@@ -50,7 +50,7 @@ async function getArticle(link) {
   };
 }
 
-async function articlesFromPage(ings, page) {
+export async function articlesFromPage(ings: string[], page: string) {
   try {
     if (ings.length === 0) {
       throw new Error('Empty ingredients array!');
@@ -70,7 +70,7 @@ async function articlesFromPage(ings, page) {
     if (resultsNumber === nothingFound) {
       throw new Error('NO other recieps');
     }
-    const articles = [];
+    const articles: { name: string; link: string; image: string | undefined }[] = [];
     $('.item-bl').each((index, item) => {
       const article = {
         name: $('h2 a', item).text(),
@@ -92,5 +92,3 @@ async function articlesFromPage(ings, page) {
     return new Error(error);
   }
 }
-
-module.exports = { articlesFromPage, getArticle };

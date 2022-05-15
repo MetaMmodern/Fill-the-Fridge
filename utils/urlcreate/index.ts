@@ -1,6 +1,6 @@
-const uni = require('../UnicodeToWin');
+import uni from '../UnicodeToWin';
 
-function createPovarenokURLPage(URL, ings, page) {
+function createPovarenokURLPage(URL: string, ings: string[], page?: string) {
   const encodedIngs = ings.map(ing => uni(ing));
   let link = URL;
   if (page) {
@@ -19,4 +19,4 @@ function createPovarenokURLPage(URL, ings, page) {
   return link;
 }
 
-module.exports = createPovarenokURLPage;
+export default createPovarenokURLPage;

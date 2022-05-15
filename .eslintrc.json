@@ -1,31 +1,3 @@
 {
-  "extends": ["airbnb", "prettier"],
-  "plugins": ["prettier"],
-  "rules": {
-    "prettier/prettier": ["error"],
-    "strict": "off",
-    "import/no-extraneous-dependencies": [
-      "error",
-      {
-        "devDependencies": true
-      }
-    ],
-    "no-plusplus": [
-      "error",
-      {
-        "allowForLoopAfterthoughts": true
-      }
-    ]
-  },
-
-  "env": {
-    "browser": true,
-    "node": true,
-    "commonjs": true,
-    "es6": true,
-    "jquery": true
-  },
-  "parserOptions": {
-    "sourceType": "script"
-  }
+  "extends": "next/core-web-vitals"
 }

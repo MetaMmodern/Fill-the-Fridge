@@ -1,6 +1,6 @@
-const needle = require('needle');
-const cheerio = require('cheerio');
-const creatorurl = require('../urlcreate');
+import needle from 'needle';
+import cheerio from 'cheerio';
+import creatorurl from '../urlcreate';
 
 async function wait(ms) {
   return new Promise(resolve => {
@@ -8,10 +8,10 @@ async function wait(ms) {
   });
 }
 
-function getNumber(str) {
+function getNumber(str: any) {
   return parseFloat(str);
 }
-function sortByPrice(arrayOfStore) {
+function sortByPrice(arrayOfStore: any) {
   arrayOfStore.sort((store, anotherStore) => {
     // eslint-disable-next-line no-param-reassign
     store.price = Number(store.price.toFixed(2));
@@ -223,4 +223,4 @@ async function getCart(responseProds) {
   sortByPrice(arrayOfStore);
   return arrayOfStore;
 }
-module.exports = getCart;
+export default getCart;
