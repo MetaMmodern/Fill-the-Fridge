@@ -4,6 +4,6 @@ import { articlesFromPage } from '../../../utils/articlesFromPage';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const {page} = req.query;
-  const whatToSearch = await articlesFromPage(req.body.ings, page as string);
+  const whatToSearch = await articlesFromPage(req.body.ings, "0");
   return res.json({ recipesArray: whatToSearch });
 }
