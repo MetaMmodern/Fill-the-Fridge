@@ -5,12 +5,18 @@ import Image from "next/image";
 import styles from "../styles/Home.module.scss";
 import TagInput from "../components/TagInput/TagInput";
 import Header from "../components/Header/Header";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ResultsContainer from "../components/ResultsContainer/ResultsContainer";
+import RecipePopup from "../components/RecipePopup/RecipePopup";
+import Loading from "../components/Loading/Loading";
 
 const Home: NextPage = () => {
   const [recipes, setRecipes] = useState<any[] | null>(null);
   const [loading, setLoading] = useState(false);
+  const [modalOpened, setModalOpened] = useState(false);
+  const [currentRecipePopupId, setCurrentRecipePopupId] = useState<
+    null | number
+  >(null);
   const fetchRecipes = async (tags: string[]) => {
     setLoading(true);
     if (tags && tags.length) {
@@ -23,13 +29,25 @@ const Home: NextPage = () => {
         const response = await fetch(`api/recipes/search/`, options);
         const recipes: { recipesArray: any[] } = await response.json();
         console.log(recipes);
-        setRecipes(recipes.recipesArray || []);
+        setRecipes(
+          recipes?.recipesArray && recipes?.recipesArray?.length
+            ? recipes.recipesArray
+            : []
+        );
       } catch (error) {
         console.debug(error);
       }
     }
     setLoading(false);
   };
+  useEffect(() => {
+    if (currentRecipePopupId !== null) {
+      setModalOpened(true);
+    } else {
+      setModalOpened(false);
+    }
+  }, [currentRecipePopupId]);
+
   return (
     <div className={styles.container}>
       <Head>
@@ -40,13 +58,14 @@ const Home: NextPage = () => {
 
       <Header />
       <TagInput getRecipes={fetchRecipes} />
-      <div className="container mt-4 container-infinite">
+      <div className="container mt-4 container-infinite d-flex justify-content-center">
         {loading ? (
-          <div className="spinner-border" role="status">
-            <span className="sr-only"></span>
-          </div>
+          <Loading />
         ) : (
-          <ResultsContainer recipes={recipes} />
+          <ResultsContainer
+            recipes={recipes}
+            openRecipe={(id) => setCurrentRecipePopupId(id)}
+          />
         )}
       </div>
       <div className="d-flex justify-content-center mt-4" id="reloading"></div>
@@ -57,7 +76,13 @@ const Home: NextPage = () => {
         ></div>
         <div className="d-flex justify-content-center" id="loading"></div>
       </div>
-      <div className="container container-popup"></div>
+      <div className="container container-popup">
+        <RecipePopup
+          recipeId={currentRecipePopupId}
+          showModal={modalOpened}
+          handleCloseModal={() => setModalOpened(false)}
+        />
+      </div>
       <Script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCYsL3NtRxHucdRBUKgnmP5m0QQcTnjM3s&libraries=places" />
     </div>
   );

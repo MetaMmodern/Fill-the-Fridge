@@ -2,6 +2,13 @@ import needle from "needle";
 import cheerio, { CheerioAPI } from "cheerio";
 import creatorurl from "../urlcreate";
 
+type Article = {
+  name: string;
+  link: string;
+  image: string | undefined;
+  ingrFast: string[];
+  id: string | undefined;
+};
 function getIngredientsObject(currentHTML: CheerioAPI) {
   const ingredients: {}[] = [];
   currentHTML(".ingredients-bl ul li > span[itemprop='ingredient']").each(
@@ -10,9 +17,9 @@ function getIngredientsObject(currentHTML: CheerioAPI) {
       let inner: any = currentHTML(value)
         .first()
         .contents()
-        .filter(() => {
-          return this.nodeType === 3;
-        })
+        // .filter(() => {
+        //   return this.nodeType === 3;
+        // })
         .text()
         .match(/\([^)]*\)/);
 
@@ -37,14 +44,16 @@ function newFormat(someText: string) {
 }
 export async function getArticle(link: string) {
   const response = await needle("get", link, { follow_max: 3 });
+  console.log("needle ok");
   const articleBody = cheerio.load(response.body, {
     decodeEntities: false,
   });
+  console.log("cheerio okay");
   return {
     name: articleBody(".item-about div h1").text(),
     link: `http://fillthefridge.me/recipe/${link.split("/").pop()}`,
     image: articleBody(".item-about div .m-img img").attr("src"),
-    reciep: newFormat(articleBody(".cooking-bl").text()),
+    recipe: newFormat(articleBody(".cooking-bl").text()),
     ingredients: getIngredientsObject(articleBody),
   };
 }
@@ -69,27 +78,19 @@ export async function articlesFromPage(ings: string[], page: string) {
     if (resultsNumber === nothingFound) {
       throw new Error("NO other recieps");
     }
-    const articles: {
-      name: string;
-      link: string;
-      image: string | undefined;
-      ingrFast: string[];
-    }[] = [];
+    const articles: Article[] = [];
     $(".item-bl").each((index, item) => {
-      const article: {
-        name: string;
-        link: string;
-        image: string | undefined;
-        ingrFast: string[];
-      } = {
+      const recipeId = $("h2 a", item)
+        ?.attr("href")
+        ?.replace(/\/$/, "")
+        .split("/")
+        .pop();
+      const article: Article = {
         name: $("h2 a", item).text(),
-        link: `/recipe/${$("h2 a", item)
-          ?.attr("href")
-          ?.replace(/\/$/, "")
-          .split("/")
-          .pop()}`,
+        link: `/recipe/${recipeId}`,
         image: $(".desktop-img a img", item).attr("src"),
         ingrFast: [],
+        id: recipeId,
       };
       $(".ingr_fast span", item).each((_index, value) =>
         article.ingrFast.push(value.children[0].data)

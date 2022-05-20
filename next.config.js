@@ -4,11 +4,6 @@ const nextConfig = {
   images: {
     domains: ['www.povarenok.ru']
   },
-  experimental: {
-    images: {
-      layoutRaw: true
-    }
-  },
 }
 
 module.exports = nextConfig

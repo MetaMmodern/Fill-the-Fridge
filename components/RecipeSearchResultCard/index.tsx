@@ -2,22 +2,21 @@ import { NextComponentType, NextPage } from "next";
 import Image from "next/image";
 import React, { useState } from "react";
 
-type Props = { image: string; ingrFast: string[]; link: string; name: string };
+type Props = {
+  image: string;
+  ingrFast: string[];
+  link: string;
+  name: string;
+  openRecipe: () => void;
+};
 
 const RecipeSearchResultCard: NextPage<Props> = ({
   image,
   ingrFast,
   link,
   name,
+  openRecipe,
 }) => {
-  //   <div class="card" style="width: 18rem;">
-  //   <img src="..." class="card-img-top" alt="...">
-  //   <div class="card-body">
-  //     <h5 class="card-title">Card title</h5>
-  //     <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-  //     <a href="#" class="btn btn-primary">Go somewhere</a>
-  //   </div>
-  // </div>
   return (
     <div className="col mb-4">
       <div className="card">
@@ -30,6 +29,10 @@ const RecipeSearchResultCard: NextPage<Props> = ({
               href={link}
               className="recipe-link"
               rel="noreferrer"
+              onClick={(e) => {
+                e.preventDefault();
+                openRecipe();
+              }}
             >
               {name}
             </a>
