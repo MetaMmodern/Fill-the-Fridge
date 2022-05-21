@@ -10,30 +10,21 @@ import ResultsContainer from "../components/ResultsContainer/ResultsContainer";
 import RecipePopup from "../components/RecipePopup/RecipePopup";
 import Loading from "../components/Loading/Loading";
 
+import API from "../components/API";
 const Home: NextPage = () => {
   const [recipes, setRecipes] = useState<any[] | null>(null);
   const [loading, setLoading] = useState(false);
   const [modalOpened, setModalOpened] = useState(false);
   const [currentRecipePopupId, setCurrentRecipePopupId] = useState<
-    null | number
+    null | string
   >(null);
   const fetchRecipes = async (tags: string[]) => {
     setLoading(true);
     if (tags && tags.length) {
-      const options = {
-        method: "POST",
-        headers: { "Content-Type": "application/json; charset=utf-8" },
-        body: JSON.stringify({ ings: tags }),
-      };
       try {
-        const response = await fetch(`api/recipes/search/`, options);
-        const recipes: { recipesArray: any[] } = await response.json();
+        const recipes = await API.getRecipes(tags);
         console.log(recipes);
-        setRecipes(
-          recipes?.recipesArray && recipes?.recipesArray?.length
-            ? recipes.recipesArray
-            : []
-        );
+        setRecipes(recipes);
       } catch (error) {
         console.debug(error);
       }
@@ -41,6 +32,7 @@ const Home: NextPage = () => {
     setLoading(false);
   };
   useEffect(() => {
+    console.log(currentRecipePopupId);
     if (currentRecipePopupId !== null) {
       setModalOpened(true);
     } else {
@@ -64,7 +56,10 @@ const Home: NextPage = () => {
         ) : (
           <ResultsContainer
             recipes={recipes}
-            openRecipe={(id) => setCurrentRecipePopupId(id)}
+            openRecipe={(id) => {
+              console.log(id);
+              setCurrentRecipePopupId(id);
+            }}
           />
         )}
       </div>

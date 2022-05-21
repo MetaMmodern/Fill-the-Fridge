@@ -9,13 +9,13 @@ type Props = {
         ingrFast: string[];
         link: string;
         name: string;
-        id: number;
+        id: string;
       }[]
     | null;
-  openRecipe: (id: number) => void;
+  openRecipe: (id: string) => void;
 };
 const ResultsContainer: NextPage<Props> = (props) => {
-  console.log(props.recipes)
+  console.log(props.recipes);
   return (
     <div
       className="row row-cols-1 row-cols-sm-2 row-cols-md-3"
@@ -26,7 +26,10 @@ const ResultsContainer: NextPage<Props> = (props) => {
           <RecipeSearchResultCard
             key={i}
             {...r}
-            openRecipe={() => props.openRecipe(r.id)}
+            openRecipe={() => {
+              console.log("duddde");
+              props.openRecipe(r.id);
+            }}
           />
         ))
       ) : (

@@ -1,7 +1,11 @@
+import { NextPage } from "next";
 import React from "react";
 import ShoppingBasket from "./ShoppingBasket/ShoppingBasket";
 
-const ShoppingBasketsList = () => {
+type Props = {
+  openMapHandler: () => void;
+};
+const ShoppingBasketsList: NextPage<Props> = (props) => {
   const baskets = [
     { storeName: "Сільпо", price: "0.00" },
     { storeName: "АТБ", price: "0.00" },
@@ -18,7 +22,7 @@ const ShoppingBasketsList = () => {
       <button
         type="button"
         className="btn btn-primary btn-block w-100"
-        id="openMap"
+        onClick={props.openMapHandler}
       >
         See on Map
       </button>

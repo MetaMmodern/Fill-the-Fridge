@@ -5,8 +5,10 @@ import Loading from "../Loading/Loading";
 import ShoppingBasketsList from "../ShoppingBasketsList/ShoppingBasketsList";
 import MapSideBar from "./MapSidebar/MapSideBar";
 
+import API from "../API";
+
 type Props = {
-  recipeId: number | null;
+  recipeId: string | null;
   showModal: boolean;
   handleCloseModal: () => void;
 };
@@ -22,14 +24,16 @@ const RecipePopup: NextPage<Props> = (props) => {
   const [loading, setLoading] = useState(false);
   const [mapIsShowing, setMapIsShowing] = useState(false);
   useEffect(() => {
+    console.log(mapIsShowing);
+  }, [mapIsShowing]);
+
+  useEffect(() => {
     console.log("yyyep");
     if (props.recipeId) {
       setLoading(true);
-      fetch(`/api/recipes/${props.recipeId}`)
-        .then(async (recipeData) => {
-          const recipeJSON = await recipeData.json();
-          console.log(recipeJSON);
-          setRecipeData(recipeJSON);
+      API.getRecipeDetails(props.recipeId)
+        .then((res) => {
+          setRecipeData(res);
         })
         .finally(() => {
           setLoading(false);
@@ -88,7 +92,9 @@ const RecipePopup: NextPage<Props> = (props) => {
                   style={{ height: "auto" }}
                 />
               </div>
-              <ShoppingBasketsList />
+              <ShoppingBasketsList
+                openMapHandler={() => setMapIsShowing(true)}
+              />
             </div>
             <div className="row ingredientsSingle mt-3 mb-3">
               <div className="col-12 col-md-9 col-lg-6">
