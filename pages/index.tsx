@@ -7,24 +7,34 @@ import TagInput from "../components/TagInput/TagInput";
 import Header from "../components/Header/Header";
 import { useEffect, useState } from "react";
 import ResultsContainer from "../components/ResultsContainer/ResultsContainer";
-import RecipePopup from "../components/RecipePopup/RecipePopup";
+import RecipePopup from "../components/RecipePopup";
 import Loading from "../components/Loading/Loading";
 
 import API from "../components/API";
 const Home: NextPage = () => {
+  // null: for search not started yet.
+  // [data]: for something found
+  // []: for nothing found
+  // endless search will be somewhere else
   const [recipes, setRecipes] = useState<any[] | null>(null);
+  const [tags, setTags] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const [modalOpened, setModalOpened] = useState(false);
   const [currentRecipePopupId, setCurrentRecipePopupId] = useState<
     null | string
   >(null);
-  const fetchRecipes = async (tags: string[]) => {
+
+  const fetchRecipes = async (tagsToSearch: string[], pages = 1) => {
     setLoading(true);
-    if (tags && tags.length) {
+    setTags(tagsToSearch);
+    if (tagsToSearch && tagsToSearch.length) {
       try {
-        const recipes = await API.getRecipes(tags);
-        console.log(recipes);
-        setRecipes(recipes);
+        const newRecipes = await API.getRecipes(tagsToSearch, pages);
+        if (pages > 1) {
+          setRecipes([...(recipes ?? []), newRecipes]);
+          return;
+        }
+        setRecipes(newRecipes);
       } catch (error) {
         console.debug(error);
       }
@@ -32,7 +42,6 @@ const Home: NextPage = () => {
     setLoading(false);
   };
   useEffect(() => {
-    console.log(currentRecipePopupId);
     if (currentRecipePopupId !== null) {
       setModalOpened(true);
     } else {
@@ -57,9 +66,9 @@ const Home: NextPage = () => {
           <ResultsContainer
             recipes={recipes}
             openRecipe={(id) => {
-              console.log(id);
               setCurrentRecipePopupId(id);
             }}
+            // updateRecipes={fetchRecipes}
           />
         )}
       </div>
@@ -76,6 +85,7 @@ const Home: NextPage = () => {
           recipeId={currentRecipePopupId}
           showModal={modalOpened}
           handleCloseModal={() => setModalOpened(false)}
+          ingredients={tags}
         />
       </div>
       <Script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCYsL3NtRxHucdRBUKgnmP5m0QQcTnjM3s&libraries=places" />

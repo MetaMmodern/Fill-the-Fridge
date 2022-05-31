@@ -1,34 +1,28 @@
 import { NextPage } from "next";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Modal } from "react-bootstrap";
 import Loading from "../Loading/Loading";
 import ShoppingBasketsList from "../ShoppingBasketsList/ShoppingBasketsList";
 import MapSideBar from "./MapSidebar/MapSideBar";
-
 import API from "../API";
-
+import classNames from "classnames";
+import styles from "./RecipePopup.module.scss";
+import IngredientsInPopup from "./IngredientsInPopup/IngredientsInPopup";
+import { RecipeDetails } from "../../types";
 type Props = {
   recipeId: string | null;
   showModal: boolean;
   handleCloseModal: () => void;
+  ingredients: string[];
 };
-type RecipeDetails = {
-  name: string;
-  image: string;
-  ingredients: { item: string; amount: string }[];
-  link: string;
-  recipe: string;
-};
+
 const RecipePopup: NextPage<Props> = (props) => {
   const [recipeData, setRecipeData] = useState<RecipeDetails | null>(null);
+
   const [loading, setLoading] = useState(false);
   const [mapIsShowing, setMapIsShowing] = useState(false);
-  useEffect(() => {
-    console.log(mapIsShowing);
-  }, [mapIsShowing]);
 
   useEffect(() => {
-    console.log("yyyep");
     if (props.recipeId) {
       setLoading(true);
       API.getRecipeDetails(props.recipeId)
@@ -42,88 +36,96 @@ const RecipePopup: NextPage<Props> = (props) => {
 
     return () => {
       setRecipeData(null);
+      setLoading(false);
+      setMapIsShowing(false);
     };
   }, [props.recipeId, setRecipeData]);
 
-  return (
-    <Modal
-      show={props.showModal}
-      style={{ borderRadius: "1.5rem" }}
-      onHide={props.handleCloseModal}
-    >
-      {/* <div className="modal-dialog modal-lg d-flex"> */}
-      {/* <div
-        className="modal-content"
-        id="reciepContent"
-        style={{ borderRadius: "1.5rem" }}
-      > */}
-      {/* <div className="backbutton d-none" id="dropmarkers">
-        <button
-          type="button"
-          className="rounded-circle material-icons btn btn-light"
+  return props.showModal && recipeData ? (
+    <div style={{ borderRadius: "1.5rem" }} className="modal d-flex">
+      <div className="modal-dialog modal-lg d-flex">
+        <div
+          className={classNames("modal-content", {
+            [styles["recipeContent-jammed"]]: mapIsShowing,
+          })}
+          id="recipeContent"
+          style={{ borderRadius: "1.5rem" }}
         >
-          navigate_before
-        </button>
-      </div> */}
-      {/* <div id="wholemodalReciep"> */}
-      <Modal.Header>
-        <Modal.Title>{recipeData?.name}</Modal.Title>
-        <button
-          type="button"
-          className="close"
-          data-dismiss="modal"
-          aria-label="Close"
-          onClick={props.handleCloseModal}
-        >
-          <span aria-hidden="true">×</span>
-        </button>
-      </Modal.Header>
-      <Modal.Body style={{ display: "flex", justifyContent: "center" }}>
-        {loading ? (
-          <Loading />
-        ) : (
-          <div className="container-fluid">
-            <div className="row">
-              <div className="col-12 col-md-5 col-lg-6">
-                <img
-                  src={recipeData?.image}
-                  alt="recipe-image"
-                  className="img-fluid rounded"
-                  style={{ height: "auto" }}
-                />
-              </div>
-              <ShoppingBasketsList
-                openMapHandler={() => setMapIsShowing(true)}
-              />
+          <div
+            className={classNames(styles.backbutton, {
+              "d-none": !mapIsShowing,
+            })}
+            id="dropmarkers"
+          >
+            <button
+              type="button"
+              className="rounded-circle material-icons btn btn-light"
+              onClick={() => setMapIsShowing(false)}
+            >
+              navigate_before
+            </button>
+          </div>
+          <div
+            id="wholemodalReciep"
+            className={classNames({
+              "d-none": mapIsShowing,
+            })}
+          >
+            <div className="modal-header">
+              <div className="modal-title">{recipeData?.name}</div>
+              <button
+                type="button"
+                className="close"
+                data-dismiss="modal"
+                aria-label="Close"
+                onClick={props.handleCloseModal}
+              >
+                <span aria-hidden="true">×</span>
+              </button>
             </div>
-            <div className="row ingredientsSingle mt-3 mb-3">
-              <div className="col-12 col-md-9 col-lg-6">
-                <ul className="list-group" id="allIngs">
-                  {recipeData?.ingredients.map((ingrs, idx) => (
-                    <li
-                      className="list-group-item list-group-item-danger"
-                      key={ingrs.item + idx}
-                    >
-                      <span>{ingrs.item}</span>—{ingrs.amount}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-            <div className="row">
-              <div className="col-12">
-                <p>{recipeData?.recipe}</p>
-              </div>
+            <div
+              className="modal-body"
+              style={{ display: "flex", justifyContent: "center" }}
+            >
+              {loading ? (
+                <Loading />
+              ) : (
+                <div className="container-fluid">
+                  <div className="row">
+                    <div className="col-12 col-md-5 col-lg-6">
+                      <img
+                        src={recipeData?.image}
+                        alt="recipe-image"
+                        className="img-fluid rounded"
+                        style={{ height: "auto" }}
+                      />
+                    </div>
+                    <ShoppingBasketsList
+                      openMapHandler={() => setMapIsShowing(true)}
+                      existingIngredients={props.ingredients}
+                      recipeIngredients={recipeData.ingredients}
+                    />
+                  </div>
+                  {recipeData ? (
+                    <IngredientsInPopup
+                      existingIngredients={props.ingredients}
+                      recipeIngredients={recipeData.ingredients}
+                    />
+                  ) : null}
+                  <div className="row">
+                    <div className="col-12">
+                      <p>{recipeData?.recipe}</p>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
-        )}
-      </Modal.Body>
-      {/* </div> */}
-      {/* </div> */}
-      {mapIsShowing && <MapSideBar />}
-      {/* </div> */}
-    </Modal>
-  );
+        </div>
+        {mapIsShowing && <MapSideBar mapIsShowing />}
+      </div>
+    </div>
+  ) : null;
 };
 
 export default RecipePopup;

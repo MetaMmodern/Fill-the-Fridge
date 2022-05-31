@@ -44,11 +44,9 @@ function newFormat(someText: string) {
 }
 export async function getArticle(link: string) {
   const response = await needle("get", link, { follow_max: 3 });
-  console.log("needle ok");
   const articleBody = cheerio.load(response.body, {
     decodeEntities: false,
   });
-  console.log("cheerio okay");
   return {
     name: articleBody(".item-about div h1").text(),
     link: `http://fillthefridge.me/recipe/${link.split("/").pop()}`,

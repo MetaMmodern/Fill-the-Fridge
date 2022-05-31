@@ -17,10 +17,11 @@ export type RecipeCartPrices = {};
 
 interface baseAPI {
   getRecipes(
-    recipeIngredients: Array[string]
+    recipeIngredients: Array[string],
+    page: number
   ): Promise<Array<RecipeBaseDetails>>;
   getRecipeDetails(recipeId: string): Promise<RecipeFullDetails>;
-  getRecipeCartPrices(recipeId: string): Promise<RecipeCartPrices>;
+  getRecipeCartPrices(whatToBuy: string[]): Promise<RecipeCartPrices>;
   // getRecipeCommentsById(id: string): void;
 }
 export default baseAPI;

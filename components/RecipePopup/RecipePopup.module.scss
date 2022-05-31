@@ -1,0 +1,16 @@
+.recipeContent {
+  &-jammed {
+    width: 4rem;
+    margin-right: 0.5rem;
+    & .backbutton {
+      display: flex;
+      justify-content: center;
+      margin-top: 0.5rem;
+      & button {
+        height: 2rem;
+        width: 2rem;
+        padding: 0;
+      }
+    }
+  }
+}

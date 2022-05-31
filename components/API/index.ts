@@ -3,7 +3,7 @@ import mockedAPI from "./mockedAPI";
 import realAPI from "./realAPI";
 
 const allApis: Record<typeof process.env.NODE_ENV, baseAPI> = {
-  development: mockedAPI,
+  development: realAPI,
   production: realAPI,
   test: mockedAPI,
 };

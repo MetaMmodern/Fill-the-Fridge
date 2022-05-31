@@ -1,9 +1,9 @@
-import needle from 'needle';
-import cheerio from 'cheerio';
-import creatorurl from '../urlcreate';
+import needle from "needle";
+import cheerio from "cheerio";
+import creatorurl from "../urlcreate";
 
 async function wait(ms) {
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     setTimeout(resolve, ms);
   });
 }
@@ -29,61 +29,41 @@ function sortByPrice(arrayOfStore: any) {
 async function getPrice(ings) {
   try {
     if (ings === undefined) {
-      throw new Error('No ingredients passed');
+      throw new Error("No ingredients passed");
     }
     if (ings.length === 0) {
-      throw new Error('empty array');
+      throw new Error("empty array");
     }
-    const URL = 'http://mysupermarket.org.ua/index.php?search=';
+    const URL = "http://mysupermarket.org.ua/index.php?search=";
     const readyURL = creatorurl(URL, ings, 0);
     const options = {
-      headers: { Referer: 'http://mysupermarket.org.ua/' }
+      headers: { Referer: "http://mysupermarket.org.ua/" },
     };
     const items = [];
     await wait(100);
-    const response = await needle('get', readyURL, options);
+    const response = await needle("get", readyURL, options);
     if (response.statusCode !== 200) {
-      throw new Error('Error, not 200');
+      throw new Error("Error, not 200");
     }
     const $ = cheerio.load(response.body);
 
-    $('table:nth-child(4) td').each((index, value) => {
+    $("table:nth-child(4) td").each((index, value) => {
       const item = {
-        name: '',
-        pricesAndStores: []
+        name: "",
+        pricesAndStores: [],
       };
       $(value)
-        .find('p')
+        .find("p")
         .each((_index, elem) => {
-          if (
-            $(elem)
-              .find('b')
-              .text() !== ''
-          ) {
-            if (
-              $(elem)
-                .find('b')
-                .text()
-                .includes('grn.')
-            ) {
+          if ($(elem).find("b").text() !== "") {
+            if ($(elem).find("b").text().includes("grn.")) {
               item.pricesAndStores.push({
-                store: $(elem)
-                  .find('a')
-                  .text(),
-                price: getNumber(
-                  $(elem)
-                    .find('b')
-                    .text()
-                )
+                store: $(elem).find("a").text(),
+                price: getNumber($(elem).find("b").text()),
               });
             } else {
-              item.name = $(value)
-                .find('b')
-                .first()
-                .text();
-              item.amount = $(value)
-                .find('i')
-                .text();
+              item.name = $(value).find("b").first().text();
+              item.amount = $(value).find("i").text();
             }
           }
         });
@@ -104,7 +84,7 @@ function crossItOut(products, nameOfProduct) {
   return products;
 }
 function getShoppingList(shoppingList, products) {
-  return shoppingList.filter(n => products.indexOf(n) === -1);
+  return shoppingList.filter((n) => products.indexOf(n) === -1);
 }
 function getCount(shoppingList) {
   return shoppingList.length;
@@ -115,12 +95,12 @@ function getMinPrice(arrayOfStore) {
     let { shoppingList } = arrayOfStore[store];
     const { products } = arrayOfStore[store];
     const arrayOfName = [];
-    shoppingList.forEach(product => {
+    shoppingList.forEach((product) => {
       let minPrice = 0;
 
       const nameOfMinProduct = {
-        name: '',
-        price: 0
+        name: "",
+        price: 0,
       };
       for (let goods = 0; goods < listOfAllGoods.length; goods++) {
         if (listOfAllGoods[goods].name === product)
@@ -145,11 +125,10 @@ function getMinPrice(arrayOfStore) {
 }
 
 async function getCart(responseProds) {
-  let listOfProducts = [];
-  Object.values(responseProds).forEach(val => {
+  let listOfProducts: any[] = [];
+  Object.values(responseProds).forEach((val) => {
     listOfProducts = val;
   });
-
   // for (const product in responseProds) {
   //   if (Object.prototype.hasOwnProperty.call(responseProds, product)) {
   //     listOfProducts = responseProds[product];
@@ -158,36 +137,36 @@ async function getCart(responseProds) {
   let arrayPrice = 0;
   const arrayOfStore = [];
   arrayOfStore[0] = {
-    name: 'Novus',
+    name: "Novus",
     price: 0,
     count: 0,
     products: [...listOfProducts],
     listOfAllGoods: [],
-    shoppingList: [...listOfProducts]
+    shoppingList: [...listOfProducts],
   };
   arrayOfStore[1] = {
-    name: 'АТБ',
+    name: "АТБ",
     price: 0,
     count: 0,
     products: [...listOfProducts],
     listOfAllGoods: [],
-    shoppingList: [...listOfProducts]
+    shoppingList: [...listOfProducts],
   };
   arrayOfStore[2] = {
-    name: 'Велика Кишеня',
+    name: "Велика Кишеня",
     price: 0,
     count: 0,
     products: [...listOfProducts],
     listOfAllGoods: [],
-    shoppingList: [...listOfProducts]
+    shoppingList: [...listOfProducts],
   };
   arrayOfStore[3] = {
-    name: 'Сільпо',
+    name: "Сільпо",
     price: 0,
     count: 0,
     products: [...listOfProducts],
     listOfAllGoods: [],
-    shoppingList: [...listOfProducts]
+    shoppingList: [...listOfProducts],
   };
 
   for (let i = 0; i < listOfProducts.length; i++) {
@@ -207,8 +186,8 @@ async function getCart(responseProds) {
             if (arrayOfStore[store].name === element.store) {
               // если названия совпали
               const goods = {
-                price: '',
-                name: ''
+                price: "",
+                name: "",
               };
               goods.price = element.price;
               goods.name = listOfProducts[i];

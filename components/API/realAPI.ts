@@ -23,8 +23,17 @@ const API: baseAPI = {
     return json;
   },
   // TODO: add all missing methods
-  getRecipeCartPrices: async function (recipeId) {
-    throw new Error("Function not implemented.");
+  getRecipeCartPrices: async function (whatToBuy) {
+    const response = await fetch("/api/cart", {
+      method: "POST",
+      headers: { "Content-Type": "application/json; Charset=utf-8" },
+      body: JSON.stringify({
+        whatToBuy,
+      }),
+    });
+
+    const stores = await response.json();
+    return stores;
   },
 };
 export default API;

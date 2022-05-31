@@ -31,7 +31,6 @@ const RecipeSearchResultCard: NextPage<Props> = ({
               rel="noreferrer"
               onClick={(e) => {
                 e.preventDefault();
-                console.log("dude I'm trying");
                 openRecipe();
               }}
             >

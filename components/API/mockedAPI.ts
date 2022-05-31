@@ -39,4 +39,24 @@ const API: baseAPI = {
     throw new Error("Function not implemented.");
   },
 };
+
+const sleep = (ms: number) => {
+  return new Promise<void>((resolve) => {
+    setTimeout(() => {
+      resolve();
+    }, ms);
+  });
+};
+const randomDelayAPIHandler: ProxyHandler<typeof API> = {
+  async get(target, prop, reciever) {
+    const sleepMs = Math.ceil(Math.random() * 100);
+    await sleep(sleepMs);
+    type propType = keyof typeof target;
+    // this is wrong
+    return target[prop as keyof typeof target];
+  },
+};
+
+const randomDelayAPI = new Proxy(API, randomDelayAPIHandler);
+
 export default API;

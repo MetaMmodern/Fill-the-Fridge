@@ -15,7 +15,6 @@ type Props = {
   openRecipe: (id: string) => void;
 };
 const ResultsContainer: NextPage<Props> = (props) => {
-  console.log(props.recipes);
   return (
     <div
       className="row row-cols-1 row-cols-sm-2 row-cols-md-3"
@@ -27,7 +26,6 @@ const ResultsContainer: NextPage<Props> = (props) => {
             key={i}
             {...r}
             openRecipe={() => {
-              console.log("duddde");
               props.openRecipe(r.id);
             }}
           />
