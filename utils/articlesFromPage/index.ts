@@ -1,5 +1,5 @@
 import needle from "needle";
-import cheerio, { CheerioAPI } from "cheerio";
+import cheerio from "cheerio";
 import creatorurl from "../urlcreate";
 
 type Article = {
@@ -9,10 +9,10 @@ type Article = {
   ingrFast: string[];
   id: string | undefined;
 };
-function getIngredientsObject(currentHTML: CheerioAPI) {
+function getIngredientsObject(currentHTML: any) {
   const ingredients: {}[] = [];
   currentHTML(".ingredients-bl ul li > span[itemprop='ingredient']").each(
-    (_index, value) => {
+    (_index: any, value: any) => {
       const ingredientAndAmount: any = {};
       let inner: any = currentHTML(value)
         .first()
@@ -68,7 +68,7 @@ export async function articlesFromPage(ings: string[], page: string) {
     const readyURL = creatorurl(URL, ings, page);
     const response = await needle("get", readyURL, options);
     if (response.statusCode !== 200) {
-      throw new Error(response.statusCode);
+      throw new Error(String(response.statusCode));
     }
     const $ = cheerio.load(response.body);
     const resultsNumber = $("div.sort-res div.bl-right strong").text();
@@ -91,6 +91,7 @@ export async function articlesFromPage(ings: string[], page: string) {
         id: recipeId,
       };
       $(".ingr_fast span", item).each((_index, value) =>
+        // @ts-ignore
         article.ingrFast.push(value.children[0].data)
       );
       articles.push(article);

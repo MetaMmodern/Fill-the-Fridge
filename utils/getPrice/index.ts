@@ -2,7 +2,7 @@ import needle from "needle";
 import cheerio from "cheerio";
 import creatorurl from "../urlcreate";
 
-async function wait(ms) {
+async function wait(ms: number) {
   return new Promise((resolve) => {
     setTimeout(resolve, ms);
   });
@@ -12,7 +12,7 @@ function getNumber(str: any) {
   return parseFloat(str);
 }
 function sortByPrice(arrayOfStore: any) {
-  arrayOfStore.sort((store, anotherStore) => {
+  arrayOfStore.sort((store: any, anotherStore: any) => {
     // eslint-disable-next-line no-param-reassign
     store.price = Number(store.price.toFixed(2));
     // eslint-disable-next-line no-param-reassign
@@ -26,7 +26,7 @@ function sortByPrice(arrayOfStore: any) {
     return -1;
   });
 }
-async function getPrice(ings) {
+async function getPrice(ings: any) {
   try {
     if (ings === undefined) {
       throw new Error("No ingredients passed");
@@ -35,11 +35,11 @@ async function getPrice(ings) {
       throw new Error("empty array");
     }
     const URL = "http://mysupermarket.org.ua/index.php?search=";
-    const readyURL = creatorurl(URL, ings, 0);
+    const readyURL = creatorurl(URL, ings, 0 as any);
     const options = {
       headers: { Referer: "http://mysupermarket.org.ua/" },
     };
-    const items = [];
+    const items: any[] = [];
     await wait(100);
     const response = await needle("get", readyURL, options);
     if (response.statusCode !== 200) {
@@ -48,7 +48,7 @@ async function getPrice(ings) {
     const $ = cheerio.load(response.body);
 
     $("table:nth-child(4) td").each((index, value) => {
-      const item = {
+      const item: any = {
         name: "",
         pricesAndStores: [],
       };
@@ -72,10 +72,10 @@ async function getPrice(ings) {
     });
     return items;
   } catch (error) {
-    return new Error(error);
+    return new Error(error as any);
   }
 }
-function crossItOut(products, nameOfProduct) {
+function crossItOut(products: any, nameOfProduct: any) {
   for (let product = 0; product < products.length; product++) {
     if (nameOfProduct === products[product]) {
       products.splice(product, 1);
@@ -83,19 +83,19 @@ function crossItOut(products, nameOfProduct) {
   }
   return products;
 }
-function getShoppingList(shoppingList, products) {
-  return shoppingList.filter((n) => products.indexOf(n) === -1);
+function getShoppingList(shoppingList: any, products: any) {
+  return shoppingList.filter((n: any) => products.indexOf(n) === -1);
 }
-function getCount(shoppingList) {
+function getCount(shoppingList: any) {
   return shoppingList.length;
 }
-function getMinPrice(arrayOfStore) {
+function getMinPrice(arrayOfStore: any) {
   for (let store = 0; store < arrayOfStore.length; store++) {
     const { listOfAllGoods } = arrayOfStore[store];
     let { shoppingList } = arrayOfStore[store];
     const { products } = arrayOfStore[store];
-    const arrayOfName = [];
-    shoppingList.forEach((product) => {
+    const arrayOfName: any[] = [];
+    shoppingList.forEach((product: any) => {
       let minPrice = 0;
 
       const nameOfMinProduct = {
@@ -124,9 +124,9 @@ function getMinPrice(arrayOfStore) {
   }
 }
 
-async function getCart(responseProds) {
+async function getCart(responseProds: any) {
   let listOfProducts: any[] = [];
-  Object.values(responseProds).forEach((val) => {
+  Object.values(responseProds).forEach((val: any) => {
     listOfProducts = val;
   });
   // for (const product in responseProds) {
@@ -134,8 +134,8 @@ async function getCart(responseProds) {
   //     listOfProducts = responseProds[product];
   //   }
   // }
-  let arrayPrice = 0;
-  const arrayOfStore = [];
+  let arrayPrice: any = 0;
+  const arrayOfStore: any[] = [];
   arrayOfStore[0] = {
     name: "Novus",
     price: 0,
