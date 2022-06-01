@@ -22,6 +22,18 @@ interface baseAPI {
   ): Promise<Array<RecipeBaseDetails>>;
   getRecipeDetails(recipeId: string): Promise<RecipeFullDetails>;
   getRecipeCartPrices(whatToBuy: string[]): Promise<RecipeCartPrices>;
-  // getRecipeCommentsById(id: string): void;
+  createNewUser(email: string, password: string): Promise<void>;
+  updateUserPassword?: () => Promise<void>;
+  deleteUser?: () => Promise<void>;
+  createNewRecipe?: (recipeDetails: {
+    image: string;
+    description: string;
+  }) => Promise<string>;
+  getRecipeComments?: () => Promise<string[]>;
+  postNewComment?: (
+    recipeId: string,
+    comment: string,
+    user: string
+  ) => Promise<void>;
 }
 export default baseAPI;

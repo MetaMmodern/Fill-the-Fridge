@@ -1,17 +1,32 @@
 import { NextPage } from "next";
 import Link from "next/link";
 import Header from "../components/Header/Header";
-const Login: NextPage = () => {
+import { getCsrfToken } from "next-auth/react";
+import { CtxOrReq } from "next-auth/client/_utils";
+import { useRouter } from "next/router";
+type Props = {
+  csrfToken: string;
+};
+const Login: NextPage<Props> = ({ csrfToken }) => {
+  const { error } = useRouter().query;
   return (
     <>
       <Header />
       <div className="container h-100 mt-4">
-        <form>
+        <form method="post" action="/api/auth/callback/credentials">
+          {error && (
+            <div className="alert alert-danger" role="alert">
+              This is a danger alert.
+            </div>
+          )}
+          <input name="csrfToken" type="hidden" defaultValue={csrfToken} />
+
           <div className="form-group">
             <label htmlFor="exampleInputEmail1">Email address</label>
             <input
               type="email"
               className="form-control"
+              name="email"
               id="exampleInputEmail1"
               aria-describedby="emailHelp"
               autoComplete="email"
@@ -21,6 +36,7 @@ const Login: NextPage = () => {
             <label htmlFor="exampleInputPassword1">Password</label>
             <input
               type="password"
+              name="password"
               className="form-control"
               id="exampleInputPassword1"
               autoComplete="current-password"
@@ -35,4 +51,11 @@ const Login: NextPage = () => {
     </>
   );
 };
+
+export async function getServerSideProps(context: CtxOrReq | undefined) {
+  const csrfToken = await getCsrfToken(context);
+  return {
+    props: { csrfToken },
+  };
+}
 export default Login;

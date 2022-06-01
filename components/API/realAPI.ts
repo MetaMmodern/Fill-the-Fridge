@@ -35,5 +35,18 @@ const API: baseAPI = {
     const stores = await response.json();
     return stores;
   },
+  createNewUser: async function (
+    email: string,
+    password: string
+  ): Promise<void> {
+    const response = await fetch("/api/auth/signup", {
+      method: "POST",
+      body: JSON.stringify({ email, password }),
+    });
+    if (response.status != 201) {
+      return;
+    }
+    return;
+  },
 };
 export default API;
