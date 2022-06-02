@@ -1,6 +1,6 @@
 import { NextPage } from "next";
 import React from "react";
-
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 type Props = {
   storeName: string;
   price: string;
@@ -13,9 +13,9 @@ const ShoppingBasket: NextPage<Props> = (props) => {
         data-placement="right"
         data-html="true"
         title=""
-        className="material-icons mr-1"
+        className="mr-1"
       >
-        shopping_cart
+        <ShoppingCartIcon />
       </span>
       <div className="storeName">{props.storeName}</div>
       <span>—</span>

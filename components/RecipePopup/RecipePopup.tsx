@@ -8,6 +8,7 @@ import API from "../API";
 import classNames from "classnames";
 import styles from "./RecipePopup.module.scss";
 import IngredientsInPopup from "./IngredientsInPopup/IngredientsInPopup";
+import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
 import { RecipeDetails } from "../../types";
 type Props = {
   recipeId: string | null;
@@ -59,10 +60,10 @@ const RecipePopup: NextPage<Props> = (props) => {
           >
             <button
               type="button"
-              className="rounded-circle material-icons btn btn-light"
+              className="rounded-circle btn btn-light"
               onClick={() => setMapIsShowing(false)}
             >
-              navigate_before
+              <NavigateBeforeIcon />
             </button>
           </div>
           <div
