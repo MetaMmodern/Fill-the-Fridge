@@ -1,20 +1,3 @@
-export type RecipeBaseDetails = {
-  image: string;
-  ingrFast: string[];
-  link: string;
-  name: string;
-  id: string;
-};
-
-export type RecipeFullDetails = {
-  name: string;
-  image: string;
-  ingredients: { item: string; amount: string }[];
-  link: string;
-  recipe: string;
-};
-export type RecipeCartPrices = {};
-
 interface baseAPI {
   getRecipes(
     recipeIngredients: Array[string],
@@ -22,7 +5,7 @@ interface baseAPI {
   ): Promise<Array<RecipeBaseDetails>>;
   getRecipeDetails(recipeId: string): Promise<RecipeFullDetails>;
   getRecipeCartPrices(whatToBuy: string[]): Promise<RecipeCartPrices>;
-  createNewUser(email: string, password: string): Promise<void>;
+  createNewUser(details: NewUserRequestDetails): Promise<void>;
   updateUserPassword?: () => Promise<void>;
   deleteUser?: () => Promise<void>;
   createNewRecipe?: (recipeDetails: {

@@ -1,4 +1,5 @@
-import baseAPI, { RecipeBaseDetails } from "./baseApi";
+import { RecipeBaseDetails } from "../../types";
+import baseAPI from "./baseApi";
 
 const API: baseAPI = {
   getRecipes: async function (recipeIngredients) {
@@ -35,13 +36,14 @@ const API: baseAPI = {
     const stores = await response.json();
     return stores;
   },
-  createNewUser: async function (
-    email: string,
-    password: string
-  ): Promise<void> {
+  createNewUser: async function ({
+    email,
+    password,
+    passwordSubmit,
+  }): Promise<void> {
     const response = await fetch("/api/auth/signup", {
       method: "POST",
-      body: JSON.stringify({ email, password }),
+      body: JSON.stringify({ email, password, passwordSubmit }),
     });
     if (response.status != 201) {
       return;

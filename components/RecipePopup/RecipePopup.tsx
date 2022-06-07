@@ -94,6 +94,7 @@ const RecipePopup: NextPage<Props> = (props) => {
                 <div className="container-fluid">
                   <div className="row">
                     <div className="col-12 col-md-5 col-lg-6">
+                      {/* // eslint-disable-next-line @next/next/no-img-element */}
                       <img
                         src={recipeData?.image}
                         alt="recipe-image"

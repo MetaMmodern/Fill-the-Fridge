@@ -38,7 +38,7 @@ const API: baseAPI = {
   getRecipeCartPrices: function (recipeId) {
     throw new Error("Function not implemented.");
   },
-  createNewUser: function (email: string, password: string): Promise<void> {
+  createNewUser: function ({ email, password, passwordSubmit }): Promise<void> {
     throw new Error("Function not implemented.");
   },
 };

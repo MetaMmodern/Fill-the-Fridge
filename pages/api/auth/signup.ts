@@ -1,6 +1,7 @@
 import { NextApiHandler } from "next";
 import { hashPassword } from "../../../lib/auth";
 import { MongoClient } from "mongodb";
+import { NewUserRequestDetails } from "../../../types";
 
 // import { connectToDatabase } from "../../../lib/db";
 
@@ -9,9 +10,17 @@ const handler: NextApiHandler = async (req, res) => {
     return;
   }
 
-  const data = req.body;
+  const { email, password, passwordSubmit }: NewUserRequestDetails = JSON.parse(
+    req.body
+  );
 
-  const { email, password } = data;
+  if (password !== passwordSubmit) {
+    console.log("not equal");
+    res.status(422).json({
+      message: "Invalid input - passwords are not equal.",
+    });
+    return;
+  }
 
   if (
     !email ||
@@ -19,6 +28,13 @@ const handler: NextApiHandler = async (req, res) => {
     !password ||
     password.trim().length < 7
   ) {
+    console.log("short");
+
+    console.log(
+      [!email, !email.includes("@"), !password, password.trim().length < 7],
+      !email || !email.includes("@") || !password || password.trim().length < 7
+    );
+
     res.status(422).json({
       message:
         "Invalid input - password should also be at least 7 characters long.",
@@ -35,6 +51,7 @@ const handler: NextApiHandler = async (req, res) => {
   const existingUser = await db.collection("users").findOne({ email: email });
 
   if (existingUser) {
+    console.log("user exists");
     res.status(422).json({ message: "User exists already!" });
     client.close();
     return;
