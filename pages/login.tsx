@@ -4,9 +4,11 @@ import Header from "../components/Header/Header";
 import { getCsrfToken } from "next-auth/react";
 import { CtxOrReq } from "next-auth/client/_utils";
 import { useRouter } from "next/router";
+import AuthErrorContainer from "../components/AuthErrorContainer/AuthErrorContainer";
 type Props = {
   csrfToken: string;
 };
+
 const Login: NextPage<Props> = ({ csrfToken }) => {
   const { error } = useRouter().query;
   return (
@@ -14,11 +16,7 @@ const Login: NextPage<Props> = ({ csrfToken }) => {
       <Header />
       <div className="container h-100 mt-4">
         <form method="post" action="/api/auth/callback/credentials">
-          {error && (
-            <div className="alert alert-danger" role="alert">
-              This is a danger alert.
-            </div>
-          )}
+          <AuthErrorContainer error={error} />
           <input name="csrfToken" type="hidden" defaultValue={csrfToken} />
 
           <div className="form-group">

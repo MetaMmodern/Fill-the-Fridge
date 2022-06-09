@@ -3,6 +3,8 @@ import GithubProvider from "next-auth/providers/github";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { MongoDBAdapter } from "@next-auth/mongodb-adapter";
 import clientPromise from "./lib/mongodb";
+import { compare } from "bcryptjs";
+import { MongoClient } from "mongodb";
 
 export default NextAuth({
   pages: {
@@ -32,20 +34,47 @@ export default NextAuth({
       },
       async authorize(credentials, req) {
         // Add logic here to look up the user from the credentials supplied
-        const user = { id: 1, name: "J Smith", email: "jsmith@example.com" };
+        // const user = { id: 1, name: "J Smith", email: "jsmith@example.com" };
 
-        if (
-          credentials?.email == "john@gmail.com" &&
-          credentials?.password == "test"
-        ) {
-          // Any object returned will be saved in `user` property of the JWT
-          return user;
-        } else {
-          // If you return null then an error will be displayed advising the user to check their details.
-          return null;
+        // if (
+        //   credentials?.email == "john@gmail.com" &&
+        //   credentials?.password == "test"
+        // ) {
+        //   // Any object returned will be saved in `user` property of the JWT
+        //   return user;
+        // } else {
+        //   // If you return null then an error will be displayed advising the user to check their details.
+        //   return null;
 
-          // You can also Reject this callback with an Error thus the user will be sent to the error page with the error message as a query parameter
+        //   // You can also Reject this callback with an Error thus the user will be sent to the error page with the error message as a query parameter
+        // }
+
+        const client = await MongoClient.connect(process.env.MONGODB_URI!);
+        //Get all the users
+        const users = await client.db().collection("users");
+        //Find user with the email
+        const result = await users.findOne({
+          email: credentials?.email,
+        });
+        const ERROR_MESSAGE = "INCORRECT_CREDS";
+        //Not found - send error res
+        if (!result) {
+          client.close();
+          throw new Error(ERROR_MESSAGE);
         }
+        //Check hased password with DB password
+        const checkPassword = await compare(
+          credentials?.password || "",
+          result.password
+        );
+        //Incorrect password - send response
+        if (!checkPassword) {
+          client.close();
+          throw new Error(ERROR_MESSAGE);
+        }
+        //Else send success response
+        client.close();
+        return { email: result.email };
       },
     }),
     // ...add more providers here
