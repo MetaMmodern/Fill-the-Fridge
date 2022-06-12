@@ -83,7 +83,6 @@ const Home: NextPage = () => {
         dropRecipeId={dropRecipeId}
       />
       {/* </div> */}
-      <Script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCYsL3NtRxHucdRBUKgnmP5m0QQcTnjM3s&libraries=places" />
     </div>
   );
 };

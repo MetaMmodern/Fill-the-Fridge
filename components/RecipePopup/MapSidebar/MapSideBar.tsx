@@ -1,8 +1,9 @@
 import classNames from "classnames";
 import { NextPage } from "next";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Wrapper, Status } from "@googlemaps/react-wrapper";
 import useDeepCompareEffect from "use-deep-compare-effect";
+import getLocation from "../../../utils";
 type Props = {
   mapIsShowing: boolean;
 };
@@ -58,8 +59,14 @@ const MapSideBar: NextPage<Props> = (props) => {
     "modal-content",
     { "d-none": !props.mapIsShowing },
   ]);
-  const center = { lat: -34.397, lng: 150.644 };
-  const zoom = 4;
+  const [location, setLocation] = useState<GeolocationPosition | null>(null);
+  useEffect(() => {
+    getLocation().then((loc) => {
+      setLocation(loc);
+    });
+  }, []);
+
+  const zoom = 14;
   return (
     <div
       className={MapContainerClassName}
@@ -67,12 +74,17 @@ const MapSideBar: NextPage<Props> = (props) => {
       style={{ width: "400px" }}
     >
       <div className="modal-body" style={{ padding: "0.5rem" }}>
-        <Wrapper apiKey={"AIzaSyAj7zcSZkcfyAZDMyS-anJoY6Co-w0Z1dA"}>
-          <Map
-            style={{ width: "100%", height: "100%" }}
-            center={center}
-            zoom={zoom}
-          />
+        <Wrapper apiKey={process.env.NEXT_PUBLIC_GMAPS_KEY!}>
+          {location ? (
+            <Map
+              style={{ width: "100%", height: "100%" }}
+              center={{
+                lat: location.coords.latitude,
+                lng: location.coords.longitude,
+              }}
+              zoom={zoom}
+            />
+          ) : undefined}
         </Wrapper>
       </div>
     </div>
