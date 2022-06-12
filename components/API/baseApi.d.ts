@@ -8,10 +8,7 @@ interface baseAPI {
   createNewUser(details: NewUserRequestDetails): Promise<void>;
   updateUserPassword?: () => Promise<void>;
   deleteUser?: () => Promise<void>;
-  createNewRecipe?: (recipeDetails: {
-    image: string;
-    description: string;
-  }) => Promise<string>;
+  createNewRecipe: (recipeDetails: FormData) => Promise<string>;
   getRecipeComments?: () => Promise<string[]>;
   postNewComment?: (
     recipeId: string,

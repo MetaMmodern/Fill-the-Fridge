@@ -41,6 +41,9 @@ const API: baseAPI = {
   createNewUser: function ({ email, password, passwordSubmit }): Promise<void> {
     throw new Error("Function not implemented.");
   },
+  createNewRecipe: function (recipeDetails: FormData): Promise<string> {
+    throw new Error("Function not implemented.");
+  },
 };
 
 const sleep = (ms: number) => {

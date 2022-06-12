@@ -10,7 +10,7 @@ const API: baseAPI = {
         body: JSON.stringify({ ings: recipeIngredients }),
       };
 
-      const response = await fetch(`api/recipes/search/`, options);
+      const response = await fetch(`api/recipes/search`, options);
       const recipes: { recipesArray: RecipeBaseDetails[] } =
         await response.json();
       console.debug(recipes);
@@ -49,6 +49,14 @@ const API: baseAPI = {
       return;
     }
     return;
+  },
+  async createNewRecipe(recipeDetails) {
+    const res = await fetch("/api/recipes", {
+      method: "POST",
+      body: recipeDetails,
+    });
+    const resultId: { id: string } = await res.json();
+    return resultId.id;
   },
 };
 export default API;

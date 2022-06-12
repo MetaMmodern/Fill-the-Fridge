@@ -43,3 +43,15 @@ export interface NewUserRequestDetails {
   password: string;
   passwordSubmit: string;
 }
+
+export interface newRecipeIngredient {
+  name: string;
+  amount: string;
+}
+
+export interface newRecipeForm {
+  name: string;
+  fullDescription: string;
+  ingredients: newRecipeIngredient[];
+  image: FileList;
+}

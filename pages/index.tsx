@@ -19,7 +19,6 @@ const Home: NextPage = () => {
   const [recipes, setRecipes] = useState<any[] | null>(null);
   const [tags, setTags] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
-  const [modalOpened, setModalOpened] = useState(false);
   const [currentRecipePopupId, setCurrentRecipePopupId] = useState<
     null | string
   >(null);
@@ -41,13 +40,9 @@ const Home: NextPage = () => {
     }
     setLoading(false);
   };
-  useEffect(() => {
-    if (currentRecipePopupId !== null) {
-      setModalOpened(true);
-    } else {
-      setModalOpened(false);
-    }
-  }, [currentRecipePopupId]);
+  const dropRecipeId = () => {
+    setCurrentRecipePopupId(null);
+  };
 
   return (
     <div className={styles.container}>
@@ -66,6 +61,7 @@ const Home: NextPage = () => {
           <ResultsContainer
             recipes={recipes}
             openRecipe={(id) => {
+              console.log("immediate");
               setCurrentRecipePopupId(id);
             }}
             // updateRecipes={fetchRecipes}
@@ -80,14 +76,13 @@ const Home: NextPage = () => {
         ></div>
         <div className="d-flex justify-content-center" id="loading"></div>
       </div>
-      <div className="container container-popup">
-        <RecipePopup
-          recipeId={currentRecipePopupId}
-          showModal={modalOpened}
-          handleCloseModal={() => setModalOpened(false)}
-          ingredients={tags}
-        />
-      </div>
+      {/* <div className="container container-popup"> */}
+      <RecipePopup
+        recipeId={currentRecipePopupId}
+        ingredients={tags}
+        dropRecipeId={dropRecipeId}
+      />
+      {/* </div> */}
       <Script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCYsL3NtRxHucdRBUKgnmP5m0QQcTnjM3s&libraries=places" />
     </div>
   );

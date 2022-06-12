@@ -19,12 +19,17 @@ const Header = () => {
         </h3>
         <div style={{ height: "100%", display: "flex", alignItems: "center" }}>
           {session ? (
-            <button
-              className={`btn btn-success ${styles.cleaner} ml-3`}
-              onClick={() => signOut()}
-            >
-              Sign Out
-            </button>
+            <>
+              <button className={`btn btn-success ${styles.cleaner} ml-3`}>
+                <Link href="/newRecipe">Add Recipe</Link>
+              </button>
+              <button
+                className={`btn btn-success ${styles.cleaner} ml-3`}
+                onClick={() => signOut()}
+              >
+                Sign Out
+              </button>
+            </>
           ) : (
             <button
               className={`btn btn-success ${styles.cleaner} ml-3`}

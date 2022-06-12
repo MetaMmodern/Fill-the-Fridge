@@ -26,6 +26,7 @@ const ResultsContainer: NextPage<Props> = (props) => {
             key={i}
             {...r}
             openRecipe={() => {
+              console.log("immediate");
               props.openRecipe(r.id);
             }}
           />

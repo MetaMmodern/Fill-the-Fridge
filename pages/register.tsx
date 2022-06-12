@@ -6,36 +6,33 @@ import { useForm } from "react-hook-form";
 import API from "../components/API";
 import { signIn } from "next-auth/react";
 
+interface RegisterForm {
+  email: string;
+  password: string;
+  passwordSubmit: string;
+}
 const Register: NextPage = () => {
   const {
     register,
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm<{
-    email: string;
-    password: string;
-    passwordSubmit: string;
-  }>();
-  const onSubmit = async (data: {
-    email: string;
-    password: string;
-    passwordSubmit: string;
-  }) => {
+  } = useForm<RegisterForm>();
+  const onSubmit = async (data: RegisterForm) => {
     console.log(data);
     return API.createNewUser(data)
       .catch((e) => {
         alert(e);
       })
       .then(() => {
-        // return signIn(
-        //   "credentials",
-        //   {},
-        //   {
-        //     email: data.email,
-        //     password: data.password,
-        //   }
-        // );
+        return signIn(
+          "credentials",
+          {},
+          {
+            email: data.email,
+            password: data.password,
+          }
+        );
       });
   };
   return (
