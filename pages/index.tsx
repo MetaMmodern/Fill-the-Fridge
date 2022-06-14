@@ -33,6 +33,7 @@ const Home: NextPage = () => {
           setRecipes([...(recipes ?? []), newRecipes]);
           return;
         }
+        console.log(newRecipes);
         setRecipes(newRecipes);
       } catch (error) {
         console.debug(error);
@@ -60,10 +61,7 @@ const Home: NextPage = () => {
         ) : (
           <ResultsContainer
             recipes={recipes}
-            openRecipe={(id) => {
-              console.log("immediate");
-              setCurrentRecipePopupId(id);
-            }}
+            openRecipe={(id) => setCurrentRecipePopupId(id)}
             // updateRecipes={fetchRecipes}
           />
         )}

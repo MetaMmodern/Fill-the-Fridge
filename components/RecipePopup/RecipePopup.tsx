@@ -9,7 +9,7 @@ import classNames from "classnames";
 import styles from "./RecipePopup.module.scss";
 import IngredientsInPopup from "./IngredientsInPopup/IngredientsInPopup";
 import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
-import { RecipeDetails } from "../../types";
+import { Carts, RecipeDetails } from "../../types";
 import classnames from "classnames";
 type Props = {
   recipeId: string | null;
@@ -22,9 +22,9 @@ const RecipePopup: NextPage<Props> = (props) => {
   const [modalOpened, setModalOpened] = useState(false);
   const [loading, setLoading] = useState(false);
   const [mapIsShowing, setMapIsShowing] = useState(false);
+  const [baskets, setBaskets] = useState<null | Carts>(null);
   useEffect(() => {
     if (props.recipeId !== null) {
-      console.log("immediate");
       setModalOpened(true);
     }
   }, [props.recipeId]);
@@ -119,6 +119,8 @@ const RecipePopup: NextPage<Props> = (props) => {
                       openMapHandler={() => setMapIsShowing(true)}
                       existingIngredients={props.ingredients}
                       recipeIngredients={recipeData.ingredients}
+                      baskets={baskets}
+                      setBaskets={setBaskets}
                     />
                   </div>
                   {recipeData ? (
@@ -144,7 +146,7 @@ const RecipePopup: NextPage<Props> = (props) => {
             </div>
           </div>
         </div>
-        {mapIsShowing && <MapSideBar mapIsShowing />}
+        {mapIsShowing && <MapSideBar mapIsShowing stores={baskets || []} />}
       </div>
     </div>
   ) : null;

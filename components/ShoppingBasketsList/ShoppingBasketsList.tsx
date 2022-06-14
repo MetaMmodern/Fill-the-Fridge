@@ -10,10 +10,16 @@ type Props = {
   openMapHandler: () => void;
   existingIngredients: string[];
   recipeIngredients: RecipeDetails["ingredients"];
+  baskets: null | Carts;
+  setBaskets: (newBaskets: Carts) => void;
 };
-const ShoppingBasketsList: NextPage<Props> = (props) => {
+const ShoppingBasketsList: NextPage<Props> = ({
+  baskets,
+  setBaskets,
+  ...props
+}) => {
   const [loading, setLoading] = useState(true);
-  const [baskets, setBaskets] = useState<null | Carts>(null);
+
   useEffect(() => {
     setLoading(true);
     const whatToSearch = props.recipeIngredients

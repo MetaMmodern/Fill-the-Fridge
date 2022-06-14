@@ -4,8 +4,12 @@ import React, { useEffect, useState } from "react";
 import { Wrapper, Status } from "@googlemaps/react-wrapper";
 import useDeepCompareEffect from "use-deep-compare-effect";
 import getLocation from "../../../utils";
+import { Carts } from "../../../types";
+import { resolve } from "node:path/win32";
+import { rejects } from "node:assert";
 type Props = {
   mapIsShowing: boolean;
+  stores: Carts;
 };
 
 interface MapProps extends google.maps.MapOptions {
@@ -14,7 +18,33 @@ interface MapProps extends google.maps.MapOptions {
   onIdle?: (map: google.maps.Map) => void;
   center: google.maps.LatLngLiteral;
   zoom: number;
+  stores: Carts;
 }
+
+const Marker: React.FC<google.maps.MarkerOptions> = (options) => {
+  const [marker, setMarker] = React.useState<google.maps.Marker>();
+
+  React.useEffect(() => {
+    if (!marker) {
+      setMarker(new google.maps.Marker());
+    }
+
+    // remove marker from map on unmount
+    return () => {
+      if (marker) {
+        marker.setMap(null);
+      }
+    };
+  }, [marker]);
+
+  React.useEffect(() => {
+    if (marker) {
+      marker.setOptions(options);
+    }
+  }, [marker, options]);
+
+  return null;
+};
 
 const Map: React.FC<MapProps> = ({
   onClick,
@@ -26,6 +56,7 @@ const Map: React.FC<MapProps> = ({
 }) => {
   const ref = React.useRef<HTMLDivElement>(null);
   const [map, setMap] = React.useState<google.maps.Map>();
+  const [positions, setPositions] = useState([]);
   useDeepCompareEffect(() => {
     if (map) {
       map.setOptions(options);
@@ -46,12 +77,80 @@ const Map: React.FC<MapProps> = ({
       }
     }
   }, [map, onClick, onIdle]);
-  React.useEffect(() => {
+  useEffect(() => {
     if (ref.current && !map) {
       setMap(new window.google.maps.Map(ref.current, { center, zoom }));
     }
   }, [ref, map]);
-  return <div ref={ref} style={style}></div>;
+  const [markers, setMarkers] = useState<google.maps.MarkerOptions[]>([]);
+  // create marker positions
+  useEffect(() => {
+    function findPlacePromise(
+      element: google.maps.places.FindPlaceFromQueryRequest,
+      service: google.maps.places.PlacesService
+    ): Promise<google.maps.places.PlaceResult[]> {
+      return new Promise((resolve, reject) => {
+        service.findPlaceFromQuery(
+          element,
+          (
+            a: google.maps.places.PlaceResult[] | null,
+            b: google.maps.places.PlacesServiceStatus
+          ) => {
+            if (a) resolve(a);
+            else reject(b);
+          }
+        );
+      });
+    }
+    if (map) {
+      console.log("started searching");
+      const service = new window.google.maps.places.PlacesService(map);
+      const requestBodies = options.stores.map((el) => ({
+        query: el.name,
+        fields: ["name", "geometry"],
+        locationBias: {
+          radius: 800,
+          center: { lat: center.lat, lng: center.lng },
+        },
+      }));
+      console.log(requestBodies);
+      const promises = requestBodies.map((reqBody) =>
+        findPlacePromise(reqBody, service)
+      );
+      Promise.allSettled(promises).then((results) => {
+        console.log(results);
+        results.forEach((resultArray) => {
+          if (resultArray.status == "fulfilled") {
+            const markerParams = resultArray.value.map((resultPosition) => ({
+              map,
+              position: resultPosition.geometry?.location,
+            }));
+            setMarkers(markerParams);
+            // const cpos = google.maps.geometry.spherical.computeDistanceBetween(
+            //   new google.maps.LatLng(
+            //     JSON.parse(JSON.stringify(marker.position))
+            //   ),
+            //   new google.maps.LatLng(myposition)
+            // );
+            // if (cpos > 10000) {
+            //   marker.setMap(null);
+            //   return null;
+            // }
+          }
+        });
+
+        // results.forEach((res)=>createMarker(res))
+      });
+    }
+  }, [center.lat, center.lng, map, options.stores]);
+
+  return (
+    <div ref={ref} style={style}>
+      {markers.map((mOptions, i) => {
+        return <Marker {...mOptions} key={i} />;
+      })}
+    </div>
+  );
 };
 
 const MapSideBar: NextPage<Props> = (props) => {
@@ -74,7 +173,10 @@ const MapSideBar: NextPage<Props> = (props) => {
       style={{ width: "400px" }}
     >
       <div className="modal-body" style={{ padding: "0.5rem" }}>
-        <Wrapper apiKey={process.env.NEXT_PUBLIC_GMAPS_KEY!}>
+        <Wrapper
+          apiKey={process.env.NEXT_PUBLIC_GMAPS_KEY!}
+          libraries={["places"]}
+        >
           {location ? (
             <Map
               style={{ width: "100%", height: "100%" }}
@@ -83,6 +185,7 @@ const MapSideBar: NextPage<Props> = (props) => {
                 lng: location.coords.longitude,
               }}
               zoom={zoom}
+              stores={props.stores}
             />
           ) : undefined}
         </Wrapper>

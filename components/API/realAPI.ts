@@ -13,7 +13,6 @@ const API: baseAPI = {
       const response = await fetch(`api/recipes/search`, options);
       const recipes: { recipesArray: RecipeBaseDetails[] } =
         await response.json();
-      console.debug(recipes);
       return recipes.recipesArray;
     }
     return Promise.resolve([]);
