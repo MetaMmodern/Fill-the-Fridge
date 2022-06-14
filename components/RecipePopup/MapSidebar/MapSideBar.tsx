@@ -121,25 +121,26 @@ const Map: React.FC<MapProps> = ({
         console.log(results);
         results.forEach((resultArray) => {
           if (resultArray.status == "fulfilled") {
-            const markerParams = resultArray.value.map((resultPosition) => ({
-              map,
-              position: resultPosition.geometry?.location,
-            }));
+            const userPosition = new google.maps.LatLng(center.lat, center.lng);
+            const markerParams = resultArray.value
+              .map((resultPosition) => ({
+                map,
+                position: resultPosition.geometry?.location,
+              }))
+              .filter(({ position }) => {
+                if (!position?.lat || !position.lng) {
+                  return false;
+                }
+                const cpos =
+                  google.maps.geometry.spherical.computeDistanceBetween(
+                    new google.maps.LatLng(position.lat(), position.lng()),
+                    userPosition
+                  );
+                return cpos <= 10000;
+              });
             setMarkers(markerParams);
-            // const cpos = google.maps.geometry.spherical.computeDistanceBetween(
-            //   new google.maps.LatLng(
-            //     JSON.parse(JSON.stringify(marker.position))
-            //   ),
-            //   new google.maps.LatLng(myposition)
-            // );
-            // if (cpos > 10000) {
-            //   marker.setMap(null);
-            //   return null;
-            // }
           }
         });
-
-        // results.forEach((res)=>createMarker(res))
       });
     }
   }, [center.lat, center.lng, map, options.stores]);
