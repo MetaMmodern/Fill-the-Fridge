@@ -55,3 +55,11 @@ export interface newRecipeForm {
   ingredients: newRecipeIngredient[];
   image: FileList;
 }
+
+export interface SingleCommentResponse {
+  author: string;
+  comment: string;
+}
+export interface CommentsResponse {
+  comments: SingleCommentResponse[];
+}

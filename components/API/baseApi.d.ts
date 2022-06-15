@@ -1,3 +1,5 @@
+import { CommentsResponse, SingleCommentResponse } from "../../types";
+
 interface baseAPI {
   getRecipes(
     recipeIngredients: Array[string],
@@ -9,7 +11,7 @@ interface baseAPI {
   updateUserPassword?: () => Promise<void>;
   deleteUser?: () => Promise<void>;
   createNewRecipe: (recipeDetails: FormData) => Promise<string>;
-  getRecipeComments?: () => Promise<string[]>;
+  getRecipeComments?: (recipeId: string) => Promise<CommentsResponse>;
   postNewComment?: (
     recipeId: string,
     comment: string,

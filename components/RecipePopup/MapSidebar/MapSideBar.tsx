@@ -3,7 +3,7 @@ import { NextPage } from "next";
 import React, { useEffect, useState } from "react";
 import { Wrapper, Status } from "@googlemaps/react-wrapper";
 import useDeepCompareEffect from "use-deep-compare-effect";
-import getLocation from "../../../utils";
+import getLocation from "../../../utils/getLocation";
 import { Carts } from "../../../types";
 import { resolve } from "node:path/win32";
 import { rejects } from "node:assert";

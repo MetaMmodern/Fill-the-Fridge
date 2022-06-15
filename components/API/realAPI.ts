@@ -1,4 +1,8 @@
-import { RecipeBaseDetails } from "../../types";
+import {
+  CommentsResponse,
+  RecipeBaseDetails,
+  SingleCommentResponse,
+} from "../../types";
 import baseAPI from "./baseApi";
 
 const API: baseAPI = {
@@ -56,6 +60,19 @@ const API: baseAPI = {
     });
     const resultId: { id: string } = await res.json();
     return resultId.id;
+  },
+  async postNewComment(recipeId, comment, user) {
+    await fetch("api/comments", {
+      method: "POST",
+      body: JSON.stringify({ recipeId, comment, user }),
+    });
+  },
+  async getRecipeComments(recipeId: string) {
+    const url = new URL("api/comments", window.location.origin);
+    url.searchParams.set("recipeId", recipeId);
+    const response = await fetch(url.href);
+    const json: CommentsResponse = await response.json();
+    return json;
   },
 };
 export default API;
