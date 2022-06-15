@@ -74,7 +74,7 @@ export default NextAuth({
         }
         //Else send success response
         client.close();
-        return { email: result.email };
+        return { email: result.email, id: result._id };
       },
     }),
     // ...add more providers here
