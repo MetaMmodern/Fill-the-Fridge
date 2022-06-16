@@ -25,7 +25,13 @@ const NewRecipe: NextPage = () => {
     for (const key in formToSend) {
       if (Object.prototype.hasOwnProperty.call(formToSend, key)) {
         const element = formToSend[key];
-        formData.append(key, element);
+        if (Array.isArray(element)) {
+          formData.append(key, `[${element.reduce((acc, curr)=>{return acc + JSON.stringify(curr)}, '')}]`);
+
+        }
+        else {
+          formData.append(key, element);
+        }
       }
     }
     API.createNewRecipe(formData).then((resultId) => {
