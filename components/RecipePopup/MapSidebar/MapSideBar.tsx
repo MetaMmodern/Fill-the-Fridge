@@ -5,8 +5,9 @@ import { Wrapper, Status } from "@googlemaps/react-wrapper";
 import useDeepCompareEffect from "use-deep-compare-effect";
 import getLocation from "../../../utils/getLocation";
 import { Carts } from "../../../types";
-import { resolve } from "node:path/win32";
-import { rejects } from "node:assert";
+
+import styles from "./MapSideBar.module.scss";
+
 type Props = {
   mapIsShowing: boolean;
   stores: Carts;
@@ -157,6 +158,8 @@ const Map: React.FC<MapProps> = ({
 const MapSideBar: NextPage<Props> = (props) => {
   const MapContainerClassName = classNames([
     "modal-content",
+    "w-100",
+    styles.mapPopup,
     { "d-none": !props.mapIsShowing },
   ]);
   const [location, setLocation] = useState<GeolocationPosition | null>(null);

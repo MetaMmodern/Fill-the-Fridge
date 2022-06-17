@@ -39,11 +39,11 @@ const Header = () => {
             </button>
           )}
 
-          <button
+          {/* <button
             className={`${styles.help} text-black ml-3 mr-1 bg-white border-0`}
           >
             ?
-          </button>
+          </button> */}
         </div>
       </div>
     </div>

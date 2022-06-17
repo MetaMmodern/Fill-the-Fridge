@@ -1,16 +1,14 @@
 import { NextPage } from "next";
 import React, { useEffect, useRef, useState } from "react";
-import { Modal } from "react-bootstrap";
-import Loading from "../Loading/Loading";
-import ShoppingBasketsList from "../ShoppingBasketsList/ShoppingBasketsList";
 import MapSideBar from "./MapSidebar/MapSideBar";
 import API from "../API";
 import classNames from "classnames";
 import styles from "./RecipePopup.module.scss";
-import IngredientsInPopup from "./IngredientsInPopup/IngredientsInPopup";
 import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
 import { Carts, RecipeDetails } from "../../types";
 import classnames from "classnames";
+import { useRouter } from "next/router";
+import WholeRecipeContent from "../WholeRecipeContent/WholeRecipeContent";
 type Props = {
   recipeId: string | null;
   ingredients: string[];
@@ -23,6 +21,19 @@ const RecipePopup: NextPage<Props> = (props) => {
   const [loading, setLoading] = useState(false);
   const [mapIsShowing, setMapIsShowing] = useState(false);
   const [baskets, setBaskets] = useState<null | Carts>(null);
+  const router = useRouter();
+  useEffect(() => {
+    if (modalOpened) {
+      history.pushState(
+        `/recipe/${props.recipeId}`,
+        "page 2",
+        `/recipe/${props.recipeId}`
+      );
+    } else {
+      history.pushState(`/`, "page 2", `/`);
+    }
+  }, [modalOpened, props.recipeId, router]);
+
   useEffect(() => {
     if (props.recipeId !== null) {
       setModalOpened(true);
@@ -57,6 +68,7 @@ const RecipePopup: NextPage<Props> = (props) => {
       <div
         className={classnames("modal-dialog modal-lg", {
           "d-flex": mapIsShowing,
+          "w-100": mapIsShowing,
         })}
       >
         <div
@@ -64,7 +76,10 @@ const RecipePopup: NextPage<Props> = (props) => {
             [styles["recipeContent-jammed"]]: mapIsShowing,
           })}
           id="recipeContent"
-          style={{ borderRadius: "1.5rem" }}
+          style={{
+            borderRadius: "1.5rem",
+            width: mapIsShowing ? "3.5rem" : undefined,
+          }}
         >
           <div
             className={classNames(styles.backbutton, {
@@ -80,71 +95,16 @@ const RecipePopup: NextPage<Props> = (props) => {
               <NavigateBeforeIcon />
             </button>
           </div>
-
-          <div
-            id="wholemodalReciep"
-            className={classNames({
-              "d-none": mapIsShowing,
-            })}
-          >
-            <div className="modal-header">
-              <div className="modal-title">{recipeData?.name}</div>
-              <button
-                type="button"
-                className="close"
-                data-dismiss="modal"
-                aria-label="Close"
-                onClick={closeModal}
-              >
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div
-              className="modal-body"
-              style={{ display: "flex", justifyContent: "center" }}
-            >
-              {recipeData && !loading ? (
-                <div className="container-fluid">
-                  <div className="row">
-                    <div className="col-12 col-md-5 col-lg-6">
-                      {/* // eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src={recipeData?.image}
-                        alt="recipe-image"
-                        className="img-fluid rounded"
-                        style={{ height: "auto" }}
-                      />
-                    </div>
-                    <ShoppingBasketsList
-                      openMapHandler={() => setMapIsShowing(true)}
-                      existingIngredients={props.ingredients}
-                      recipeIngredients={recipeData.ingredients}
-                      baskets={baskets}
-                      setBaskets={setBaskets}
-                    />
-                  </div>
-                  {recipeData ? (
-                    <IngredientsInPopup
-                      existingIngredients={props.ingredients}
-                      recipeIngredients={recipeData.ingredients}
-                    />
-                  ) : null}
-                  <div className="row">
-                    <div className="col-12">
-                      <p>{recipeData?.recipe}</p>
-                    </div>
-                  </div>
-                </div>
-              ) : (
-                <div
-                  className="d-flex justify-content-center"
-                  style={{ maxWidth: "400px", minWidth: "100%" }}
-                >
-                  <Loading />
-                </div>
-              )}
-            </div>
-          </div>
+          <WholeRecipeContent
+            ingredients={props.ingredients}
+            mapIsShowing={mapIsShowing}
+            closeModal={closeModal}
+            loading={loading}
+            openMap={() => setMapIsShowing(true)}
+            baskets={baskets}
+            setBaskets={setBaskets}
+            recipeData={recipeData}
+          />
         </div>
         {mapIsShowing && <MapSideBar mapIsShowing stores={baskets || []} />}
       </div>

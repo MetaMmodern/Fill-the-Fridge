@@ -5,6 +5,8 @@ import {
 } from "../../types";
 import baseAPI from "./baseApi";
 
+const server = process.env.NODE_ENV == "development" ? "http://localhost:3000" : process.env.VERCEL_URL;
+
 const API: baseAPI = {
   getRecipes: async function (recipeIngredients) {
     if (recipeIngredients && recipeIngredients.length) {
@@ -13,8 +15,9 @@ const API: baseAPI = {
         headers: { "Content-Type": "application/json; charset=utf-8" },
         body: JSON.stringify({ ings: recipeIngredients }),
       };
+      const url = new URL("/api/recipes/search", server).href;
 
-      const response = await fetch(`api/recipes/search`, options);
+      const response = await fetch(url, options);
       const recipes: { recipesArray: RecipeBaseDetails[] } =
         await response.json();
       return recipes.recipesArray;
@@ -22,13 +25,15 @@ const API: baseAPI = {
     return Promise.resolve([]);
   },
   getRecipeDetails: async function (recipeId) {
-    const req = await fetch(`/api/recipes/${recipeId}`);
+    const url = new URL(`/api/recipes/${recipeId}`, server).href;
+    const req = await fetch(url);
     const json = await req.json();
     return json;
   },
   // TODO: add all missing methods
   getRecipeCartPrices: async function (whatToBuy) {
-    const response = await fetch("/api/cart", {
+    const url = new URL("/api/cart", server).href;
+    const response = await fetch(url, {
       method: "POST",
       headers: { "Content-Type": "application/json; Charset=utf-8" },
       body: JSON.stringify({

@@ -1,6 +1,6 @@
 import classNames from "classnames";
 import React from "react";
-import { RecipeDetails } from "../../../types";
+import { RecipeDetails } from "../../types";
 
 interface Props {
   existingIngredients: string[];

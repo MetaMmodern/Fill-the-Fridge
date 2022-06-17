@@ -17,8 +17,8 @@ let space = new AWS.S3({
   useAccelerateEndpoint: false,
   //Create a credential using DO Spaces API key (https://cloud.digitalocean.com/account/api/tokens)
   credentials: new AWS.Credentials(
-    process.env.AWS_ACCESS_KEY!,
-    process.env.AWS_SECRET_KEY!,
+    process.env.MY_AWS_ACCESS_KEY!,
+    process.env.MY_AWS_SECRET_KEY!,
   ),
 });
 

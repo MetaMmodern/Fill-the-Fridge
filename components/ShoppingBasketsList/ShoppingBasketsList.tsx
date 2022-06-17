@@ -21,6 +21,7 @@ const ShoppingBasketsList: NextPage<Props> = ({
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    console.log("ah fuk");
     setLoading(true);
     const whatToSearch = props.recipeIngredients
       .map((el) => el.item)
@@ -39,7 +40,7 @@ const ShoppingBasketsList: NextPage<Props> = ({
       .finally(() => {
         setLoading(false);
       });
-  }, [props.existingIngredients, props.recipeIngredients]);
+  }, []);
 
   return (
     <div className="col-12 col-md-7 col-lg-6 mt-2 mt-md-0 h-100">
