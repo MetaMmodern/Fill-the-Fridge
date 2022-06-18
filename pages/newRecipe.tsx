@@ -26,10 +26,11 @@ const NewRecipe: NextPage = () => {
       if (Object.prototype.hasOwnProperty.call(formToSend, key)) {
         const element = formToSend[key];
         if (Array.isArray(element)) {
-          formData.append(key, `[${element.reduce((acc, curr)=>{return acc + JSON.stringify(curr)}, '')}]`);
-
-        }
-        else {
+          formData.append(
+            key,
+            `[${element.map((curr) => JSON.stringify(curr)).join(",")}]`
+          );
+        } else {
           formData.append(key, element);
         }
       }
@@ -82,8 +83,8 @@ const NewRecipe: NextPage = () => {
             <textarea
               className="form-control"
               id="inputDescription"
-              aria-describedby="fullDescriptionHelp"
-              {...register("fullDescription")}
+              aria-describedby="recipeHelp"
+              {...register("recipe")}
             />
           </div>
           <div className="form-group">

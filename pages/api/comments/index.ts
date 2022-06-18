@@ -14,7 +14,7 @@ export default async function handler(
     const db = client.db();
     const collection = db.collection("comments");
     const comments = await collection.find({ recipeId }, { _id: 0 }).toArray();
-    // TODO: get comments for recipe from mongoDB.
+    client.close();
     return res.status(200).json({
       comments,
     } as any);

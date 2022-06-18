@@ -34,11 +34,12 @@ handler.post<NextApiRequest & { files: any }, NextApiResponse>(
     }
     const data = req.body;
     const file = req.files?.image;
+    console.log(data);
     // first save the recipe
     const client = await MongoClient.connect(process.env.MONGODB_URI!);
     const db = client.db();
     const collection = db.collection("recipes");
-    const recipeObj = { ...data, ingredients: JSON.parse(data.ingredients), author: session.user.id }; // name, fullDescription, ingredients: {name, amount}[]
+    const recipeObj = { ...data, ingredients: JSON.parse(data.ingredients), author: session.user.id }; // name, recipe, ingredients: {name, amount}[]
     const resultDocument = await collection.insertOne(recipeObj);
     const recipeId = resultDocument.insertedId.toString();
     // then save the image, if there is none--respond.
@@ -71,7 +72,7 @@ handler.post<NextApiRequest & { files: any }, NextApiResponse>(
       const { value: updatedResult } = await collection.findOneAndUpdate({ _id: new ObjectId(recipeId) }, { $set: { image: result.Location } }, { returnDocument: "after" })
       console.log(updatedResult)
       client.close();
-      return res.json({ ...updatedResult, _id: undefined });
+      return res.json({ ...updatedResult });
     } catch (error) {
       client.close();
       console.log(error);

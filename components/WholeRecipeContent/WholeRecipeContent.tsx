@@ -24,7 +24,9 @@ const WholeRecipeContent: FC<Props> = (props) => {
       })}
     >
       <div className="modal-header">
-        <div className="modal-title">{props.recipeData?.name}</div>
+        <div className="modal-title">
+          <h2>{props.recipeData?.name}</h2>
+        </div>
         {props.closeModal ? (
           <button
             type="button"

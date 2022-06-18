@@ -45,13 +45,13 @@ export interface NewUserRequestDetails {
 }
 
 export interface newRecipeIngredient {
-  name: string;
+  item: string;
   amount: string;
 }
 
 export interface newRecipeForm {
   name: string;
-  fullDescription: string;
+  recipe: string;
   ingredients: newRecipeIngredient[];
   image: FileList;
 }

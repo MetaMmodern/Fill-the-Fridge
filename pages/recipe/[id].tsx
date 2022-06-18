@@ -64,7 +64,7 @@ const Recipe: NextPage<RecipeFullDetails> = (props) => {
       />
 
       <div className="container mt-4 container-infinite mb-4">
-        <div className="toDelete d-flex">
+        <div className={classnames({ "d-flex": mapIsShowing })}>
           <div
             className={styles.fullrecipe}
             id="reciepContent"
@@ -111,6 +111,7 @@ export const getServerSideProps: GetServerSideProps<RecipeFullDetails> = async (
   const { id } = context.params;
 
   const res = await API.getRecipeDetails(id as string);
+  console.log(res);
   return {
     props: {
       ...res,

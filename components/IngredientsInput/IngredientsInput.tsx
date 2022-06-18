@@ -9,11 +9,11 @@ interface IngredientsInputProps {
   removeIngredient: (index: number) => void;
 }
 const IngredientsInput: NextPage<IngredientsInputProps> = (props) => {
-  const [name, setName] = useState("");
+  const [item, setItem] = useState("");
   const [amount, setAmount] = useState("");
   const saveNewIngredient = () => {
-    props.setNewIngredient({ name, amount });
-    setName("");
+    props.setNewIngredient({ item, amount });
+    setItem("");
     setAmount("");
   };
   return (
@@ -23,7 +23,7 @@ const IngredientsInput: NextPage<IngredientsInputProps> = (props) => {
         {props.ingredients.map((ingr, index) => {
           return (
             <div key={index}>
-              <span>{ingr.name}</span>-<span>{ingr.amount}</span>
+              <span>{ingr.item}</span>-<span>{ingr.amount}</span>
               <button onClick={() => props.removeIngredient(index)}>
                 Delete
               </button>
@@ -33,7 +33,7 @@ const IngredientsInput: NextPage<IngredientsInputProps> = (props) => {
       </div>
       <div>
         <label>Ingredient Name</label>
-        <input value={name} onChange={(e) => setName(e.target.value)}></input>
+        <input value={item} onChange={(e) => setItem(e.target.value)}></input>
         <label>Ingredient Amount</label>
         <input
           value={amount}
