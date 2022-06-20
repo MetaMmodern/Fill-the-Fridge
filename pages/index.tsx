@@ -33,7 +33,6 @@ const Home: NextPage = () => {
           setRecipes([...(recipes ?? []), newRecipes]);
           return;
         }
-        console.log(newRecipes);
         setRecipes(newRecipes);
       } catch (error) {
         console.debug(error);

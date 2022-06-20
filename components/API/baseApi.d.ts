@@ -11,11 +11,10 @@ interface baseAPI {
   updateUserPassword?: () => Promise<void>;
   deleteUser?: () => Promise<void>;
   createNewRecipe: (recipeDetails: FormData) => Promise<string>;
-  getRecipeComments?: (recipeId: string) => Promise<CommentsResponse>;
-  postNewComment?: (
+  getRecipeComments: (recipeId: string) => Promise<CommentsResponse>;
+  postNewComment: (
     recipeId: string,
     comment: string,
-    user: string
-  ) => Promise<void>;
+  ) => Promise<SingleCommentResponse>;
 }
 export default baseAPI;

@@ -19,7 +19,6 @@ const Register: NextPage = () => {
     formState: { errors },
   } = useForm<RegisterForm>();
   const onSubmit = async (data: RegisterForm) => {
-    console.log(data);
     return API.createNewUser(data)
       .catch((e) => {
         alert(e);

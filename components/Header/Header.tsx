@@ -5,9 +5,6 @@ import { useEffect } from "react";
 
 const Header = () => {
   const { data: session } = useSession();
-  useEffect(() => {
-    console.log(session);
-  }, []);
 
   return (
     <div className="container mt-4">

@@ -4,7 +4,7 @@ import Link from "next/link";
 import Header from "../../components/Header/Header";
 import TagInput from "../../components/TagInput/TagInput";
 import API from "../../components/API";
-import { RecipeFullDetails } from "../../types";
+import { CommentsResponse, RecipeFullDetails } from "../../types";
 import { useEffect, useState } from "react";
 import MapSideBar from "../../components/RecipePopup/MapSidebar/MapSideBar";
 import WholeRecipeContent from "../../components/WholeRecipeContent/WholeRecipeContent";
@@ -12,8 +12,13 @@ import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
 import styles from "./styles.module.scss";
 import classnames from "classnames";
 
-const Recipe: NextPage<RecipeFullDetails> = (props) => {
+interface Props {
+  recipe: RecipeFullDetails;
+  comments: CommentsResponse["comments"];
+}
+const Recipe: NextPage<Props> = (props) => {
   const [mapIsShowing, setMapIsShowing] = useState(false);
+  const [comments, setComments] = useState(props.comments);
   const [baskets, setBaskets] = useState([]);
   const [tags, setTags] = useState<string[]>([]);
   useEffect(() => {
@@ -92,7 +97,11 @@ const Recipe: NextPage<RecipeFullDetails> = (props) => {
               openMap={() => setMapIsShowing(true)}
               baskets={baskets}
               setBaskets={setBaskets}
-              recipeData={props}
+              recipeData={props.recipe}
+              comments={comments}
+              addCommentToState={(newComment) => {
+                setComments([...comments, newComment]);
+              }}
             />
           </div>
           {mapIsShowing && <MapSideBar mapIsShowing stores={baskets || []} />}
@@ -102,19 +111,30 @@ const Recipe: NextPage<RecipeFullDetails> = (props) => {
   );
 };
 
-export const getServerSideProps: GetServerSideProps<RecipeFullDetails> = async (
+export const getServerSideProps: GetServerSideProps<Props> = async (
   context
 ) => {
   if (!context.params) {
     return { props: {} };
   }
   const { id } = context.params;
+  const dataPromises = [
+    API.getRecipeDetails(id as string),
+    API.getRecipeComments(id as string),
+  ];
+  const { recipe, comments } = await Promise.allSettled(dataPromises).then(
+    (values) => {
+      const recipe = values[0].status == "fulfilled" ? values[0].value : {};
+      const { comments } =
+        values[1].status == "fulfilled" ? values[1].value : { comments: [] };
+      return { recipe, comments };
+    }
+  );
 
-  const res = await API.getRecipeDetails(id as string);
-  console.log(res);
   return {
     props: {
-      ...res,
+      recipe,
+      comments,
     },
   };
 };

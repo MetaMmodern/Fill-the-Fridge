@@ -13,17 +13,15 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     const article = await getArticle(
       `https://www.povarenok.ru/recipes/show/${req.query.id}`
     );
-    return res.json(article);
+    return res.json({ ...article, id: req.query.id });
   } else {
     //  TODO: fetch recipe from mongodb and give it back.
     const client = await MongoClient.connect(process.env.MONGODB_URI!);
     const db = client.db();
     const collection = db.collection("recipes");
-    console.log(id);
     const result = await collection.findOne({ _id: new ObjectId(id) });
     client.close();
     if (result) {
-      console.log(result);
       return res.status(200).json(result);
     } else {
       return res.status(404).json({ error: "Recipe not found" })

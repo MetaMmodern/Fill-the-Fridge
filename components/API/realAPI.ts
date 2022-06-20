@@ -18,6 +18,7 @@ const API: baseAPI = {
       const url = new URL("/api/recipes/search", server).href;
 
       const response = await fetch(url, options);
+
       const recipes: { recipesArray: RecipeBaseDetails[] } =
         await response.json();
       return recipes.recipesArray;
@@ -27,6 +28,8 @@ const API: baseAPI = {
   getRecipeDetails: async function (recipeId) {
     const url = new URL(`/api/recipes/${recipeId}`, server).href;
     const req = await fetch(url);
+    // const txt = await req.text();
+    // console.log(txt)
     const json = await req.json();
     return json;
   },
@@ -66,14 +69,16 @@ const API: baseAPI = {
     const resultId: { id: string } = await res.json();
     return resultId.id;
   },
-  async postNewComment(recipeId, comment, user) {
-    await fetch("api/comments", {
+  async postNewComment(recipeId, comment) {
+    const url = new URL("api/comments", server);
+    const res = await fetch(url, {
       method: "POST",
-      body: JSON.stringify({ recipeId, comment, user }),
+      body: JSON.stringify({ recipeId, comment }),
     });
+    return await res.json();
   },
   async getRecipeComments(recipeId: string) {
-    const url = new URL("api/comments", window.location.origin);
+    const url = new URL("api/comments", server);
     url.searchParams.set("recipeId", recipeId);
     const response = await fetch(url.href);
     const json: CommentsResponse = await response.json();

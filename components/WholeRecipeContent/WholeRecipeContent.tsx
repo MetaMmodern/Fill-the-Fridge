@@ -1,6 +1,12 @@
 import classNames from "classnames";
 import React, { FC } from "react";
-import { RecipeDetails } from "../../types";
+import {
+  CommentsResponse,
+  RecipeFullDetails,
+  SingleCommentResponse,
+} from "../../types";
+import Comment from "../Comment/Comment";
+import CommentForm from "../CommentForm/CommentForm";
 import IngredientsInPopup from "../IngredientsFull/IngredientsFull";
 import Loading from "../Loading/Loading";
 import ShoppingBasketsList from "../ShoppingBasketsList/ShoppingBasketsList";
@@ -8,12 +14,14 @@ import ShoppingBasketsList from "../ShoppingBasketsList/ShoppingBasketsList";
 interface Props {
   ingredients: string[];
   mapIsShowing: boolean;
-  recipeData: RecipeDetails | null;
+  recipeData: RecipeFullDetails | null;
   closeModal?: () => void;
   loading?: boolean;
   openMap: () => void;
   baskets: any;
   setBaskets: any;
+  comments: SingleCommentResponse[];
+  addCommentToState: (comment: SingleCommentResponse) => void;
 }
 const WholeRecipeContent: FC<Props> = (props) => {
   return (
@@ -71,6 +79,25 @@ const WholeRecipeContent: FC<Props> = (props) => {
             <div className="row">
               <div className="col-12">
                 <p>{props.recipeData?.recipe}</p>
+              </div>
+            </div>
+            <div className="row pt-2 border-top">
+              <div className="col-12 ">
+                {props.comments.map((commentData, i) => {
+                  return <Comment key={i} {...commentData} />;
+                })}
+              </div>
+            </div>
+            <div className="row">
+              <div className="col-12">
+                <p>
+                  <CommentForm
+                    updateStateComments={(comment) =>
+                      props.addCommentToState(comment)
+                    }
+                    recipeId={props.recipeData.id}
+                  />
+                </p>
               </div>
             </div>
           </div>

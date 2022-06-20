@@ -39,7 +39,6 @@ const NewRecipe: NextPage = () => {
       console.log(resultId);
     });
 
-    console.log(formToSend);
     return null;
   };
   const setNewIngredient = (newIngredient: newRecipeIngredient) => {

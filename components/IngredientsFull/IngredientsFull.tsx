@@ -1,10 +1,10 @@
 import classNames from "classnames";
 import React from "react";
-import { RecipeDetails } from "../../types";
+import { RecipeFullDetails } from "../../types";
 
 interface Props {
   existingIngredients: string[];
-  recipeIngredients: RecipeDetails["ingredients"];
+  recipeIngredients: RecipeFullDetails["ingredients"];
 }
 const IngredientsInPopup: React.FC<Props> = ({
   recipeIngredients,

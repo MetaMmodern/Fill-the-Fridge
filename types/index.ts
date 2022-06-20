@@ -1,10 +1,4 @@
-export type RecipeDetails = {
-  name: string;
-  image: string;
-  ingredients: { item: string; amount: string }[];
-  link: string;
-  recipe: string;
-};
+
 
 export interface ListOfAllGood {
   name: string;
@@ -27,7 +21,6 @@ export type RecipeBaseDetails = {
   ingrFast: string[];
   link: string;
   name: string;
-  id: string;
 };
 
 export type RecipeFullDetails = {
@@ -36,6 +29,7 @@ export type RecipeFullDetails = {
   ingredients: { item: string; amount: string }[];
   link: string;
   recipe: string;
+  id: string;
 };
 export type RecipeCartPrices = {};
 export interface NewUserRequestDetails {
@@ -59,6 +53,7 @@ export interface newRecipeForm {
 export interface SingleCommentResponse {
   author: string;
   comment: string;
+  datetime: string;
 }
 export interface CommentsResponse {
   comments: SingleCommentResponse[];

@@ -15,7 +15,6 @@ const handler: NextApiHandler = async (req, res) => {
   );
 
   if (password !== passwordSubmit) {
-    console.log("not equal");
     res.status(422).json({
       message: "Invalid input - passwords are not equal.",
     });
@@ -28,12 +27,7 @@ const handler: NextApiHandler = async (req, res) => {
     !password ||
     password.trim().length < 7
   ) {
-    console.log("short");
 
-    console.log(
-      [!email, !email.includes("@"), !password, password.trim().length < 7],
-      !email || !email.includes("@") || !password || password.trim().length < 7
-    );
 
     res.status(422).json({
       message:
@@ -51,7 +45,6 @@ const handler: NextApiHandler = async (req, res) => {
   const existingUser = await db.collection("users").findOne({ email: email });
 
   if (existingUser) {
-    console.log("user exists");
     res.status(422).json({ message: "User exists already!" });
     client.close();
     return;

@@ -44,6 +44,12 @@ const API: baseAPI = {
   createNewRecipe: function (recipeDetails: FormData): Promise<string> {
     throw new Error("Function not implemented.");
   },
+  getRecipeComments: async function (recipeId: string) {
+    throw new Error("Function not implemented.");
+  },
+  postNewComment: function (recipeId: string, comment: string) {
+    throw new Error("Function not implemented.");
+  }
 };
 
 const sleep = (ms: number) => {
